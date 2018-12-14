@@ -17,7 +17,7 @@ module Teach
     # the framework and any gems in your application.
 
     # /lib autoload
-    config.autoload_paths << "#{Rails.root}/lib"
     config.eager_load_paths << "#{Rails.root}/lib"
+    config.autoload_paths += config.eager_load_paths
   end
 end
