@@ -15,6 +15,7 @@ module UsersHelper
     session[:user_token] = token
     user_info = user_api_get 'user', token
     session[:user_id] = user_info['id']
+    session[:username] = user_info['username']
   end
 
   def logged_in?
@@ -22,6 +23,6 @@ module UsersHelper
   end
 
   def current_user
-    @current_user ||= User.new session[:user_id], session[:user_token]
+    @current_user ||= User.new session[:user_id], session[:user_token], session[:username]
   end
 end

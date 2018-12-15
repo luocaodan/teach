@@ -1,0 +1,13 @@
+!!!
+%html
+  %head
+    %title
+      - if logged_in?
+        = current_user.username
+      - else
+        = yield :title
+    = csrf_meta_tags
+    = csp_meta_tag
+
+  %body
+    = yield
