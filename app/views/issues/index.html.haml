@@ -1,1 +1,7 @@
-%h1 welcome
+- content_for :scripts do
+  = javascript_pack_tag 'demo'
+
+%h1 hello world
+
+#hello
+  {{ message }}
