@@ -1,7 +1,9 @@
 - content_for :scripts do
-  = javascript_pack_tag 'demo'
+  = javascript_pack_tag 'issues'
 
-%h1 hello world
-
-#hello
-  {{ message }}
+#issues-app{data: issues_data}
+  %el-container
+    %el-aside
+      %issues-list{':issues': 'issues'}
+    %el-main
+      %sidebar

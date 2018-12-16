@@ -8,8 +8,14 @@
         = yield :title
     = csrf_meta_tags
     = csp_meta_tag
-
+    - if logged_in?
+      = javascript_pack_tag 'navbar'
+      = stylesheet_pack_tag 'navbar'
     = yield :scripts
 
   %body
+    - if logged_in?
+      #navbar
+        %navbar
     = yield
+
