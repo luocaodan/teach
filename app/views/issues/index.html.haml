@@ -1,7 +1,11 @@
 - content_for :scripts do
   = javascript_pack_tag 'issues'
+- content_for :styles do
+  = stylesheet_pack_tag 'issues'
 
 #issues-app{data: issues_data}
+  #filter{data: filter_data}
+    %issues-filter
   %el-container
     %el-aside
       %issues-list{':issues': 'issues'}
