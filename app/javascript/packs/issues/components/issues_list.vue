@@ -47,7 +47,9 @@
       window.onresize = () => {
         let navHeight = document.getElementById('navbar').clientHeight;
         let sortHeight = document.getElementById('sort').clientHeight;
-        let heightDiff = navHeight + sortHeight;
+        let filterHeight = document.getElementById('filter').clientHeight;
+        // 2px border
+        let heightDiff = navHeight + sortHeight + filterHeight + 2;
         this.height = document.documentElement.clientHeight - heightDiff;
       };
       window.onresize();
@@ -98,7 +100,7 @@
   }
 
   .left-bar {
-    margin-left: 20px;
+    padding: 0 20px;
   }
 
   .list-board {

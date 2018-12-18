@@ -8,7 +8,7 @@
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="all">所有</el-dropdown-item>
-        <el-dropdown-item v-for="(project, index) in projects" :key="index" :command="project.id">
+        <el-dropdown-item v-for="(project, index) in projects" :key="index" :command="project.id+','+project.name">
           {{ project.name }}
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -45,12 +45,12 @@
     <span>
       <el-dropdown size="small" @command="selectAssignee">
         <span>
-          经办人： {{ text(currentM) }}
+          经办人： {{ currentMN }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="all">所有</el-dropdown-item>
-          <el-dropdown-item v-for="(assignee, index) in members" :key="index" :command="assignee.id">
+          <el-dropdown-item v-for="(assignee, index) in members" :key="index" :command="assignee.id+','+assignee.name">
             {{ assignee.name }}
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -75,8 +75,10 @@
           'Doing'
         ],
         currentP: 'all',
+        currentPN: '',
         currentL: 'all',
         currentM: 'all',
+        currentMN: '',
         currentS: 'all'
       }
     },
@@ -120,11 +122,16 @@
         }
         return str;
       },
-      selectProject(project_id) {
+      selectProject(str) {
+        let list = str.split(',');
+        let project_id = list[0];
+        let project_name = list[1];
+        console.log(project_id)
         if (project_id === this.currentP) {
           return;
         }
         this.currentP = project_id;
+        this.currentPN = project_name;
         this.update();
       },
       selectLabel(label_name) {
@@ -141,11 +148,15 @@
         this.currentS = state;
         this.update();
       },
-      selectAssignee(user_id) {
+      selectAssignee(str) {
+        let list = str.split(',');
+        let user_id = list[0];
+        let user_name = list[1];
         if (user_id === this.currentM) {
           return;
         }
         this.currentM = user_id;
+        this.currentMN = user_name;
         this.update();
       },
       update() {
@@ -156,6 +167,11 @@
 </script>
 
 <style scoped>
+  .filter {
+    border: 1px solid #e5e5e5;
+    background-color: #fafafa;
+    padding: 10px 30px;
+  }
   .filter > span {
     margin-right: 20px;
   }
