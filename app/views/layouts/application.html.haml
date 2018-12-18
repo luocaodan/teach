@@ -18,7 +18,7 @@
 
   %body
     - if logged_in?
-      #navbar
+      #navbar{data: projects_data}
         %navbar
     = yield
 

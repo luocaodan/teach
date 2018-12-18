@@ -1,43 +1,93 @@
 <template>
-  <div>
+  <div class="navbar">
     <el-menu
-      :default-active="activeIndex2"
+      :default-active="kanban"
       class="el-menu-demo"
       mode="horizontal"
       @select="handleSelect"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b">
-      <el-menu-item index="1">处理中心</el-menu-item>
-      <el-submenu index="2">
-        <template slot="title">我的工作台</template>
-        <el-menu-item index="2-1">选项1</el-menu-item>
-        <el-menu-item index="2-2">选项2</el-menu-item>
-        <el-menu-item index="2-3">选项3</el-menu-item>
-        <el-submenu index="2-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="2-4-1">选项1</el-menu-item>
-          <el-menu-item index="2-4-2">选项2</el-menu-item>
-          <el-menu-item index="2-4-3">选项3</el-menu-item>
-        </el-submenu>
+      <el-submenu index="1">
+        <template slot="title">项目看板</template>
+        <el-menu-item v-for="(project, index) in projects" :key="index" :index="'1-' + project.id">
+          {{ project.name }}
+        </el-menu-item>
       </el-submenu>
-      <el-menu-item index="3" disabled>消息中心</el-menu-item>
-      <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+      <el-menu-item index="2">
+        <a href="/issues">
+          问题
+        </a>
+      </el-menu-item>
+
+      <el-menu-item index="3">
+        <a :href="gitlabHost" target="_blank">
+          GitLab
+        </a>
+      </el-menu-item>
+
+      <el-menu-item index="4" style="float: right">
+        新建问题
+      </el-menu-item>
     </el-menu>
+
+    <el-dialog
+      title="New Issue"
+      :visible.sync="dialogVisible"
+      width="70%"
+      :before-close="handleClose">
+      <detail-issue :issue="newIssue"></detail-issue>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 <script>
+  import DetailIssue from './detail_issue.vue'
+
   export default {
+    components: {
+      DetailIssue
+    },
     data() {
       return {
-        activeIndex: '1',
-        activeIndex2: '1'
+        kanban: '1',
+        issues: '2',
+        gitlab: '3',
+        projects: [],
+        gitlabHost: '',
+        dialogVisible: false,
+        newIssue: {}
       };
+    },
+    mounted() {
+      const navbar = document.getElementById('navbar');
+      this.projects = JSON.parse(navbar.dataset.projects);
+      this.gitlabHost = navbar.dataset.gitlabhost;
     },
     methods: {
       handleSelect(key, keyPath) {
-        console.log(key, keyPath);
+        if (key.startsWith('1-')) {
+          let project_id = key.substr(2);
+          window.location.href = '/boards/' + project_id;
+        } else if (key === '4') {
+          this.dialogVisible = true;
+        }
+      },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
       }
     }
   }
 </script>
+<style>
+  .navbar a {
+    text-decoration: none;
+  }
+</style>

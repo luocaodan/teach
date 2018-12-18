@@ -19,19 +19,19 @@
     </div>
     <div :style="{height: height + 'px'}">
       <el-scrollbar class="scroll center">
-        <Issue class="issue-item" v-for="issue in issues" :issue="issue" :key="issue.id"></Issue>
+        <issue-card class="issue-item" v-for="issue in issues" :issue="issue" :key="issue.id"></issue-card>
       </el-scrollbar>
     </div>
   </div>
 </template>
 
 <script>
-  import Issue from './issue'
+  import IssueCard from './issue_card.vue'
   import eventhub from '../eventhub'
 
   export default {
     components: {
-      Issue
+      IssueCard
     },
     data: function () {
       return {

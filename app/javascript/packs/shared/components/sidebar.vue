@@ -1,10 +1,17 @@
 <template>
-  <p>
-    i am main
-  </p>
+  <div class="sidebar">
+    <detail-issue :issue="detailIssue"></detail-issue>
+  </div>
 </template>
 <script>
-  export default {
+  import DetailIssue from './detail_issue.vue'
 
+  export default {
+    components: {
+      DetailIssue
+    },
+    props: {
+      detailIssue: Object
+    }
   }
 </script>

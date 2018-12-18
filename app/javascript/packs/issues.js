@@ -2,6 +2,7 @@ import Vue from 'vue/dist/vue.esm'
 import IssuesList from './issues/components/issues_list.vue'
 import Sidebar from './shared/components/sidebar.vue'
 import IssuesFilter from './issues/components/issues_filter.vue'
+import DetailIssue from './shared/components/detail_issue.vue'
 import IssuesService from "./issues/services/issues_service";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -17,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     components: {
       IssuesList,
       Sidebar,
-      IssuesFilter
+      IssuesFilter,
+      DetailIssue
     },
     data: {
       issues: [],

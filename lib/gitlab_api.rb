@@ -1,6 +1,6 @@
 module GitlabApi
   def get_api_url(url)
-    "#{Constant::GitLabHost}/api/v4/#{url}"
+    "#{gitlab_host}/api/v4/#{url}"
   end
 
   def admin_api_post(url, payload)
@@ -30,6 +30,10 @@ module GitlabApi
     res['access_token']
   end
 
+  def gitlab_host
+    Constant::GitLabHost
+  end
+
   private
 
   def admin_headers
@@ -45,9 +49,6 @@ module GitlabApi
   end
 
   # constant mapping
-  def gitlab_host
-    Constant::GitLabHost
-  end
 
   def webhook_url
     Constant::WebhookUrl
