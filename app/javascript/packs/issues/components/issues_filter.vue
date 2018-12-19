@@ -31,7 +31,7 @@
     <span>
       <el-dropdown size="small" @command="selectState">
         <span>
-          状态： {{ text(currentL) }}
+          状态： {{ text(currentS) }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
