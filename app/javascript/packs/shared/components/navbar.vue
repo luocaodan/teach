@@ -23,6 +23,10 @@
       <el-menu-item index="3">
         <a :href="gitlabHost" target="_blank">
           GitLab
+          <i class="iconfont icon-link"></i>
+          <!--<svg aria-hidden="true" class="icon">-->
+            <!--<use xlink:href="#icon-link"></use>-->
+          <!--</svg>-->
         </a>
       </el-menu-item>
 
@@ -89,5 +93,9 @@
 <style>
   .navbar a {
     text-decoration: none;
+  }
+
+  .navbar i {
+    font-size: 14px;
   }
 </style>

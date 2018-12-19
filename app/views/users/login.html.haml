@@ -1,3 +1,23 @@
 - content_for :title do
   login
-= link_to 'login with gitlab', gitlab_auth_url
+- content_for :scripts do
+  = javascript_pack_tag 'login'
+- content_for :styles do
+  = stylesheet_pack_tag 'login'
+
+#login
+  %img{src: '/logo/gitlab-icon-rgb.svg'}
+  %el-button
+    %a{href: "#{gitlab_auth_url}"}
+      Login in with GitLab
+
+:css
+  #login {
+    margin: auto;
+    text-align: center;
+    width: 400px;
+  }
+
+  #login a {
+    text-decoration: none;
+  }
