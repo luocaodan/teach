@@ -5,10 +5,10 @@
 - content_for :styles do
   = stylesheet_pack_tag 'login'
 
-#login
+#login{data: {auth: "#{gitlab_auth_url}"}}
   %img{src: '/logo/gitlab-icon-rgb.svg'}
-  %el-button
-    %a{href: "#{gitlab_auth_url}"}
+  %el-button{'@click': 'redirectToGitlab'}
+    %a{href: "#"}
       Login in with GitLab
 
 :css
