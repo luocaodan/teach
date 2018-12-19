@@ -23,13 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     data: {
       issues: [],
+      detailIndex: 0,
       loading: true,
       issuesEndpoint: $issuesApp.dataset.endpoint,
+      // 下方剩余高度
+      height: 400,
+      // aside 宽度
+      asideWidth: 400
     },
     computed: {
       detailIssue() {
         if (this.issues.length > 0) {
-          return this.issues[0];
+          return this.issues[this.detailIndex];
         }
         else {
           return null;
@@ -44,11 +49,19 @@ document.addEventListener('DOMContentLoaded', () => {
       eventhub.$on('reverse', this.reverseList);
       eventhub.$on('sort', this.sortList);
       eventhub.$on('updateParams', this.updateIssues);
+      eventhub.$on('updateAsideWidth', this.updateAsideWidth);
+      eventhub.$on('updateDetailIndex', this.updateDetailIndex);
 
       // issuesStore.create();
     },
     mounted() {
       this.updateIssues({});
+      window.onresize = () => {
+        let navHeight = document.getElementById('navbar').clientHeight;
+        let filterHeight = document.getElementById('filter').clientHeight;
+        this.height = document.documentElement.clientHeight - navHeight - filterHeight;
+      };
+      window.onresize();
     },
     methods: {
       reverseList() {
@@ -103,6 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
             Flash('error');
             this.loading = false;
           })
+      },
+      updateAsideWidth(width) {
+        let value = this.asideWidth + width;
+        if (value > 900 || value < 250) {
+          return;
+        }
+        this.asideWidth = value;
+      },
+      updateDetailIndex(index) {
+        this.detailIndex = index;
       }
     }
   })

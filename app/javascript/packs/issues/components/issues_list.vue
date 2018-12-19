@@ -19,7 +19,7 @@
     </div>
     <div :style="{height: height + 'px'}">
       <el-scrollbar class="scroll center">
-        <issue-card class="issue-item" v-for="issue in issues" :issue="issue" :key="issue.id"></issue-card>
+        <issue-card class="issue-item" :clicked="clicked === index" v-for="(issue, index) in issues" :issue="issue" :key="index" @click.native="clickIssue(index)"></issue-card>
       </el-scrollbar>
     </div>
   </div>
@@ -35,25 +35,26 @@
     },
     data: function () {
       return {
-        height: 400,
         sort_field: 'created_at',
         asc: false,
+        sortHeight: 10,
+        clicked: 0,
       }
     },
     props: {
-      issues: Array
+      issues: Array,
+      totalHeight: Number
+    },
+    computed: {
+      height() {
+        let heightDiff = this.sortHeight + 2;
+        return this.totalHeight - heightDiff;
+      }
     },
     mounted() {
-      window.onresize = () => {
-        let navHeight = document.getElementById('navbar').clientHeight;
-        let sortHeight = document.getElementById('sort').clientHeight;
-        let filterHeight = document.getElementById('filter').clientHeight;
-        // 2px border
-        let heightDiff = navHeight + sortHeight + filterHeight + 2;
-        this.height = document.documentElement.clientHeight - heightDiff;
-      };
-      window.onresize();
       this.handleSortField(this.sort_field);
+      const sort = document.getElementById('sort');
+      this.sortHeight = sort.clientHeight;
     },
     updated() {
       console.log(this.issues);
@@ -78,7 +79,12 @@
       reverse() {
         this.asc = !this.asc;
         eventhub.$emit('reverse');
-      }
+      },
+      clickIssue(index) {
+        console.log(index);
+        this.clicked = index;
+        eventhub.$emit('updateDetailIndex', index);
+      },
     }
   }
 </script>
@@ -100,7 +106,7 @@
   }
 
   .left-bar {
-    padding: 0 20px;
+    /*padding: 0 10px;*/
   }
 
   .list-board {

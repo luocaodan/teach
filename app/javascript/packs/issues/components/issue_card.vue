@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card shadow="hover" :body-style="{ padding: '0px' }">
+    <el-card shadow="hover" :class="{clicked: clicked}" :body-style="{ padding: '0px' }">
       <div style="padding: 14px">
         <div class="main-info">
           <span>{{ issue.title }}</span>
@@ -42,7 +42,8 @@
   export default {
     components: {},
     props: {
-      issue: Object
+      issue: Object,
+      clicked: false,
     },
     computed: {
       closed() {
@@ -106,5 +107,9 @@
 
   .right {
     float: right;
+  }
+
+  .clicked {
+    background-color: #ebf2f9;
   }
 </style>

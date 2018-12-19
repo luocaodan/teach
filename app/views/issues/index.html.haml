@@ -7,7 +7,12 @@
   #filter{data: filter_data}
     %issues-filter
   %el-container
-    %el-aside{width: '400px'}
-      %issues-list{':issues': 'issues'}
+    %el-aside{':width': "asideWidth + 'px'"}
+      %issues-list{':issues': 'issues', ':total-height': 'height'}
     %el-main
-      %sidebar{':detail-issue': 'detailIssue'}
+      %sidebar{':detail-issue': 'detailIssue', ':total-height': 'height'}
+
+:css
+  .el-main {
+    padding: 0;
+  }

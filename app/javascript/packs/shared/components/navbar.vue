@@ -40,7 +40,7 @@
       :visible.sync="dialogVisible"
       width="70%"
       :before-close="handleClose">
-      <detail-issue :issue="newIssue"></detail-issue>
+      <detail-issue :raw-issue="newIssue"></detail-issue>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -63,7 +63,7 @@
         projects: [],
         gitlabHost: '',
         dialogVisible: false,
-        newIssue: {}
+        newIssue: {},
       };
     },
     mounted() {
