@@ -1,6 +1,8 @@
 class Issue {
   constructor() {
     this.id = '';
+    this.access = '';
+    this.projectId = '';
 
     this.title = '';
     this.projectName = '';
@@ -52,6 +54,19 @@ class Issue {
 
   static toUnderLine(name) {
     return name.replace(/([A-Z])/g, '_$1').toLowerCase();
+  }
+
+  toObj() {
+    const obj = {};
+    for (let key in this) {
+      let underLine = Issue.toUnderLine(key);
+      obj[underLine] = this[key];
+    }
+    if (['To Do', 'Doing'].includes(obj.state)) {
+      obj.state = 'open';
+    }
+    console.log(obj);
+    return obj;
   }
 }
 

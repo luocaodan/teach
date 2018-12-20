@@ -1,4 +1,5 @@
 require 'set'
+require 'rest-client'
 
 class ProjectsService < BaseService
   def project(project_id)
@@ -24,6 +25,19 @@ class ProjectsService < BaseService
       end
     end
     members.to_a
+  end
+
+  def member_access(project_id, user_id)
+    begin
+      res = get "projects/#{project_id}/members/#{user_id}"
+      if res['access_level'] > 10
+        'edit'
+      else
+        'new'
+      end
+    rescue RestClient::NotFound => e
+      'new'
+    end
   end
 
   def all_labels

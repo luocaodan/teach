@@ -81,7 +81,6 @@
         eventhub.$emit('reverse');
       },
       clickIssue(index) {
-        console.log(index);
         this.clicked = index;
         eventhub.$emit('updateDetailIndex', index);
       },

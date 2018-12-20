@@ -2,12 +2,13 @@
   <div class="sidebar">
     <div v-on:mousedown="drag" class="divider" :style="{height: totalHeight + 'px'}">
     </div>
-    <detail-issue :raw-issue="detailIssue"></detail-issue>
+    <detail-issue :issue="detailIssue" :index="detailIndex"></detail-issue>
   </div>
 </template>
 <script>
   import DetailIssue from './detail_issue.vue'
   import eventhub from '../../issues/eventhub'
+  import Issue from '../../issues/models/issue'
 
   export default {
     components: {
@@ -20,8 +21,9 @@
       }
     },
     props: {
-      detailIssue: Object,
-      totalHeight: Number
+      detailIssue: Issue,
+      totalHeight: Number,
+      detailIndex: Number
     },
     methods: {
       drag(src) {

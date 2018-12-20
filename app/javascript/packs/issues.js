@@ -8,11 +8,19 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import "./tools/flash"
 import eventhub from './issues/eventhub'
+import Issue from './issues/models/issue'
 
 Vue.use(ElementUI);
 
 document.addEventListener('DOMContentLoaded', () => {
-  const $issuesApp = document.getElementById('issues-app')
+  const $navbar = document.getElementById('navbar');
+  const projects = JSON.parse($navbar.dataset.projects);
+  const accessMap = {};
+  for (let project of projects) {
+    accessMap[project.id] = project.access;
+  }
+
+  const $issuesApp = document.getElementById('issues-app');
   const issueApp = new Vue({
     el: $issuesApp,
     components: {
@@ -22,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       DetailIssue
     },
     data: {
+      accessMap: accessMap,
       issues: [],
       detailIndex: 0,
       loading: true,
@@ -51,6 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
       eventhub.$on('updateParams', this.updateIssues);
       eventhub.$on('updateAsideWidth', this.updateAsideWidth);
       eventhub.$on('updateDetailIndex', this.updateDetailIndex);
+      eventhub.$on('addNewIssue', this.addNewIssue);
+      // 设置为全局变量 保证编译完成的不同js引用同一个对象
+      window.eventhub = eventhub;
 
       // issuesStore.create();
     },
@@ -109,11 +121,21 @@ document.addEventListener('DOMContentLoaded', () => {
           .all(filterParams)
           .then(res => res.data)
           .then(data => {
-            this.issues = data;
+            let list = data;
+            for (let issue of list) {
+              if (this.accessMap[issue.project_id]) {
+                issue.access = this.accessMap[issue.project_id];
+              }
+              else {
+                issue.access = 'new';
+              }
+            }
+            this.issues = list.map((issue) => Issue.valueOf(issue));
             this.loading = false;
           })
-          .catch(() => {
+          .catch((e) => {
             Flash('error');
+            console.log(e);
             this.loading = false;
           })
       },
@@ -126,7 +148,19 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       updateDetailIndex(index) {
         this.detailIndex = index;
+      },
+      addNewIssue(issue) {
+        this.issuesService
+          .newIssue(issue.toObj())
+          .then(res => res.data)
+          .then((data) => {
+            this.issues.splice(0, 0, Issue.valueOf(data));
+            this.detailIndex = 0;
+          })
+          .catch(e => {
+            Flash('error');
+          })
       }
     }
   })
-})
+});

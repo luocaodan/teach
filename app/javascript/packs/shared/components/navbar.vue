@@ -25,7 +25,7 @@
           GitLab
           <i class="iconfont icon-link"></i>
           <!--<svg aria-hidden="true" class="icon">-->
-            <!--<use xlink:href="#icon-link"></use>-->
+          <!--<use xlink:href="#icon-link"></use>-->
           <!--</svg>-->
         </a>
       </el-menu-item>
@@ -38,22 +38,23 @@
     <el-dialog
       title="New Issue"
       :visible.sync="dialogVisible"
-      width="70%"
-      :before-close="handleClose">
-      <detail-issue :raw-issue="newIssue"></detail-issue>
+      width="70%">
+      <!--:before-close="handleClose">-->
+      <new-issue ref="newIssue" :issue="newIssue"></new-issue>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-  </span>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addIssue('newIssueForm')">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
 <script>
-  import DetailIssue from './detail_issue.vue'
+  import NewIssue from './new_issue.vue'
+  import Issue from '../../issues/models/issue'
 
   export default {
     components: {
-      DetailIssue
+      NewIssue
     },
     data() {
       return {
@@ -63,7 +64,7 @@
         projects: [],
         gitlabHost: '',
         dialogVisible: false,
-        newIssue: {},
+        newIssue: new Issue(),
       };
     },
     mounted() {
@@ -85,12 +86,25 @@
           .then(_ => {
             done();
           })
-          .catch(_ => {});
+          .catch(_ => {
+          });
+      },
+      addIssue(formName) {
+        this.$refs['newIssue'].$refs[formName].validate((valid) => {
+          if (valid) {
+            this.dialogVisible = false;
+            window.eventhub.$emit('addNewIssue', this.newIssue);
+            this.newIssue = new Issue();
+          }
+          else {
+            return false;
+          }
+        })
       }
     }
   }
 </script>
-<style>
+<style scoped>
   .navbar a {
     text-decoration: none;
   }

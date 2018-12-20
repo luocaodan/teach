@@ -10,4 +10,10 @@ export default class IssuesService {
       params: filterParams
     });
   }
+
+  newIssue(issue) {
+    return axios.post(this.issuesEndpoint, {
+      issue: issue
+    });
+  }
 }
