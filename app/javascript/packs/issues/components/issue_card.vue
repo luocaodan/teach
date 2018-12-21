@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="clearFloat">
     <el-card shadow="hover" :class="{clicked: clicked}" :body-style="{ padding: '0px' }">
       <div style="padding: 14px">
         <div class="main-info">

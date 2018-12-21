@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div v-on:mousedown="drag" class="divider" :style="{height: totalHeight + 'px'}">
     </div>
-    <detail-issue :issue="detailIssue" :index="detailIndex"></detail-issue>
+    <detail-issue :issue="issueDup" :index="detailIndex"></detail-issue>
   </div>
 </template>
 <script>
@@ -24,6 +24,11 @@
       detailIssue: Issue,
       totalHeight: Number,
       detailIndex: Number
+    },
+    computed: {
+      issueDup() {
+        return Object.assign(new Issue(), this.detailIssue);
+      }
     },
     methods: {
       drag(src) {
@@ -50,7 +55,9 @@
 </script>
 <style scoped>
   .divider {
-    float: left;
+    position: absolute;
+    margin-top: 0em;
+    margin-bottom: 0em;
     width: 15px;
     cursor: col-resize;
     background-color: #fff;

@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <div class="navbar clearFloat">
     <el-menu
       :default-active="kanban"
       class="el-menu-demo"
