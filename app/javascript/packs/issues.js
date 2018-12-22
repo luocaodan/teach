@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       accessMap: accessMap,
       issues: [],
       detailIndex: 0,
+      curIssue: null,
       loading: true,
       issuesEndpoint: $issuesApp.dataset.endpoint,
       // 下方剩余高度
@@ -131,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             }
             this.issues = list.map((issue) => Issue.valueOf(issue));
+            this.curIssue = Object.assign(new Issue(), this.issues[this.detailIndex]);
             this.loading = false;
           })
           .catch((e) => {
@@ -141,13 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       updateAsideWidth(width) {
         let value = this.asideWidth + width;
-        if (value > 900 || value < 250) {
+        let sidebar = document.documentElement.clientWidth - value;
+        if (sidebar < 400 || value < 250) {
           return;
         }
         this.asideWidth = value;
       },
       updateDetailIndex(index) {
         this.detailIndex = index;
+        this.curIssue = Object.assign(new Issue(), this.issues[this.detailIndex]);
       },
       addNewIssue(issue) {
         this.issuesService

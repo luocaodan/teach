@@ -24,8 +24,8 @@
         </span>
         <div class="issue-info">
           <i class="iconfont icon-xiangmu"></i>
-          <span title="项目">{{ issue.project_name }}</span>
-          <span v-if="issue.due_date">
+          <span title="项目">{{ issue.projectName }}</span>
+          <span v-if="issue.dueDate">
             <i class="el-icon-date"></i>
             <span title="截止日期">{{ issue.due_date }}</span>
           </span>

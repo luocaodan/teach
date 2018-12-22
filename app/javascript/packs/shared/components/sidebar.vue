@@ -2,7 +2,9 @@
   <div class="sidebar">
     <div v-on:mousedown="drag" class="divider" :style="{height: totalHeight + 'px'}">
     </div>
-    <detail-issue :issue="issueDup" :index="detailIndex"></detail-issue>
+    <div :style="{height: totalHeight + 'px'}" class="detail">
+      <detail-issue :issue="issueDup()" :index="detailIndex"></detail-issue>
+    </div>
   </div>
 </template>
 <script>
@@ -26,9 +28,7 @@
       detailIndex: Number
     },
     computed: {
-      issueDup() {
-        return Object.assign(new Issue(), this.detailIssue);
-      }
+
     },
     methods: {
       drag(src) {
@@ -49,11 +49,19 @@
         let diff = des.clientX - this.preX;
         this.preX = des.clientX;
         eventhub.$emit('updateAsideWidth', diff);
+      },
+      issueDup() {
+        if (this.detailIssue) {
+          return Object.assign(new Issue(), this.detailIssue);
+        }
+        else {
+          return new Issue();
+        }
       }
     }
   }
 </script>
-<style scoped>
+<style>
   .divider {
     position: absolute;
     margin-top: 0em;
@@ -65,5 +73,10 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+
+  .detail {
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 </style>
