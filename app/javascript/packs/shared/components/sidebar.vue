@@ -3,7 +3,7 @@
     <div v-on:mousedown="drag" class="divider" :style="{height: totalHeight + 'px'}">
     </div>
     <div :style="{height: totalHeight + 'px'}" class="detail">
-      <detail-issue :issue="issueDup()" :index="detailIndex"></detail-issue>
+      <detail-issue :issue="detailIssue" :index="detailIndex"></detail-issue>
     </div>
   </div>
 </template>
@@ -49,14 +49,6 @@
         let diff = des.clientX - this.preX;
         this.preX = des.clientX;
         eventhub.$emit('updateAsideWidth', diff);
-      },
-      issueDup() {
-        if (this.detailIssue) {
-          return Object.assign(new Issue(), this.detailIssue);
-        }
-        else {
-          return new Issue();
-        }
       }
     }
   }

@@ -27,7 +27,7 @@
           <span title="项目">{{ issue.projectName }}</span>
           <span v-if="issue.dueDate">
             <i class="el-icon-date"></i>
-            <span title="截止日期">{{ issue.due_date }}</span>
+            <span title="截止日期">{{ issue.dueDate }}</span>
           </span>
           <span class="assignee" v-if="issue.assignee">
             <img :title="'经办人: ' + issue.assignee.username" :src="issue.assignee.avatar_url">

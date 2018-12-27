@@ -42,14 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
       asideWidth: 400
     },
     computed: {
-      detailIssue() {
-        if (this.issues.length > 0) {
-          return this.issues[this.detailIndex];
-        }
-        else {
-          return null;
-        }
-      }
     },
     created() {
       this.issuesService = new IssuesService({
@@ -62,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       eventhub.$on('updateAsideWidth', this.updateAsideWidth);
       eventhub.$on('updateDetailIndex', this.updateDetailIndex);
       eventhub.$on('addNewIssue', this.addNewIssue);
+      eventhub.$on('updateIssue', this.updateIssue);
       // 设置为全局变量 保证编译完成的不同js引用同一个对象
       window.eventhub = eventhub;
 
@@ -159,7 +152,20 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => res.data)
           .then((data) => {
             this.issues.splice(0, 0, Issue.valueOf(data));
-            this.detailIndex = 0;
+            this.updateDetailIndex(0);
+          })
+          .catch(e => {
+            Flash('error');
+          })
+      },
+      updateIssue(update) {
+        this.issuesService
+          .updateIssue(update)
+          .then(res => res.data)
+          .then((data) => {
+            let updated = Issue.valueOf(data);
+            this.issues.splice(this.detailIndex, 1, updated);
+            this.updateDetailIndex(this.detailIndex);
           })
           .catch(e => {
             Flash('error');

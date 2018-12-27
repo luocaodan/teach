@@ -21,4 +21,8 @@ class BaseService
   def post(url, params)
     user_api_post url, user_token, params
   end
+
+  def put(url, params)
+    user_api_put url, user_token, params
+  end
 end

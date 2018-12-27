@@ -14,23 +14,38 @@
           {{ project.name }}
         </el-menu-item>
       </el-submenu>
-      <el-menu-item index="2">
+
+      <el-submenu index="2">
+        <template slot="title">冲刺</template>
+        <el-submenu
+          v-for="(milestone, index) in milestones"
+          :key="index"
+          :index="'2-' + index">
+          <template slot="title">{{ milestone.title }}</template>
+          <el-menu-item
+            :index="'2-' + milestone.project_id + '-' + milestone.id + '-kanban'">
+            看板
+          </el-menu-item>
+          <el-menu-item
+            :index="'2-' + milestone.project_id + '-' + milestone.id + '-burndown'">
+            燃尽图
+          </el-menu-item>
+        </el-submenu>
+      </el-submenu>
+      <el-menu-item index="3">
         <a href="/issues">
           问题
         </a>
       </el-menu-item>
 
-      <el-menu-item index="3">
+      <el-menu-item index="4">
         <a :href="gitlabHost" target="_blank">
           GitLab
           <i class="iconfont icon-link"></i>
-          <!--<svg aria-hidden="true" class="icon">-->
-          <!--<use xlink:href="#icon-link"></use>-->
-          <!--</svg>-->
         </a>
       </el-menu-item>
 
-      <el-menu-item index="4" style="float: right">
+      <el-menu-item index="5" style="float: right">
         新建问题
       </el-menu-item>
     </el-menu>
@@ -62,6 +77,7 @@
         issues: '2',
         gitlab: '3',
         projects: [],
+        milestones: [],
         gitlabHost: '',
         dialogVisible: false,
         newIssue: new Issue(),
@@ -71,13 +87,24 @@
       const navbar = document.getElementById('navbar');
       this.projects = JSON.parse(navbar.dataset.projects);
       this.gitlabHost = navbar.dataset.gitlabhost;
+      this.milestones = JSON.parse(navbar.dataset.milestones);
     },
     methods: {
       handleSelect(key, keyPath) {
         if (key.startsWith('1-')) {
           let project_id = key.substr(2);
           window.location.href = '/boards/' + project_id;
-        } else if (key === '4') {
+        }
+        else if (key.startsWith('2-')) {
+          let list = key.substr(2).split('-');
+          if (list.length === 3) {
+            let project_id = list[0];
+            let milestone_id = list[1];
+            let route = list[2];
+            window.location.href = `/projects/${project_id}/milestones/${milestone_id}/${route}`;
+          }
+        }
+        else if (key === '5') {
           this.dialogVisible = true;
         }
       },

@@ -8,7 +8,7 @@
 #login{data: {auth: "#{gitlab_auth_url}"}}
   %img{src: '/logo/gitlab-icon-rgb.svg'}
   %el-button{'@click': 'redirectToGitlab'}
-    %a{href: "#"}
+    %a{href: "#{gitlab_auth_url}"}
       Login in with GitLab
 
 :css

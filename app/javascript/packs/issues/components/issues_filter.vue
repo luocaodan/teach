@@ -110,10 +110,10 @@
       }
     },
     mounted() {
-      const $filter = document.getElementById('filter');
-      this.projects = JSON.parse($filter.dataset.projects);
-      this.labels = JSON.parse($filter.dataset.labels);
-      this.members = JSON.parse($filter.dataset.members);
+      const $navbar = document.getElementById('navbar');
+      this.projects = JSON.parse($navbar.dataset.projects);
+      this.labels = JSON.parse($navbar.dataset.labels);
+      this.members = JSON.parse($navbar.dataset.members);
     },
     methods: {
       text(str) {

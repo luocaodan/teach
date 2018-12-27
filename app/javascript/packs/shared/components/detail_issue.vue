@@ -21,7 +21,8 @@
           </div>
           <div class="clearFloat">
             <span class="info-attr">权重：</span>
-            <el-input size="mini" class="info-value" id="issue-weight" v-if="policy.weight" v-model="issue.weight" @blur="update('weight')"></el-input>
+            <el-input size="mini" class="info-value" id="issue-weight" v-if="policy.weight" v-model="issue.weight"
+                      @blur="update('weight')"></el-input>
             <span v-else @click="openPolicy('weight')" class="info-value">
                 <span v-if="issue.weight">
                   {{ issue.weight }}
@@ -33,13 +34,13 @@
           </div>
           <div class="clearFloat">
             <span class="info-attr">优先级：</span>
-            {{ issue.weight }}
-            <el-select id="issue-priority" v-if="policy.priority" size="mini" class="info-value" v-model="issue.weight" @click="test" @blur="update('priority')">
-              <el-option label="高" :value="5"></el-option>
+            <el-select id="issue-priority" v-if="canEdit" size="mini" class="info-value" v-model="issue.priority"
+                       @change="update('priority')">
+              <el-option label="高" :value="3"></el-option>
               <el-option label="中" :value="2"></el-option>
               <el-option label="低" :value="1"></el-option>
             </el-select>
-            <span v-else class="info-value" @click="openPolicy('priority')">
+            <span v-else class="info-value">
                 <span v-if="issue.priority">
                   {{ priorityMap(issue.priority) }}
                 </span>
@@ -52,7 +53,7 @@
             <span class="info-attr">冲刺：</span>
             <span class="info-value">
                 <span v-if="issue.milestone">
-                  {{ issue.milestone }}
+                  <a :href="issue.milestone.web_url" target="_blank">{{ issue.milestone.title }}</a>
                 </span>
                 <span v-else>
                   无
@@ -67,9 +68,20 @@
           </div>
           <div class="clearFloat">
             <span class="info-attr">标签：</span>
-            <span class="info-value">
-              {{ issue.labels }}
+            <el-select class="info-value" size="mini" v-if="canEdit" v-model="issue.labels" multiple placeholder="选择标签"
+                       @change="update('labels')">
+              <el-option v-for="(label, index) in labels" :key="index" :label="label.name"
+                         :value="label.name"></el-option>
+            </el-select>
+            <span class="info-value" v-else @click="openPolicy('labels')">
+              <span v-if="issue.labels.length">
+                <el-tag size="mini" v-for="(label, index) in issue.labels" :key="index">{{ label }}</el-tag>
+              </span>
+              <span v-else>
+                无
+              </span>
             </span>
+
           </div>
         </div>
 
@@ -88,7 +100,26 @@
             </span>
             <span class="info-value">
               <span v-if="issue.assignee">
-                {{ issue.assignee }}
+                <el-popover
+                  placement="top-start"
+                  title="经办人"
+                  width="200"
+                  trigger="hover">
+                  <div>
+                    <a :href="issue.assignee.web_url" target="_blank">
+                      {{ issue.assignee.name }}
+                    </a>
+                  </div>
+                  <div>
+                    @{{ issue.assignee.username}}
+                  </div>
+
+                  <span slot="reference">
+                    <img style="height: 13px;width:13px;display:inline" :src="issue.assignee.avatar_url">
+                    {{ issue.assignee.name }}
+                  </span>
+                </el-popover>
+
               </span>
               <span v-else>
                 无
@@ -100,7 +131,25 @@
               报告人：
             </span>
             <span v-if="issue.author" class="info-value">
-              {{ issue.author.name }}
+              <el-popover
+                placement="top-start"
+                title="报告人"
+                width="200"
+                trigger="hover">
+                  <div>
+                    <a :href="issue.author.web_url" target="_blank">
+                      {{ issue.author.name }}
+                    </a>
+                  </div>
+                  <div>
+                    @{{ issue.author.username}}
+                  </div>
+
+                  <span slot="reference">
+                    <img style="height: 13px;width:13px;" :src="issue.author.avatar_url">
+                    {{ issue.author.name }}
+                  </span>
+                </el-popover>
             </span>
           </div>
         </div>
@@ -111,12 +160,22 @@
           <span>问题描述</span>
         </div>
         <div class="info-list clearFloat">
-          <p v-if="issue.description">
-            {{ issue.description }}
-          </p>
-          <p v-else>
-            无问题描述
-          </p>
+          <el-input
+            id="issue-description"
+            type="textarea"
+            v-if="policy.description"
+            :autosize="{ minRows: 4, maxRows: 15}"
+            v-model="issue.description"
+            @blur="update('description')">
+          </el-input>
+          <div v-else @click="openPolicy('description')">
+            <p v-if="issue.description">
+              {{ issue.description }}
+            </p>
+            <p v-else>
+              无问题描述
+            </p>
+          </div>
         </div>
       </div>
 
@@ -127,25 +186,37 @@
         <div class="info-list clearFloat">
           <div class="clearFloat">
             <span class="info-attr">
-              创建日期
+              创建日期：
             </span>
             <span class="info-value">
-              {{ issue.createdAt }}
+              <i class="el-icon-date"></i>
+              {{ dateText(issue.createdAt) }}
             </span>
           </div>
           <div class="clearFloat">
             <span class="info-attr">
-              更新日期
+              更新日期：
             </span>
             <span class="info-value">
-              {{ issue.updatedAt }}
+              <i class="el-icon-date"></i>
+              {{ dateText(issue.updatedAt) }}
             </span>
           </div>
           <div class="clearFloat">
             <span class="info-attr">
-              截止日期
+              截止日期：
             </span>
-            <span>
+            <el-date-picker class="info-value" v-if="canEdit"
+              size="mini"
+              v-model="issue.dueDate"
+              align="right"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期"
+              @change="update('dueDate')"
+              :picker-options="pickerOptions">
+            </el-date-picker>
+            <span v-else>
               <span v-if="issue.dueDate" class="info-value">
                 {{ issue.dueDate }}
               </span>
@@ -165,6 +236,7 @@
 
 <script>
   import Issue from '../../issues/models/issue'
+  import eventhub from '../../issues/eventhub'
 
   export default {
     data() {
@@ -172,13 +244,35 @@
         policy: {
           title: false,
           weight: false,
-          priority: false
+          description: false,
         },
         validates: {
           title: [
             {required: true, message: "请填写Issues主题"}
           ]
         },
+        labels: [],
+        pickerOptions: {
+          disabledDate(time) {
+            const date = new Date();
+            let previousDay = date.setTime(date - 3600 * 1000 * 24);
+            return time.getTime() < previousDay;
+          },
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+              picker.$emit('pick', new Date());
+            }
+          }, {
+            text: '明天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          }]
+        },
+        test: '',
       }
     },
     components: {},
@@ -186,23 +280,41 @@
       issue: Issue,
       index: Number
     },
-    computed: {},
+    mounted() {
+      const $navbar = document.getElementById('navbar');
+      this.labels = JSON.parse($navbar.dataset.labels);
+    },
+    computed: {
+      canEdit() {
+        return this.issue.access === 'edit';
+      }
+    },
     methods: {
       openPolicy(attr) {
+        if (!this.canEdit) {
+          return;
+        }
         this.policy[attr] = true;
         setTimeout(() => {
           document.getElementById('issue-' + attr).focus();
         }, 0);
       },
       closePolicy(attr) {
-        // this.policy[attr] = false;
+        if (this.policy[attr]) {
+          this.policy[attr] = false;
+        }
       },
-      update(attr) {
-        this.test();
-        // if (this.validate(attr)) {
-        //   console.log(this.issue[attr]);
-        //   this.closePolicy(attr);
-        // }
+      update(attr, event) {
+        if (this.validate(attr)) {
+          eventhub.$emit('updateIssue', {
+            id: this.issue.id,
+            project_id: this.issue.projectId,
+            iid: this.issue.iid,
+            attr: attr,
+            value: this.issue[attr]
+          });
+          this.closePolicy(attr);
+        }
       },
       validate(attr) {
         let validators = this.validates[attr];
@@ -242,11 +354,12 @@
       },
       priorityMap(priority) {
         const list = ['低', '中', '高'];
-        return list[priority-1];
+        return list[priority - 1];
       },
-      test() {
-        this.issue.weight = 2;
-        console.log(this.issue);
+      dateText(utcStr) {
+        const timestamp = Date.parse(utcStr);
+        const date = new Date(timestamp);
+        return date.toLocaleDateString().replace(/\//g, '-');
       }
     }
   }
@@ -273,17 +386,28 @@
   }
 
   .detail-info {
-    max-width: 520px;
+    max-width: 530px;
   }
 
   .description-info {
-    max-width: 520px;
+    max-width: 530px;
     clear: left;
     width: 100%;
   }
 
+  .description-info > .info-list > div {
+    width: 100%;
+  }
   .user-info {
     max-width: 250px;
+  }
+
+  .user-info .info-attr {
+    width: 40%;
+  }
+
+  .user-info .info-value {
+    width: 60%;
   }
 
   .date-info {
@@ -291,26 +415,26 @@
   }
 
   .info-list {
-    /*float: left;*/
-    padding: 20px;
+    padding: 15px;
   }
 
   .info-list > div {
     float: left;
-    width: 240px;
-    line-height: 40px;
+    width: 250px;
+    margin: 5px 0;
+    font-size: 16px;
   }
 
   .info-attr {
     text-align: left;
     display: inline-block;
     float: left;
-    width: 50%;
+    width: 40%;
   }
 
   .info-value {
     display: inline-block;
-    width: 40%
+    width: 50%
   }
 
   .block-title {

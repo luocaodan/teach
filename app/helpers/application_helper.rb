@@ -18,6 +18,10 @@ module ApplicationHelper
     end
     data['projects'] = infos.to_json
     data['gitlabHost'] = gitlab_host
+    projects = projects.collect { |p| p[:id] }
+    data[:members] = project_service.all_members(projects).to_json
+    data[:labels] = project_service.all_labels(projects).to_json
+    data[:milestones] = project_service.all_milestones(projects).to_json
     data
   end
 end

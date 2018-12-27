@@ -17,6 +17,24 @@ class IssuesService < BaseService
     issue
   end
 
+  def update_issue(id, project_id, iid, update)
+    attr = update.delete :attr
+    if %w[weight priority].include? attr
+      if Issue.exists? id
+        issue = Issue.find id
+        issue.update attr => update[:value]
+      else
+        Issue.create(id: id, attr => update[:value])
+      end
+      issue = get "projects/#{project_id}/issues/#{iid}"
+    else
+      payload = {attr => update[:value]}
+      issue = put "projects/#{project_id}/issues/#{iid}", payload
+    end
+    add_external_field [issue]
+    issue
+  end
+
   def add_external_field(issue_list)
     map = {}
     issue_list.each do |issue|
@@ -26,8 +44,14 @@ class IssuesService < BaseService
                        map[issue['project_id']] = project_service.project issue['project_id']
                      end
       issue['project_name'] = project_info['name']
-      issue['weight'] = 5
-      issue['priority'] = rand(3) + 1
+      if Issue.exists? issue['id']
+        issue_model = Issue.find issue['id']
+        issue['weight'] = issue_model.weight
+        issue['priority'] = issue_model.priority
+      else
+        issue['weight'] = nil
+        issue['priority'] = nil
+      end
     end
   end
 

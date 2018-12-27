@@ -23,6 +23,23 @@ class IssuesController < ApplicationController
     end
   end
 
+  def update
+    respond_to do |format|
+      format.json do
+        update = params[:update_issue]
+        id = update[:id]
+        project_id = update[:project_id]
+        iid = update[:iid]
+        payload = {
+          attr: update[:attr],
+          value: update[:value]
+        }
+        issue_info = issues_service.update_issue id, project_id, iid, payload
+        render json: issue_info
+      end
+    end
+  end
+
   private
 
   def filter_params

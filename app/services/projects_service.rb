@@ -11,9 +11,9 @@ class ProjectsService < BaseService
     get('projects', params)
   end
 
-  def all_members()
+  def all_members(projects)
     members = Set.new([])
-    projects = all(simple: true).map { |i| i['id'] }
+    # projects = all(simple: true).map { |i| i['id'] }
     projects.each do |project_id|
       list = get("projects/#{project_id}/members")
       list.each do |member|
@@ -25,6 +25,21 @@ class ProjectsService < BaseService
       end
     end
     members.to_a
+  end
+
+  def all_milestones(projects)
+    milestones = Set.new([])
+    projects.each do |project_id|
+      list = get "projects/#{project_id}/milestones"
+      list.each do |milestone|
+        milestones << {
+          id: milestone['id'],
+          project_id: milestone['project_id'],
+          title: milestone['title']
+        }
+      end
+    end
+    milestones.to_a
   end
 
   def member_access(project_id, user_id)
@@ -40,9 +55,9 @@ class ProjectsService < BaseService
     end
   end
 
-  def all_labels
+  def all_labels(projects)
     labels = Set.new([])
-    projects = all(simple: true).map { |i| i['id'] }
+    # projects = all(simple: true).map { |i| i['id'] }
     projects.each do |project_id|
       list = get("projects/#{project_id}/labels")
       list.each do |label|

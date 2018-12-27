@@ -16,4 +16,12 @@ export default class IssuesService {
       issue: issue
     });
   }
+
+  updateIssue(update) {
+    let index = this.issuesEndpoint.lastIndexOf('.json');
+    let prefix = this.issuesEndpoint.substr(0, index);
+    return axios.put(`${prefix}/${update.iid}.json`, {
+      update_issue: update
+    });
+  }
 }
