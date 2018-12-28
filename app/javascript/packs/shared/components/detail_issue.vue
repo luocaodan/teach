@@ -98,8 +98,27 @@
             <span class="info-attr">
               经办人：
             </span>
-            <span class="info-value">
-              <span v-if="issue.assignee">
+            <span v-if="canEdit" style="display:inline-block; width: 50%">
+              <el-select
+                size="mini"
+                v-model="issue.assignee.id"
+                @change="update('assignee')"
+                placeholder="选择经办人">
+                <el-option label="无经办人" :value="0"></el-option>
+                <el-option
+                  v-for="(member, index) in members"
+                  :key="index"
+                  :label="member.name"
+                  :value="member.id">
+                  <span>
+                    <img style="height: 13px;width:13px;display:inline" :src="member.avatar">
+                    {{ member.name }}
+                  </span>
+                </el-option>
+              </el-select>
+            </span>
+            <span class="info-value" v-else>
+              <span v-if="issue.assignee.id">
                 <el-popover
                   placement="top-start"
                   title="经办人"
@@ -207,14 +226,14 @@
               截止日期：
             </span>
             <el-date-picker class="info-value" v-if="canEdit"
-              size="mini"
-              v-model="issue.dueDate"
-              align="right"
-              type="date"
-              value-format="yyyy-MM-dd"
-              placeholder="选择日期"
-              @change="update('dueDate')"
-              :picker-options="pickerOptions">
+                            size="mini"
+                            v-model="issue.dueDate"
+                            align="right"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期"
+                            @change="update('dueDate')"
+                            :picker-options="pickerOptions">
             </el-date-picker>
             <span v-else>
               <span v-if="issue.dueDate" class="info-value">
@@ -237,6 +256,7 @@
 <script>
   import Issue from '../../issues/models/issue'
   import eventhub from '../../issues/eventhub'
+  import Transform from '../../tools/transform'
 
   export default {
     data() {
@@ -252,6 +272,8 @@
           ]
         },
         labels: [],
+        accessMap: {},
+        members: [],
         pickerOptions: {
           disabledDate(time) {
             const date = new Date();
@@ -272,17 +294,43 @@
             }
           }]
         },
-        test: '',
       }
     },
     components: {},
     props: {
       issue: Issue,
+      issueDup: Issue,
       index: Number
     },
     mounted() {
       const $navbar = document.getElementById('navbar');
       this.labels = JSON.parse($navbar.dataset.labels);
+      const projects = JSON.parse($navbar.dataset.projects);
+      const accessMap = {};
+      for (let project of projects) {
+        accessMap[project.id] = project.access;
+      }
+      this.accessMap = accessMap;
+      this.members = JSON.parse($navbar.dataset.members);
+    },
+    updated() {
+      if (!this.issue) {
+        return;
+      }
+      if (this.accessMap[this.issue.projectId]) {
+        this.issue.access = this.accessMap[this.issue.projectId];
+      } else {
+        this.issue.access = 'new';
+      }
+      let i;
+      for (i = 0;i < this.members.length;i++) {
+        if (this.members[i].id === this.issue.assignee.id) {
+          break;
+        }
+      }
+      if (i === this.members.length && this.issue.assignee.id) {
+        this.members.splice(0, 0, this.issue.assignee);
+      }
     },
     computed: {
       canEdit() {
@@ -304,14 +352,22 @@
           this.policy[attr] = false;
         }
       },
-      update(attr, event) {
+      update(attr) {
+        if (this.unchange(attr)) {
+          this.closePolicy(attr);
+          return;
+        }
         if (this.validate(attr)) {
+          let value = this.issue[attr];
+          if (attr === 'assignee') {
+            value = this.issue.assignee.id;
+          }
           eventhub.$emit('updateIssue', {
             id: this.issue.id,
             project_id: this.issue.projectId,
             iid: this.issue.iid,
-            attr: attr,
-            value: this.issue[attr]
+            attr: Transform.toUnderLine(attr),
+            value: value
           });
           this.closePolicy(attr);
         }
@@ -360,6 +416,27 @@
         const timestamp = Date.parse(utcStr);
         const date = new Date(timestamp);
         return date.toLocaleDateString().replace(/\//g, '-');
+      },
+      unchange(attr) {
+        if (attr === 'labels') {
+          let listA = this.issue[attr];
+          let listB = this.issueDup[attr];
+          if (listA.length === listB.length) {
+            for (let i = 0; i < listA.length; i++) {
+              if (listA[i] !== listB[i]) {
+                return false;
+              }
+            }
+            return true;
+          }
+          return false;
+        }
+        else if (attr === 'assignee') {
+          return this.issue.assignee.id === this.issueDup.assignee.id;
+        }
+        else {
+          return this.issue[attr] === this.issueDup[attr];
+        }
       }
     }
   }
@@ -398,6 +475,7 @@
   .description-info > .info-list > div {
     width: 100%;
   }
+
   .user-info {
     max-width: 250px;
   }

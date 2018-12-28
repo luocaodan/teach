@@ -15,12 +15,13 @@ class ProjectsService < BaseService
     members = Set.new([])
     # projects = all(simple: true).map { |i| i['id'] }
     projects.each do |project_id|
-      list = get("projects/#{project_id}/members")
+      list = get("projects/#{project_id}/members/all")
       list.each do |member|
         members << {
           id: member['id'],
           name: member['name'],
-          avatar: member['avatar_url']
+          avatar: member['avatar_url'],
+          username: member['username']
         }
       end
     end

@@ -28,7 +28,10 @@ class IssuesService < BaseService
       end
       issue = get "projects/#{project_id}/issues/#{iid}"
     else
-      payload = {attr => update[:value]}
+      value = update[:value]
+      value = value.join ',' if attr == 'labels'
+      attr = 'assignee_ids' if attr == 'assignee'
+      payload = {attr => value}
       issue = put "projects/#{project_id}/issues/#{iid}", payload
     end
     add_external_field [issue]

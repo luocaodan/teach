@@ -3,7 +3,7 @@
     <div v-on:mousedown="drag" class="divider" :style="{height: totalHeight + 'px'}">
     </div>
     <div :style="{height: totalHeight + 'px'}" class="detail">
-      <detail-issue :issue="detailIssue" :index="detailIndex"></detail-issue>
+      <detail-issue :issue="detailIssue" :issue-dup="rawIssue" :index="detailIndex"></detail-issue>
     </div>
   </div>
 </template>
@@ -24,6 +24,7 @@
     },
     props: {
       detailIssue: Issue,
+      rawIssue: Issue,
       totalHeight: Number,
       detailIndex: Number
     },
@@ -53,7 +54,7 @@
     }
   }
 </script>
-<style>
+<style scoped>
   .divider {
     position: absolute;
     margin-top: 0em;

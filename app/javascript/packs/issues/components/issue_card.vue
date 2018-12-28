@@ -20,7 +20,7 @@
           </span>
         </div>
         <span v-for="label in issue.labels">
-          <el-tag size="mini" :type="labelType(label)">{{ label }}</el-tag>
+          <el-tag class="label-item" size="mini" :type="labelType(label)">{{ label }}</el-tag>
         </span>
         <div class="issue-info">
           <i class="iconfont icon-xiangmu"></i>
@@ -29,8 +29,8 @@
             <i class="el-icon-date"></i>
             <span title="截止日期">{{ issue.dueDate }}</span>
           </span>
-          <span class="assignee" v-if="issue.assignee">
-            <img :title="'经办人: ' + issue.assignee.username" :src="issue.assignee.avatar_url">
+          <span class="assignee" v-if="issue.assignee.id">
+            <img :title="'经办人: ' + issue.assignee.username" :src="issue.assignee.avatar">
           </span>
 
         </div>
@@ -111,5 +111,9 @@
 
   .clicked {
     background-color: #ebf2f9;
+  }
+
+  .label-item {
+    margin: 3px;
   }
 </style>

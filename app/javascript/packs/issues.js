@@ -14,11 +14,6 @@ Vue.use(ElementUI);
 
 document.addEventListener('DOMContentLoaded', () => {
   const $navbar = document.getElementById('navbar');
-  const projects = JSON.parse($navbar.dataset.projects);
-  const accessMap = {};
-  for (let project of projects) {
-    accessMap[project.id] = project.access;
-  }
 
   const $issuesApp = document.getElementById('issues-app');
   const issueApp = new Vue({
@@ -29,19 +24,26 @@ document.addEventListener('DOMContentLoaded', () => {
       IssuesFilter,
       DetailIssue
     },
-    data: {
-      accessMap: accessMap,
-      issues: [],
-      detailIndex: 0,
-      curIssue: null,
-      loading: true,
-      issuesEndpoint: $issuesApp.dataset.endpoint,
-      // 下方剩余高度
-      height: 400,
-      // aside 宽度
-      asideWidth: 400
+    data() {
+      return {
+        issues: [],
+        detailIndex: 0,
+        curIssue: null,
+        loading: true,
+        issuesEndpoint: $issuesApp.dataset.endpoint,
+        // 下方剩余高度
+        height: 400,
+        // aside 宽度
+        asideWidth: 400
+      }
     },
     computed: {
+      rawIssue() {
+        if (this.issues.length === 0) {
+          return null;
+        }
+        return this.issues[this.detailIndex];
+      }
     },
     created() {
       this.issuesService = new IssuesService({
@@ -116,22 +118,18 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => res.data)
           .then(data => {
             let list = data;
-            for (let issue of list) {
-              if (this.accessMap[issue.project_id]) {
-                issue.access = this.accessMap[issue.project_id];
-              }
-              else {
-                issue.access = 'new';
-              }
-            }
             this.issues = list.map((issue) => Issue.valueOf(issue));
-            this.curIssue = Object.assign(new Issue(), this.issues[this.detailIndex]);
-            this.loading = false;
+            if (this.issues.length > 0) {
+              this.reDupIssue();
+              this.loading = false;
+            }
+            else {
+              this.curIssue = null;
+              this.alert('没有结果', 'warning');
+            }
           })
           .catch((e) => {
-            Flash('error');
-            console.log(e);
-            this.loading = false;
+            this.alert('Server error');
           })
       },
       updateAsideWidth(width) {
@@ -144,21 +142,30 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       updateDetailIndex(index) {
         this.detailIndex = index;
-        this.curIssue = Object.assign(new Issue(), this.issues[this.detailIndex]);
+        this.reDupIssue();
+      },
+      reDupIssue() {
+        this.curIssue = Object.assign(
+          new Issue(),
+          JSON.parse(JSON.stringify(this.issues[this.detailIndex]))
+        );
       },
       addNewIssue(issue) {
+        this.loading = true;
         this.issuesService
           .newIssue(issue.toObj())
           .then(res => res.data)
           .then((data) => {
             this.issues.splice(0, 0, Issue.valueOf(data));
             this.updateDetailIndex(0);
+            this.loading = false;
           })
           .catch(e => {
-            Flash('error');
+            this.alert('Server error');
           })
       },
       updateIssue(update) {
+        this.loading = true;
         this.issuesService
           .updateIssue(update)
           .then(res => res.data)
@@ -166,10 +173,23 @@ document.addEventListener('DOMContentLoaded', () => {
             let updated = Issue.valueOf(data);
             this.issues.splice(this.detailIndex, 1, updated);
             this.updateDetailIndex(this.detailIndex);
+            this.loading = false;
           })
           .catch(e => {
-            Flash('error');
+            this.alert('Server error');
           })
+      },
+      alert(msg, type = 'error') {
+        if (type === 'error') {
+          this.$message.error(msg);
+        }
+        else {
+          this.$message({
+            message: msg,
+            type: type
+          });
+        }
+        this.loading = false;
       }
     }
   })

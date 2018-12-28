@@ -88,10 +88,12 @@
   }
 </script>
 <style>
-  .el-scrollbar__wrap {
+  .list-board .el-scrollbar__wrap {
     overflow-x: hidden;
   }
-  
+</style>
+<style scoped>
+
   .issue-item {
     margin-bottom: 10px;
   }

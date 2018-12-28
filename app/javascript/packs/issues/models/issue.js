@@ -1,3 +1,5 @@
+import Transform from '../../tools/transform'
+
 class Issue {
   constructor() {
     this.id = '';
@@ -38,29 +40,34 @@ class Issue {
       if (key === 'state') {
         continue;
       }
-      let camelKey = this.toCamelCase(key);
+      let camelKey = Transform.toCamelCase(key);
       if (res[camelKey] !== undefined) {
         res[camelKey] = obj[key];
+      }
+    }
+    if (res.assignee === null) {
+      res.assignee = {
+        id: 0,
+        name: null,
+        avatar: null,
+        username: null
+      };
+    }
+    else {
+      res.assignee = {
+        id: res.assignee.id,
+        name: res.assignee.name,
+        avatar: res.assignee.avatar_url,
+        username: res.assignee.username
       }
     }
     return res;
   }
 
-  static toCamelCase(name) {
-    let camel = name.replace(/\_(\w)/g, (match, group) => {
-      return group.toUpperCase();
-    });
-    return camel;
-  }
-
-  static toUnderLine(name) {
-    return name.replace(/([A-Z])/g, '_$1').toLowerCase();
-  }
-
   toObj() {
     const obj = {};
     for (let key in this) {
-      let underLine = Issue.toUnderLine(key);
+      let underLine = Transform.toUnderLine(key);
       obj[underLine] = this[key];
     }
     if (['To Do', 'Doing'].includes(obj.state)) {
