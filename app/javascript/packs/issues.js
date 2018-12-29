@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
       updateAsideWidth(width) {
         let value = this.asideWidth + width;
         let sidebar = document.documentElement.clientWidth - value;
-        if (sidebar < 400 || value < 250) {
+        if (sidebar < 400 || value < 260) {
           return;
         }
         this.asideWidth = value;

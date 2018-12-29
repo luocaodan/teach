@@ -3,7 +3,7 @@
     <el-card shadow="hover" :class="{clicked: clicked}" :body-style="{ padding: '0px' }">
       <div style="padding: 14px">
         <div class="main-info">
-          <span>{{ issue.title }}</span>
+          <span>{{ issue.title | shorten }}</span>
           <i :title="issue.state" class="iconfont" :class="{ 'icon-wancheng': closed, 'icon-daibanshixiang': !closed }"></i>
 
           <span v-if="issue.priority">
@@ -49,6 +49,14 @@
       closed() {
         return this.issue.state === 'closed'
       },
+    },
+    filters: {
+      shorten(value) {
+        if (value.length > 10) {
+          value = value.substr(0, 10) + '...'
+        }
+        return value;
+      }
     },
     methods: {
       labelType(label) {
