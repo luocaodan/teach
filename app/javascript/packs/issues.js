@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import "./tools/flash"
 import eventhub from './issues/eventhub'
 import Issue from './issues/models/issue'
+import AlertMixin from './shared/components/mixins/alert'
 
 Vue.use(ElementUI);
 
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
       IssuesFilter,
       DetailIssue
     },
+    mixins: [AlertMixin],
     data() {
       return {
         issues: [],
@@ -121,15 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
             this.issues = list.map((issue) => Issue.valueOf(issue));
             if (this.issues.length > 0) {
               this.reDupIssue();
-              this.loading = false;
             }
             else {
               this.curIssue = null;
               this.alert('没有结果', 'warning');
             }
+            this.loading = false;
           })
           .catch((e) => {
             this.alert('Server error');
+            this.loading = false;
           })
       },
       updateAsideWidth(width) {
@@ -162,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
           })
           .catch(e => {
             this.alert('Server error');
+            this.loading = false;
           })
       },
       updateIssue(update) {
@@ -177,20 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
           })
           .catch(e => {
             this.alert('Server error');
+            this.loading = false;
           })
       },
-      alert(msg, type = 'error') {
-        if (type === 'error') {
-          this.$message.error(msg);
-        }
-        else {
-          this.$message({
-            message: msg,
-            type: type
-          });
-        }
-        this.loading = false;
-      }
     }
   })
 });

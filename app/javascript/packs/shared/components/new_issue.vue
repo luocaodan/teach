@@ -18,13 +18,12 @@
 
 <script>
   import Issue from '../../issues/models/issue'
+  import EditMixin from './mixins/edit_issue'
 
   export default {
+    mixins: [EditMixin],
     data() {
       return {
-        // detail form
-        detail: false,
-        projects: [],
         rules: {
           projectId: [
             {required: true, message: '请选择项目', trigger: 'change'}
@@ -38,13 +37,6 @@
         }
       }
     },
-    props: {
-      issue: Issue
-    },
-    mounted() {
-      const $navbar = document.getElementById('navbar');
-      this.projects = JSON.parse($navbar.dataset.projects);
-    }
   }
 </script>
 <style scoped>
