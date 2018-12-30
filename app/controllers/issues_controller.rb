@@ -15,7 +15,13 @@ class IssuesController < ApplicationController
         issue = params[:issue]
         payload = {
           title: issue['title'],
-          description: issue['description']
+          description: issue['description'],
+          assignee_ids: issue['assignee'],
+          milestone_id: issue['milestone'],
+          labels: issue['labels'].join(','),
+          due_date: issue['due_date'],
+          weight: issue['weight'],
+          priority: issue['priority']
         }
         issue_info = issues_service.new_issue issue.delete('project_id'), payload
         render json: issue_info

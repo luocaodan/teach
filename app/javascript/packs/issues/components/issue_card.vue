@@ -39,10 +39,12 @@
   </div>
 </template>
 <script>
+  import Issue from '../models/issue'
+
   export default {
     components: {},
     props: {
-      issue: Object,
+      issue: Issue,
       clicked: false,
     },
     computed: {

@@ -13,13 +13,23 @@ class Issue {
     this.state = '';
     this.weight = null;
     this.priority = null;
-    this.milestone = null;
+    this.milestone = {
+      id: 0,
+      title: null,
+      webUrl: null
+    };
     this.webUrl = null;
     this.labels = [];
 
     this.description = '';
 
-    this.assignee = null;
+    this.assignee = {
+      id: 0,
+      name: null,
+      avatar: null,
+      username: null
+    };
+
     this.author = null;
 
     this.createdAt = null;
@@ -37,7 +47,7 @@ class Issue {
     }
 
     for (let key in obj) {
-      if (key === 'state') {
+      if (['state', 'assignee', 'milestone'].includes(key)) {
         continue;
       }
       let camelKey = Transform.toCamelCase(key);
@@ -45,20 +55,20 @@ class Issue {
         res[camelKey] = obj[key];
       }
     }
-    if (res.assignee === null) {
+    if (obj.assignee) {
       res.assignee = {
-        id: 0,
-        name: null,
-        avatar: null,
-        username: null
-      };
+        id: obj.assignee.id,
+        name: obj.assignee.name,
+        avatar: obj.assignee.avatar_url,
+        username: obj.assignee.username,
+        webUrl: obj.assignee.web_url
+      }
     }
-    else {
-      res.assignee = {
-        id: res.assignee.id,
-        name: res.assignee.name,
-        avatar: res.assignee.avatar_url,
-        username: res.assignee.username
+    if (obj.milestone) {
+      res.milestone = {
+        id: obj.milestone.id,
+        title: obj.milestone.title,
+        webUrl: obj.milestone.web_url
       }
     }
     return res;
@@ -73,7 +83,8 @@ class Issue {
     if (['To Do', 'Doing'].includes(obj.state)) {
       obj.state = 'open';
     }
-    console.log(obj);
+    obj.assignee = obj.assignee.id;
+    obj.milestone = obj.milestone.id;
     return obj;
   }
 }

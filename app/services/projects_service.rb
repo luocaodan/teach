@@ -11,63 +11,52 @@ class ProjectsService < BaseService
     get('projects', params)
   end
 
-  def all_members(projects)
-    members = Set.new([])
-    # projects = all(simple: true).map { |i| i['id'] }
-    projects.each do |project_id|
-      list = get("projects/#{project_id}/members/all")
-      list.each do |member|
-        members << {
-          id: member['id'],
-          name: member['name'],
-          avatar: member['avatar_url'],
-          username: member['username']
-        }
-      end
+  def all_members(project_id)
+    members = []
+    list = get("projects/#{project_id}/members/all")
+    list.each do |member|
+      members << {
+        id: member['id'],
+        name: member['name'],
+        avatar: member['avatar_url'],
+        username: member['username'],
+        access: member_access(member['access_level'])
+      }
     end
-    members.to_a
+    members
   end
 
-  def all_milestones(projects)
-    milestones = Set.new([])
-    projects.each do |project_id|
-      list = get "projects/#{project_id}/milestones"
-      list.each do |milestone|
-        milestones << {
-          id: milestone['id'],
-          project_id: milestone['project_id'],
-          title: milestone['title']
-        }
-      end
+  def all_milestones(project_id)
+    milestones = []
+    list = get "projects/#{project_id}/milestones"
+    list.each do |milestone|
+      milestones << {
+        id: milestone['id'],
+        project_id: milestone['project_id'],
+        title: milestone['title']
+      }
     end
-    milestones.to_a
+    milestones
   end
 
-  def member_access(project_id, user_id)
-    begin
-      res = get "projects/#{project_id}/members/#{user_id}"
-      if res['access_level'] > 10
-        'edit'
-      else
-        'new'
-      end
-    rescue RestClient::NotFound => e
+  def member_access(level)
+    if level > 10
+      'edit'
+    else
       'new'
     end
   end
 
-  def all_labels(projects)
-    labels = Set.new([])
+  def all_labels(project_id)
+    labels = []
     # projects = all(simple: true).map { |i| i['id'] }
-    projects.each do |project_id|
-      list = get("projects/#{project_id}/labels")
-      list.each do |label|
-        labels << {
-          id: label['id'],
-          name: label['name']
-        }
-      end
+    list = get("projects/#{project_id}/labels")
+    list.each do |label|
+      labels << {
+        id: label['id'],
+        name: label['name']
+      }
     end
-    labels.to_a
+    labels
   end
 end

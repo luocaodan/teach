@@ -21,8 +21,12 @@
           </div>
           <div class="clearFloat">
             <span class="info-attr">权重：</span>
-            <el-input size="mini" class="info-value" id="issue-weight" v-if="policy.weight" v-model="issue.weight"
-                      @blur="update('weight')"></el-input>
+            <el-input
+              size="mini" class="info-value"
+              id="issue-weight" v-if="policy.weight"
+              v-model.number="issue.weight"
+              @blur="update('weight')">
+            </el-input>
             <span v-else @click="openPolicy('weight')" class="info-value">
                 <span v-if="issue.weight">
                   {{ issue.weight }}
@@ -52,13 +56,29 @@
           <div class="clearFloat">
             <span class="info-attr">冲刺：</span>
             <span class="info-value">
-                <span v-if="issue.milestone">
-                  <a :href="issue.milestone.web_url" target="_blank">{{ issue.milestone.title }}</a>
+              <span v-if="canEdit">
+                <el-select
+                  size="mini"
+                  v-model="issue.milestone.id"
+                  @change="update('milestone')"
+                  placeholder="选择冲刺">
+                  <el-option label="无冲刺" :value="0"></el-option>
+                  <el-option v-for="(milestone, index) in milestoneList(issue)"
+                             :key="index" :label="milestone.title"
+                             :value="milestone.id"></el-option>
+                </el-select>
+              </span>
+              <span v-else class="info-value">
+                <span v-if="issue.milestone.id">
+                  <a :href="issue.milestone.webUrl" target="_blank">
+                    {{ issue.milestone.title }}
+                  </a>
                 </span>
                 <span v-else>
                   无
                 </span>
               </span>
+            </span>
           </div>
           <div class="clearFloat" style="clear: left">
             <span class="info-attr">链接：</span>
@@ -68,14 +88,19 @@
           </div>
           <div class="clearFloat">
             <span class="info-attr">标签：</span>
-            <el-select class="info-value" size="mini" v-if="canEdit" v-model="issue.labels" multiple placeholder="选择标签"
+            <el-select class="info-value"
+                       size="mini" v-if="canEdit"
+                       v-model="issue.labels" multiple
+                       placeholder="选择标签"
                        @change="update('labels')">
-              <el-option v-for="(label, index) in labels" :key="index" :label="label.name"
+              <el-option v-for="(label, index) in labelList(issue)"
+                         :key="index" :label="label.name"
                          :value="label.name"></el-option>
             </el-select>
             <span class="info-value" v-else @click="openPolicy('labels')">
               <span v-if="issue.labels.length">
-                <el-tag size="mini" v-for="(label, index) in issue.labels" :key="index">{{ label }}</el-tag>
+                <el-tag style="margin: 3px" size="mini" v-for="(label, index) in issue.labels"
+                        :key="index">{{ label }}</el-tag>
               </span>
               <span v-else>
                 无
@@ -106,7 +131,7 @@
                 placeholder="选择经办人">
                 <el-option label="无经办人" :value="0"></el-option>
                 <el-option
-                  v-for="(member, index) in members"
+                  v-for="(member, index) in memberList(issue)"
                   :key="index"
                   :label="member.name"
                   :value="member.id">
@@ -125,7 +150,7 @@
                   width="200"
                   trigger="hover">
                   <div>
-                    <a :href="issue.assignee.web_url" target="_blank">
+                    <a :href="issue.assignee.webUrl" target="_blank">
                       {{ issue.assignee.name }}
                     </a>
                   </div>
@@ -134,7 +159,7 @@
                   </div>
 
                   <span slot="reference">
-                    <img style="height: 13px;width:13px;display:inline" :src="issue.assignee.avatar_url">
+                    <img style="height: 13px;width:13px;display:inline" :src="issue.assignee.avatar">
                     {{ issue.assignee.name }}
                   </span>
                 </el-popover>
@@ -271,7 +296,12 @@
         },
         validates: {
           title: [
-            {required: true, message: "请填写Issues主题"}
+            {required: true, message: "请填写Issues主题"},
+          ],
+          weight: [
+            {type: 'integer', message: '权重必须为数字'},
+            {min: 1, message: "权重至少为1"},
+            {max: 20, message: "权重最大为20"}
           ]
         },
       }
@@ -289,19 +319,11 @@
       } else {
         this.issue.access = 'new';
       }
-      let i;
-      for (i = 0;i < this.members.length;i++) {
-        if (this.members[i].id === this.issue.assignee.id) {
-          break;
-        }
-      }
-      if (i === this.members.length && this.issue.assignee.id) {
-        this.members.splice(0, 0, this.issue.assignee);
-      }
-    },
-    computed: {
-      canEdit() {
-        return this.issue.access === 'edit';
+
+      let members = this.members[this.issue.projectId];
+      let exist = members.some((member) => member.id === this.issue.assignee.id);
+      if (!exist && this.issue.assignee.id) {
+        this.members[this.issue.projectId].splice(0, 0, this.issue.assignee);
       }
     },
     methods: {
@@ -326,8 +348,8 @@
         }
         if (this.validate(attr)) {
           let value = this.issue[attr];
-          if (attr === 'assignee') {
-            value = this.issue.assignee.id;
+          if (['assignee', 'milestone'].includes(attr)) {
+            value = this.issue[attr].id;
           }
           eventhub.$emit('updateIssue', {
             id: this.issue.id,
@@ -348,6 +370,24 @@
           const msg = validator.message;
           if (validator.required === true) {
             if (this.isEmpty(this.issue[attr])) {
+              this.alert(msg);
+              return false;
+            }
+          }
+          if (validator.type === 'integer') {
+            if (!Number.isInteger(this.issue[attr])) {
+              this.alert(msg);
+              return false;
+            }
+          }
+          if (validator.min) {
+            if (this.issue[attr] < validator.min) {
+              this.alert(msg);
+              return false;
+            }
+          }
+          if (validator.max) {
+            if (this.issue[attr] > validator.max) {
               this.alert(msg);
               return false;
             }
@@ -394,11 +434,9 @@
             return true;
           }
           return false;
-        }
-        else if (attr === 'assignee') {
-          return this.issue.assignee.id === this.issueDup.assignee.id;
-        }
-        else {
+        } else if (['assignee', 'milestone'].includes(attr)) {
+          return this.issue[attr].id === this.issueDup[attr].id;
+        } else {
           return this.issue[attr] === this.issueDup[attr];
         }
       }

@@ -1,28 +1,118 @@
 <template>
   <div class="new-issue">
     <el-form ref="newIssueForm" :model="issue" :rules="rules" label-width="80px">
-      <el-form-item label="Project" prop="projectId">
+      <el-form-item label="项目" prop="projectId">
         <el-select v-model="issue.projectId" placeholder="选择项目">
-          <el-option v-for="(project, index) in projects" :key="index" :label="project.name" :value="project.id"></el-option>
+          <el-option v-for="(project, index) in projects" :key="index" :label="project.name"
+                     :value="project.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="Title" prop="title">
+      <el-form-item label="问题标题" prop="title">
         <el-input v-model="issue.title"></el-input>
       </el-form-item>
-      <el-form-item label="Description" prop="description">
+      <el-form-item label="问题描述" prop="description">
         <el-input v-model="issue.description" type="textarea" :autosize="{ minRows: 4 }"></el-input>
       </el-form-item>
+
+      <div v-if="canEdit">
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="权重" prop="weight">
+              <el-input v-model.number="issue.weight"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="优先级" prop="priority">
+              <el-select v-model="issue.priority">
+                <el-option label="高" :value="3"></el-option>
+                <el-option label="中" :value="2"></el-option>
+                <el-option label="低" :value="1"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="经办人" prop="assignee">
+              <el-select
+                v-model="issue.assignee.id"
+                placeholder="选择经办人">
+                <el-option label="无经办人" :value="0"></el-option>
+                <el-option
+                  v-for="(member, index) in memberList(issue)"
+                  :key="index"
+                  :label="member.name"
+                  :value="member.id">
+                  <span>
+                    <img style="height: 13px;width:13px;display:inline" :src="member.avatar">
+                    {{ member.name }}
+                  </span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="11" :offset="1">
+            <el-form-item label="截止日期" prop="dueDate">
+              <el-date-picker
+                v-model="issue.dueDate"
+                align="right"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择日期"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="标签" prop="labels">
+              <el-select v-model="issue.labels" multiple placeholder="选择标签">
+                <el-option v-for="(label, index) in labelList(issue)"
+                           :key="index" :label="label.name"
+                           :value="label.name"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="冲刺" prop="milestone">
+              <el-select v-model="issue.milestone.id" placeholder="选择冲刺">
+                <el-option label="无冲刺" :value="0"></el-option>
+                <el-option v-for="(milestone, index) in milestoneList(issue)"
+                           :key="index" :label="milestone.title"
+                           :value="milestone.id"></el-option>
+
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
+
     </el-form>
   </div>
 </template>
 
 <script>
-  import Issue from '../../issues/models/issue'
   import EditMixin from './mixins/edit_issue'
 
   export default {
     mixins: [EditMixin],
     data() {
+      let validateWeight = (rule, value, callback) => {
+        if (!Number.isInteger(value)) {
+          callback(new Error('权重必须为整数'));
+          return;
+        }
+        let weight = parseInt(value);
+        if (weight < 1) {
+          callback(new Error('权重至少为1'));
+        } else if (weight > 20) {
+          callback(new Error('权重最大为20'));
+        } else {
+          callback();
+        }
+      };
       return {
         rules: {
           projectId: [
@@ -31,14 +121,21 @@
           title: [
             {required: true, message: '请输入问题', trigger: 'blur'}
           ],
-          description: [
-
-          ]
+          weight: [
+            {type: 'number', message: '权重必须为数字'},
+            {validator: validateWeight, trigger: 'blur'}
+          ],
+          priority: [],
         }
       }
     },
   }
 </script>
+<style>
+  .new-issue .el-date-editor.el-input {
+    width: auto;
+  }
+</style>
 <style scoped>
   .new-issue {
 

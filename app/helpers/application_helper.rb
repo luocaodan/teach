@@ -9,19 +9,26 @@ module ApplicationHelper
                  .map {|i| {id: i['id'], name: i['name']}}
     infos = []
     projects.each do |project|
-      access = project_service.member_access project[:id], current_user.id
-      infos << {
+      info = {
         id: project[:id],
-        name: project[:name],
-        access: access
+        name: project[:name]
       }
+      members = project_service.all_members project[:id]
+      editable = members.any? do |member|
+        member[:id] == current_user.id && member.delete(:access) == 'edit'
+      end
+      info[:access] = if editable
+                        'edit'
+                      else
+                        'new'
+                      end
+      info[:members] = members
+      info[:labels] = project_service.all_labels project[:id]
+      info[:milestones] = project_service.all_milestones project[:id]
+      infos << info
     end
     data['projects'] = infos.to_json
     data['gitlabHost'] = gitlab_host
-    projects = projects.collect { |p| p[:id] }
-    data[:members] = project_service.all_members(projects).to_json
-    data[:labels] = project_service.all_labels(projects).to_json
-    data[:milestones] = project_service.all_milestones(projects).to_json
     data
   end
 end

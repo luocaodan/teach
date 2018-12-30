@@ -85,9 +85,31 @@
     },
     mounted() {
       const navbar = document.getElementById('navbar');
-      this.projects = JSON.parse(navbar.dataset.projects);
       this.gitlabHost = navbar.dataset.gitlabhost;
-      this.milestones = JSON.parse(navbar.dataset.milestones);
+      const projects = JSON.parse(navbar.dataset.projects);
+      const milestonesMap = new Map();
+      for (let project of projects) {
+        let milestones = project.milestones;
+        for (let milestone of milestones) {
+          if (!milestonesMap.get(project.id)) {
+            milestonesMap.set(project.id, true);
+            this.milestones.push(milestone);
+          }
+        }
+        this.projects.push({
+          id: project.id,
+          name: project.name,
+          access: project.access
+        });
+      }
+    },
+    updated() {
+      if (this.dialogVisible) {
+        const $dialogBody = document.getElementsByClassName('el-dialog__body')[0];
+        const navHeight = document.getElementById('navbar').clientHeight;
+        $dialogBody.style.maxHeight = '50vh';
+        $dialogBody.style.overflowY = 'auto';
+      }
     },
     methods: {
       handleSelect(key, keyPath) {

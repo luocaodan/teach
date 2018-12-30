@@ -111,9 +111,30 @@
     },
     mounted() {
       const $navbar = document.getElementById('navbar');
-      this.projects = JSON.parse($navbar.dataset.projects);
-      this.labels = JSON.parse($navbar.dataset.labels);
-      this.members = JSON.parse($navbar.dataset.members);
+      let projects = JSON.parse($navbar.dataset.projects);
+      const labelsMap = new Map();
+      const membersMap = new Map();
+      for (let project of projects) {
+        this.projects.push({
+          id: project.id,
+          name: project.name,
+          access: project.access
+        });
+        let members = project.members;
+        for (let member of members) {
+          if (!membersMap.get(member.id)) {
+            membersMap.set(member.id, true);
+            this.members.push(member);
+          }
+        }
+        let labels = project.labels;
+        for (let label of labels) {
+          if (!labelsMap.get(label.id)) {
+            labelsMap.set(label.id, true);
+            this.labels.push(label);
+          }
+        }
+      }
     },
     methods: {
       text(str) {

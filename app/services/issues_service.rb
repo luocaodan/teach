@@ -12,7 +12,12 @@ class IssuesService < BaseService
   end
 
   def new_issue(project_id, params = {})
+    weight = params.delete :weight
+    priority = params.delete :priority
     issue = post "projects/#{project_id}/issues", params
+    if weight || priority
+      Issue.create id: issue['id'], weight: weight, priority: priority
+    end
     add_external_field [issue]
     issue
   end
@@ -31,6 +36,7 @@ class IssuesService < BaseService
       value = update[:value]
       value = value.join ',' if attr == 'labels'
       attr = 'assignee_ids' if attr == 'assignee'
+      attr = 'milestone_id' if attr == 'milestone'
       payload = {attr => value}
       issue = put "projects/#{project_id}/issues/#{iid}", payload
     end

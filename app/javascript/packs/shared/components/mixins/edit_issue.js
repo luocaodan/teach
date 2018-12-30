@@ -4,10 +4,11 @@ import Issue from '../../../issues/models/issue'
 export default {
   data() {
     return {
-      labels: [],
       projects: [],
       accessMap: {},
-      members: [],
+      labels: {},
+      members: {},
+      milestones: {},
       pickerOptions: {
         disabledDate(time) {
           const date = new Date();
@@ -35,15 +36,42 @@ export default {
   },
   mounted() {
     const $navbar = document.getElementById('navbar');
-    this.labels = JSON.parse($navbar.dataset.labels);
     const projects = JSON.parse($navbar.dataset.projects);
-    this.projects = projects;
     const accessMap = {};
     for (let project of projects) {
       accessMap[project.id] = project.access;
     }
     this.accessMap = accessMap;
-    this.members = JSON.parse($navbar.dataset.members);
-  },
 
+    for (let project of projects) {
+      this.labels[project.id] = project.labels;
+      this.members[project.id] = project.members;
+      this.milestones[project.id] = project.milestones;
+      this.projects.push({
+        id: project.id,
+        name: project.name,
+        access: project.access
+      });
+    }
+  },
+  methods: {
+    milestoneList(issue) {
+      return this.milestones[issue.projectId];
+    },
+    labelList(issue) {
+      return this.labels[issue.projectId];
+    },
+    memberList(issue) {
+      return this.members[issue.projectId];
+    },
+  },
+  computed: {
+    canEdit() {
+      if (!this.issue.projectId) {
+        return false;
+      }
+      let projectId = this.issue.projectId;
+      return this.accessMap[projectId] === 'edit';
+    }
+  },
 }
