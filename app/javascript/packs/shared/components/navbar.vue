@@ -51,9 +51,10 @@
     </el-menu>
 
     <el-dialog
-      title="New Issue"
+      title="新建问题"
+      top="50px"
       :visible.sync="dialogVisible"
-      width="70%">
+      width="80%">
       <!--:before-close="handleClose">-->
       <new-issue ref="newIssue" :issue="newIssue"></new-issue>
       <span slot="footer" class="dialog-footer">
@@ -105,10 +106,11 @@
     },
     updated() {
       if (this.dialogVisible) {
-        const $dialogBody = document.getElementsByClassName('el-dialog__body')[0];
+        const $dialog = document.getElementsByClassName('el-dialog')[0];
         const navHeight = document.getElementById('navbar').clientHeight;
-        $dialogBody.style.maxHeight = '50vh';
-        $dialogBody.style.overflowY = 'auto';
+        const total = document.documentElement.clientHeight;
+        $dialog.style.maxHeight = (total - 100) + 'px';
+        $dialog.style.overflowY = 'auto';
       }
     },
     methods: {

@@ -6,12 +6,14 @@ import DetailIssue from './shared/components/detail_issue.vue'
 import IssuesService from "./issues/services/issues_service";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import "./tools/flash"
+import MavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 import eventhub from './issues/eventhub'
 import Issue from './issues/models/issue'
 import AlertMixin from './shared/components/mixins/alert'
 
 Vue.use(ElementUI);
+Vue.use(MavonEditor);
 
 document.addEventListener('DOMContentLoaded', () => {
   const $navbar = document.getElementById('navbar');
