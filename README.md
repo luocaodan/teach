@@ -76,17 +76,9 @@ APP_ID = 'd0272f9ec2c0f63e3922b1d4484aad5b01189a718b1bb1a4bc0af91c6f9d262f'.free
 APP_SECRET = '527da804ad9b6b2cb82afa63a2524fce1cc3a29ec95980e244787f941c6876ca'.freeze
 REDIRECT_URI = "#{TeachHost}/oauth/callback".freeze
 ```
+### 数据库
+默认使用 Sqlite
+数据库初始化: rails db:migrate
 
-* 配置gitlab.yml(gitlab host, ssh user)
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### 部署
+todo
