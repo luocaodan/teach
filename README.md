@@ -76,6 +76,16 @@ APP_ID = 'd0272f9ec2c0f63e3922b1d4484aad5b01189a718b1bb1a4bc0af91c6f9d262f'.free
 APP_SECRET = '527da804ad9b6b2cb82afa63a2524fce1cc3a29ec95980e244787f941c6876ca'.freeze
 REDIRECT_URI = "#{TeachHost}/oauth/callback".freeze
 ```
+
+### GitLab Runners 配置
+#### 安装 GitLab Runner
+```shell
+curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+sudo apt-get install gitlab-runner
+```
+#### 注册 GitLab Runner(Shared Runner)
+参考 https://docs.gitlab.com/runner/register/index.html
+
 ### 数据库
 默认使用 Sqlite
 数据库初始化: rails db:migrate
