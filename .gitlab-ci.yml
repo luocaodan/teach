@@ -1,5 +1,5 @@
 before_script:
-  echo "before script"
+  - echo "before script"
 #  - ruby -v
 #  - which ruby
 #  - gem install bundler --no-ri --no-rdoc
@@ -8,9 +8,9 @@ before_script:
 rspec:
   script:
     #    - bundle exec rspec
-    echo "rspec"
+    - echo "rspec"
 
 rubocop:
   script:
     #    - bundle exec rubocop
-    echo "rubocop"
+    - echo "rubocop"
