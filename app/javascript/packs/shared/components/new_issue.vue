@@ -14,6 +14,7 @@
         <!--<el-input v-model="issue.description" type="textarea" :autosize="{ minRows: 4 }"></el-input>-->
         <mavon-editor
           id="markdown-editor"
+          ref="mdEditor"
           style="max-height: 280px;"
           v-model="issue.description"
           :subfield="false"
@@ -178,6 +179,9 @@
         }
       }
     },
+    mounted() {
+      this.enableGFM();
+    },
     methods: {
       resizeMarkdown(status, value) {
         const $editor = document.getElementById('markdown-editor');
@@ -210,6 +214,10 @@
           let helpUrl = gitlabHost + '/help/user/markdown';
           window.open(helpUrl);
         }
+      },
+      enableGFM() {
+        let md = this.$refs.mdEditor.markdownIt;
+        md.set({linkify: true});
       }
     }
   }
