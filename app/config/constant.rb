@@ -5,7 +5,7 @@ module Constant
 
   # admin token
   # PRIVATE_TOKEN = 'tQZ3aDCXkzxRy6V23CPk'.freeze
-  PRIVATE_TOKEN = 'yuppYSiMdMQn7A5MLX8z'.freeze
+  PRIVATE_TOKEN = 'oMP6bjQhpw1nG4BYTm3t'.freeze
 
   # oauth application config
   APP_ID = '2a35559a8ad74c3756b9cc63cdacf4c6efb4a9ae304f6776b317455918505fbc'.freeze
