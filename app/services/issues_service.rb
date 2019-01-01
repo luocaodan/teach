@@ -66,6 +66,9 @@ class IssuesService < BaseService
       if issue['state'] != 'closed'
         issue['state'] = 'To Do' if issue['labels'].include?('To Do')
         issue['state'] = 'Doing' if issue['labels'].include?('Doing')
+      else
+        issue['labels'].delete 'To Do'
+        issue['labels'].delete 'Doing'
       end
     end
   end

@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
           })
           .catch((e) => {
             this.alert('Server error');
+            this.alert(e);
             this.loading = false;
           })
       },

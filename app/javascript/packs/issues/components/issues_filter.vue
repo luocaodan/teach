@@ -70,9 +70,9 @@
         members: [],
         states: [
           'Open',
-          'Closed',
           'To Do',
-          'Doing'
+          'Doing',
+          'Closed'
         ],
         currentP: 'all',
         currentPN: '',
@@ -101,6 +101,7 @@
           }
           else {
             labels.push(this.currentS);
+            params['state'] = 'opened';
           }
         }
         if (labels.length) {
