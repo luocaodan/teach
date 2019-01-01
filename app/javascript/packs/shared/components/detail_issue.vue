@@ -1,9 +1,19 @@
 <template>
   <div class="detail-issue" v-if="issue">
     <div class="issue-title">
-      <el-input class="big-label" id="issue-title" v-if="policy.title" v-model="issue.title"
-                @blur="update('title')"></el-input>
-      <label class="align big-label" v-else @click="openPolicy('title')">{{ issue.title }}</label>
+      <el-row>
+        <el-col :span="16">
+          <el-input class="big-label" id="issue-title" v-if="policy.title" v-model="issue.title"
+                    @blur="update('title')"></el-input>
+          <label class="align big-label" v-else @click="openPolicy('title')">{{ issue.title }}</label>
+        </el-col>
+        <el-col :span="6" :offset="2" style="line-height: 60px;">
+          <el-button style="width: auto" v-if="issue.state === 'closed'" @click="update('reopen')">
+            Reopen
+          </el-button>
+          <el-button v-else style="width: auto;" type="danger" @click="update('close')">Close</el-button>
+        </el-col>
+      </el-row>
     </div>
     <div class="clearFloat">
       <div class="up-left detail-info">
@@ -342,7 +352,7 @@
         }
       },
       update(attr) {
-        if (this.unchange(attr)) {
+        if (!['close', 'reopen'].includes(attr) && this.unchange(attr)) {
           this.closePolicy(attr);
           return;
         }
@@ -350,6 +360,10 @@
           let value = this.issue[attr];
           if (['assignee', 'milestone'].includes(attr)) {
             value = this.issue[attr].id;
+          }
+          if (['close', 'reopen'].includes(attr)) {
+            value = attr;
+            attr = 'state';
           }
           eventhub.$emit('updateIssue', {
             id: this.issue.id,

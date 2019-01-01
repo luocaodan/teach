@@ -37,6 +37,7 @@ class IssuesService < BaseService
       value = value.join ',' if attr == 'labels'
       attr = 'assignee_ids' if attr == 'assignee'
       attr = 'milestone_id' if attr == 'milestone'
+      attr = 'state_event' if attr == 'state'
       payload = {attr => value}
       issue = put "projects/#{project_id}/issues/#{iid}", payload
     end
@@ -60,6 +61,11 @@ class IssuesService < BaseService
       else
         issue['weight'] = nil
         issue['priority'] = nil
+      end
+
+      if issue['state'] != 'closed'
+        issue['state'] = 'To Do' if issue['labels'].include?('To Do')
+        issue['state'] = 'Doing' if issue['labels'].include?('Doing')
       end
     end
   end

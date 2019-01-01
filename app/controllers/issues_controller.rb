@@ -13,6 +13,8 @@ class IssuesController < ApplicationController
     respond_to do |format|
       format.json do
         issue = params[:issue]
+        # 自动标记为todo
+        issue['labels'] << 'To Do'
         payload = {
           title: issue['title'],
           description: issue['description'],

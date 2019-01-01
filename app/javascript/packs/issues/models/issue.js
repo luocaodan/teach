@@ -40,11 +40,6 @@ class Issue {
   static valueOf(obj) {
     let res = new Issue();
     res.state = obj.state;
-    if (obj.labels.includes('To Do')) {
-      res.state = 'To Do';
-    } else if (obj.labels.includes('Doing')) {
-      res.state = 'Doing';
-    }
 
     for (let key in obj) {
       if (['state', 'assignee', 'milestone'].includes(key)) {
@@ -79,9 +74,6 @@ class Issue {
     for (let key in this) {
       let underLine = Transform.toUnderLine(key);
       obj[underLine] = this[key];
-    }
-    if (['To Do', 'Doing'].includes(obj.state)) {
-      obj.state = 'open';
     }
     obj.assignee = obj.assignee.id;
     obj.milestone = obj.milestone.id;
