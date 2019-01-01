@@ -39,10 +39,9 @@ class Issue {
 
   static valueOf(obj) {
     let res = new Issue();
-    res.state = obj.state;
 
     for (let key in obj) {
-      if (['state', 'assignee', 'milestone'].includes(key)) {
+      if (['assignee', 'milestone'].includes(key)) {
         continue;
       }
       let camelKey = Transform.toCamelCase(key);

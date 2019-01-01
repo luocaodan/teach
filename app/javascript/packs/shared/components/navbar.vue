@@ -144,6 +144,7 @@
         this.$refs['newIssue'].$refs[formName].validate((valid) => {
           if (valid) {
             this.dialogVisible = false;
+            this.newIssue.state = 'opened';
             window.eventhub.$emit('addNewIssue', this.newIssue);
             this.newIssue = new Issue();
           }
