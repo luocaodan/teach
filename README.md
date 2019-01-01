@@ -48,7 +48,7 @@ sudo EXTERNAL_URL="http://gitlab.ce" apt-get install gitlab-ce
 * 配置System Hook， 填写本服务Url，添加即可
   ![](.md-imgs/systemhook.png)
 #### 配置管理员 Access Token
-进入root用户设置页，添加Access Token，务必勾选api，sudo
+进入root用户设置页，添加Access Token，务必勾选api
 ![](.md-imgs/access-token.png)
 #### 允许添加 localhost webhook
 进入Admin Area 设置页面，勾选 Allow requests to the local network from hooks and services
