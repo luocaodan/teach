@@ -26,6 +26,7 @@ class SystemController < ApplicationController
     yellow = '#f0ad4e'
     blue = '#428bca'
     green = '#5cb85c'
+    purple = '#5843ad'
 
     labels = [
       {name: 'bug', color: red},
@@ -36,6 +37,7 @@ class SystemController < ApplicationController
       {name: 'discussion', color: blue},
       {name: 'suggestion', color: blue},
       {name: 'enhancement', color: green},
+      {name: 'feature', color: purple},
       {name: 'To Do', color: yellow},
       {name: 'Doing', color: green}
     ]

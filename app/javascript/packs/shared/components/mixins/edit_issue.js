@@ -44,7 +44,7 @@ export default {
     this.accessMap = accessMap;
 
     for (let project of projects) {
-      this.labels[project.id] = project.labels;
+      this.labels[project.id] = project.labels.filter((l) => !['To Do', 'Doing'].includes(l.name));
       this.members[project.id] = project.members;
       this.milestones[project.id] = project.milestones;
       this.projects.push({

@@ -119,6 +119,9 @@
     mixins: [EditMixin],
     data() {
       let validateWeight = (rule, value, callback) => {
+        if (value === null || value === '') {
+          callback();
+        }
         if (!Number.isInteger(value)) {
           callback(new Error('权重必须为整数'));
           return;
@@ -141,7 +144,6 @@
             {required: true, message: '请输入问题', trigger: 'blur'}
           ],
           weight: [
-            {type: 'number', message: '权重必须为数字'},
             {validator: validateWeight, trigger: 'blur'}
           ],
           priority: [],

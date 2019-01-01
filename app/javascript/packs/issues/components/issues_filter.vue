@@ -129,8 +129,11 @@
         }
         let labels = project.labels;
         for (let label of labels) {
-          if (!labelsMap.get(label.id)) {
-            labelsMap.set(label.id, true);
+          if (['To Do', 'Doing'].includes(label.name)) {
+            continue;
+          }
+          if (!labelsMap.get(label.name)) {
+            labelsMap.set(label.name, true);
             this.labels.push(label);
           }
         }
