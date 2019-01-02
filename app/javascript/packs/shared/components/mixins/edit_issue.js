@@ -64,6 +64,9 @@ export default {
     memberList(issue) {
       return this.members[issue.projectId];
     },
+    getProjectId() {
+      return this.issue.projectId;
+    }
   },
   computed: {
     canEdit() {

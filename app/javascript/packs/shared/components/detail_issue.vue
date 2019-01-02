@@ -214,21 +214,27 @@
           <span>问题描述</span>
         </div>
         <div class="info-list clearFloat">
-          <el-input
-            id="issue-description"
-            type="textarea"
+          <mavon-editor
             v-if="policy.description"
-            :autosize="{ minRows: 4, maxRows: 15}"
+            id="issue-description"
+            ref="mdEditor"
+            :style="{maxHeight: maxHeight + 'px'}"
             v-model="issue.description"
-            @blur="update('description')">
-          </el-input>
+            :subfield="false"
+            :toolbars="toolbars"
+            @fullScreen="resizeMarkdown"
+            @imgAdd="$imgAdd"
+            @imgDel="$imgDel"
+            @helpToggle="navigateToHelp"
+            @save="update('description')"
+            placeholder="输入问题描述">
+          </mavon-editor>
           <div v-else @click="openPolicy('description')">
-            <p v-if="issue.description">
-              {{ issue.description }}
-            </p>
-            <p v-else>
+            <div class="issue-html-container" v-if="issue.description" v-html="renderedDescription ">
+            </div>
+            <div v-else>
               无问题描述
-            </p>
+            </div>
           </div>
         </div>
       </div>
@@ -294,9 +300,10 @@
   import Transform from '../../tools/transform'
   import EditMixin from './mixins/edit_issue'
   import AlertMixin from './mixins/alert'
+  import MarkdownMixin from './mixins/markdown_support'
 
   export default {
-    mixins: [EditMixin, AlertMixin],
+    mixins: [EditMixin, AlertMixin, MarkdownMixin],
     data() {
       return {
         policy: {
@@ -316,9 +323,18 @@
         },
       }
     },
+    computed: {
+      renderedDescription() {
+        let md = this.getMarkdownIt();
+        return md.render(this.issue.description);
+      }
+    },
     components: {},
     props: {
       issueDup: Issue,
+    },
+    mounted() {
+      this.toolbars.save = true;
     },
     updated() {
       if (!this.issue) {
@@ -543,4 +559,9 @@
     margin-bottom: 20px;
   }
 
+</style>
+<style>
+  .issue-html-container img {
+    max-width: 100%;
+  }
 </style>

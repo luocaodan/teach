@@ -13,9 +13,8 @@
       <el-form-item label="问题描述" prop="description">
         <!--<el-input v-model="issue.description" type="textarea" :autosize="{ minRows: 4 }"></el-input>-->
         <mavon-editor
-          id="markdown-editor"
           ref="mdEditor"
-          style="max-height: 280px;"
+          :style="{maxHeight: maxHeight + 'px'}"
           v-model="issue.description"
           :subfield="false"
           :toolbars="toolbars"
@@ -116,10 +115,10 @@
 
 <script>
   import EditMixin from './mixins/edit_issue'
-  import UploadService from '../services/upload_service'
+  import MarkdownMixin from './mixins/markdown_support'
 
   export default {
-    mixins: [EditMixin],
+    mixins: [EditMixin, MarkdownMixin],
     data() {
       let validateWeight = (rule, value, callback) => {
         if (value === null || value === '') {
@@ -151,109 +150,10 @@
           ],
           priority: [],
         },
-        toolbars: {
-          bold: true, // 粗体
-          italic: true, // 斜体
-          header: true, // 标题
-          underline: false, // 下划线
-          strikethrough: false, // 中划线
-          mark: true, // 标记
-          superscript: false, // 上角标
-          subscript: false, // 下角标
-          quote: true, // 引用
-          ol: true, // 有序列表
-          ul: true, // 无序列表
-          link: true, // 链接
-          imagelink: true, // 图片链接
-          code: true, // code
-          table: true, // 表格
-          fullscreen: true, // 全屏编辑
-          readmodel: false, // 沉浸式阅读
-          htmlcode: false, // 展示html源码
-          help: false, // 帮助
-          undo: true, // 上一步
-          redo: true, // 下一步
-          trash: false, // 清空
-          save: false, // 保存（触发events中的save事件）
-          navigation: false, // 导航目录
-          alignleft: false, // 左对齐
-          aligncenter: false, // 居中
-          alignright: false, // 右对齐
-          subfield: false, // 单双栏模式
-          preview: true, // 预览
-        }
       }
     },
     mounted() {
-      this.enableGFM();
-    },
-    methods: {
-      resizeMarkdown(status, value) {
-        const $editor = document.getElementById('markdown-editor');
-        let maxHeight = 280;
-        if (status) {
-          maxHeight = document.documentElement.clientHeight;
-          // 全功能Markdown编辑器
-          this.fullFunction(true);
-        } else {
-          this.fullFunction(false);
-        }
-        $editor.style.maxHeight = maxHeight + 'px';
-      },
-      fullFunction(full) {
-        const disables = [
-          'underline', 'strikethrough',
-          'superscript', 'subscript',
-          'readmodel', 'htmlcode',
-          'help', 'trash', 'subfield',
-          'navigation'
-        ];
-        for (let field of disables) {
-          this.toolbars[field] = full;
-        }
-      },
-      navigateToHelp(status, value) {
-        if (status) {
-          const $navbar = document.getElementById('navbar');
-          const gitlabHost = $navbar.dataset.gitlabhost;
-          let helpUrl = gitlabHost + '/help/user/markdown';
-          window.open(helpUrl);
-        }
-      },
-      enableGFM() {
-        let md = this.$refs.mdEditor.markdownIt;
-        md.set({linkify: true});
-
-        let defaultImgRender = md.renderer.rules.image;
-        md.renderer.rules.image = (tokens, idx, options, env, self) => {
-          let srcIndex = tokens[idx].attrIndex('src');
-          if (srcIndex >= 0) {
-            let link = tokens[idx].attrs[srcIndex][1];
-            if (link.startsWith('/uploads/')) {
-              let projectUrl = this.getProjectUrl(this.issue.projectId);
-              tokens[idx].attrs[srcIndex][1] = projectUrl + link;
-            }
-          }
-          return defaultImgRender(tokens, idx, options, env, self);
-        }
-      },
-      getProjectUrl(projectId) {
-        const $navbar = document.getElementById('navbar');
-        const projects = JSON.parse($navbar.dataset.projects);
-        return projects.find((p) => p.id === projectId).web_url;
-      },
-      $imgAdd(pos, $file) {
-        let formData = new FormData();
-        formData.append('image', $file);
-        UploadService.upload(this.issue.projectId, formData)
-          .then(res => res.data)
-          .then((data) => {
-            this.$refs.mdEditor.$img2Url(pos, data.url);
-          })
-      },
-      $imgDel(filename) {
-
-      }
+      this.editorMounted = true;
     }
   }
 </script>
