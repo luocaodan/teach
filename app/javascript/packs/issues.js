@@ -133,8 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
             this.loading = false;
           })
           .catch((e) => {
+            // 貌似有bug 复现不了???
             this.alert('Server error');
-            this.alert(e);
+            console.log('error', e);
             this.loading = false;
           })
       },

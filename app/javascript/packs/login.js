@@ -8,8 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const $login = document.getElementById('login');
   const login = new Vue({
     el: $login,
-    data: {
-      authUrl: '',
+    data() {
+      return {
+        authUrl: '',
+      }
     },
     components: {
 

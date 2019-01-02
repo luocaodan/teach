@@ -154,7 +154,6 @@
         let list = str.split(',');
         let project_id = list[0];
         let project_name = list[1];
-        console.log(project_id)
         if (project_id === this.currentP) {
           return;
         }
