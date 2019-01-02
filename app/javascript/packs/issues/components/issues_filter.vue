@@ -116,6 +116,9 @@
       const labelsMap = new Map();
       const membersMap = new Map();
       for (let project of projects) {
+        if (!project.own) {
+          continue;
+        }
         this.projects.push({
           id: project.id,
           name: project.name,

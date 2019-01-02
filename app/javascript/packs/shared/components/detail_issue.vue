@@ -331,9 +331,11 @@
       }
 
       let members = this.members[this.issue.projectId];
-      let exist = members.some((member) => member.id === this.issue.assignee.id);
-      if (!exist && this.issue.assignee.id) {
-        this.members[this.issue.projectId].splice(0, 0, this.issue.assignee);
+      if (members) {
+        let exist = members.some((member) => member.id === this.issue.assignee.id);
+        if (!exist && this.issue.assignee.id) {
+          this.members[this.issue.projectId].splice(0, 0, this.issue.assignee);
+        }
       }
     },
     methods: {

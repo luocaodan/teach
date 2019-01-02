@@ -12,6 +12,11 @@ class Http
     response.body
   end
 
+  def self.multipart_post(url, data, headers = {})
+    response = RestClient.post(url, data, headers)
+    JSON.parse response.body
+  end
+
   def self.put(url, payload, headers = {})
     response = RestClient.put(url, payload.to_json, headers)
     response.body

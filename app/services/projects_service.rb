@@ -1,13 +1,9 @@
-require 'set'
-require 'rest-client'
-
 class ProjectsService < BaseService
   def project(project_id)
     get("projects/#{project_id}")
   end
 
   def all(params = {})
-    params[:membership] = true
     get('projects', params)
   end
 

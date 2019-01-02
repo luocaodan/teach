@@ -6,6 +6,9 @@ ruby '2.5.3'
 # http client
 gem 'rest-client', '~> 2.0', '>= 2.0.2'
 
+# uuid
+gem 'uuidtools'
+
 # webpacker for vue
 gem 'webpacker'
 

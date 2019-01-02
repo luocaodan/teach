@@ -2,7 +2,6 @@
   <div class="navbar clearFloat">
     <el-menu
       :default-active="kanban"
-      class="el-menu-demo"
       mode="horizontal"
       @select="handleSelect"
       background-color="#545c64"
@@ -45,9 +44,12 @@
         </a>
       </el-menu-item>
 
-      <el-menu-item index="5" style="float: right">
-        新建问题
-      </el-menu-item>
+      <el-submenu index="5" style="float: right">
+        <template slot="title">新建问题</template>
+        <el-menu-item v-for="(project, index) in projects" :key="index" :index="'5-' + project.id">
+          {{ project.name }}
+        </el-menu-item>
+      </el-submenu>
     </el-menu>
 
     <el-dialog
@@ -97,6 +99,9 @@
             this.milestones.push(milestone);
           }
         }
+        if (!project.own) {
+          continue;
+        }
         this.projects.push({
           id: project.id,
           name: project.name,
@@ -127,8 +132,8 @@
             let route = list[2];
             window.location.href = `/projects/${project_id}/milestones/${milestone_id}/${route}`;
           }
-        }
-        else if (key === '5') {
+        } else if (key.startsWith('5-')) {
+          this.newIssue.projectId = parseInt(key.substr(2));
           this.dialogVisible = true;
         }
       },

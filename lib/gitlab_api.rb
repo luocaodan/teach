@@ -18,6 +18,11 @@ module GitlabApi
     Http.json_post url, payload, user_headers(token)
   end
 
+  def user_api_multipart(url, token, data)
+    url = get_api_url url
+    Http.multipart_post url, data, user_headers(token)
+  end
+
   def user_api_put(url, token, payload)
     url = get_api_url url
     Http.json_put url, payload, user_headers(token)

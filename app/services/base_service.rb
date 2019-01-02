@@ -22,6 +22,10 @@ class BaseService
     user_api_post url, user_token, params
   end
 
+  def multipart_post(url, params)
+    user_api_multipart url, user_token, params
+  end
+
   def put(url, params)
     user_api_put url, user_token, params
   end

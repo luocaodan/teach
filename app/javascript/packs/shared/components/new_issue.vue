@@ -20,6 +20,8 @@
           :subfield="false"
           :toolbars="toolbars"
           @fullScreen="resizeMarkdown"
+          @imgAdd="$imgAdd"
+          @imgDel="$imgDel"
           @helpToggle="navigateToHelp"
           placeholder="输入问题描述">
         </mavon-editor>
@@ -114,6 +116,7 @@
 
 <script>
   import EditMixin from './mixins/edit_issue'
+  import UploadService from '../services/upload_service'
 
   export default {
     mixins: [EditMixin],
@@ -220,6 +223,36 @@
       enableGFM() {
         let md = this.$refs.mdEditor.markdownIt;
         md.set({linkify: true});
+
+        let defaultImgRender = md.renderer.rules.image;
+        md.renderer.rules.image = (tokens, idx, options, env, self) => {
+          let srcIndex = tokens[idx].attrIndex('src');
+          if (srcIndex >= 0) {
+            let link = tokens[idx].attrs[srcIndex][1];
+            if (link.startsWith('/uploads/')) {
+              let projectUrl = this.getProjectUrl(this.issue.projectId);
+              tokens[idx].attrs[srcIndex][1] = projectUrl + link;
+            }
+          }
+          return defaultImgRender(tokens, idx, options, env, self);
+        }
+      },
+      getProjectUrl(projectId) {
+        const $navbar = document.getElementById('navbar');
+        const projects = JSON.parse($navbar.dataset.projects);
+        return projects.find((p) => p.id === projectId).web_url;
+      },
+      $imgAdd(pos, $file) {
+        let formData = new FormData();
+        formData.append('image', $file);
+        UploadService.upload(this.issue.projectId, formData)
+          .then(res => res.data)
+          .then((data) => {
+            this.$refs.mdEditor.$img2Url(pos, data.url);
+          })
+      },
+      $imgDel(filename) {
+
       }
     }
   }
