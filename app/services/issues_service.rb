@@ -37,8 +37,18 @@ class IssuesService < BaseService
       value = value.join ',' if attr == 'labels'
       attr = 'assignee_ids' if attr == 'assignee'
       attr = 'milestone_id' if attr == 'milestone'
-      attr = 'state_event' if attr == 'state'
+      if attr == 'state'
+        if ['To Do', 'Doing'].include?(value)
+          attr = 'labels'
+        else
+          attr = 'state_event'
+          value = value == 'Open' ? 'reopen' : 'close'
+        end
+      end
       payload = {attr => value}
+      if attr == 'state_event' && value == 'reopen'
+        payload[:labels] = 'To Do'
+      end
       issue = put "projects/#{project_id}/issues/#{iid}", payload
     end
     add_external_field [issue]
@@ -63,14 +73,24 @@ class IssuesService < BaseService
         issue['priority'] = nil
       end
 
-      if issue['state'] != 'closed'
-        issue['state'] = 'To Do' if issue['labels'].include?('To Do')
-        issue['state'] = 'Doing' if issue['labels'].include?('Doing')
-      else
-        issue['labels'].delete 'To Do'
-        issue['labels'].delete 'Doing'
-      end
+      add_state issue
     end
+  end
+
+  def add_state(issue)
+    todo = issue['labels'].delete 'To Do'
+    doing = issue['labels'].delete 'Doing'
+    issue['state'] = if issue['state'] != 'closed'
+                       if doing
+                         'Doing'
+                       elsif todo
+                         'To Do'
+                       else
+                         'Open'
+                       end
+                     else
+                       'Closed'
+                     end
   end
 
   private

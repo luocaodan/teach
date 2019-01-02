@@ -8,10 +8,10 @@
           <label class="align big-label" v-else @click="openPolicy('title')">{{ issue.title }}</label>
         </el-col>
         <el-col :span="6" :offset="2" style="line-height: 60px;">
-          <el-button style="width: auto" v-if="issue.state === 'closed'" @click="update('reopen')">
+          <el-button style="width: auto" v-if="issue.state === 'Closed'" @click="update('Open')">
             Reopen
           </el-button>
-          <el-button v-else style="width: auto;" type="danger" @click="update('close')">Close</el-button>
+          <el-button v-else style="width: auto;" type="danger" @click="update('Closed')">Close</el-button>
         </el-col>
       </el-row>
     </div>
@@ -27,7 +27,14 @@
                 <el-tag size="mini">
                   {{ issue.state }}
                 </el-tag>
-              </span>
+                <el-button
+                  style="margin: 4px"
+                  icon="el-icon-circle-plus"
+                  v-if="issue.state === 'Open' && canEdit"
+                  title="添加到待办"
+                  @click="update('To Do')"
+                  size="mini" circle></el-button>
+            </span>
           </div>
           <div class="clearFloat">
             <span class="info-attr">权重：</span>
@@ -46,7 +53,7 @@
                 </span>
               </span>
           </div>
-          <div class="clearFloat">
+          <div class="clearFloat" style="clear: left">
             <span class="info-attr">优先级：</span>
             <el-select id="issue-priority" v-if="canEdit" size="mini" class="info-value" v-model="issue.priority"
                        @change="update('priority')">
@@ -369,7 +376,7 @@
         }
       },
       update(attr) {
-        if (!['close', 'reopen'].includes(attr) && this.unchange(attr)) {
+        if (!['Closed', 'Open', 'To Do'].includes(attr) && this.unchange(attr)) {
           this.closePolicy(attr);
           return;
         }
@@ -378,7 +385,7 @@
           if (['assignee', 'milestone'].includes(attr)) {
             value = this.issue[attr].id;
           }
-          if (['close', 'reopen'].includes(attr)) {
+          if (['Closed', 'Open', 'To Do'].includes(attr)) {
             value = attr;
             attr = 'state';
           }

@@ -4,7 +4,7 @@
       <div style="padding: 14px">
         <div class="main-info">
           <span>{{ issue.title | shorten }}</span>
-          <i :title="issue.state" class="iconfont" :class="{ 'icon-wancheng': closed, 'icon-daibanshixiang': !closed }"></i>
+          <el-tag style="margin: 4px" :type="stateType(issue.state)" size="mini">{{ issue.state }}</el-tag>
 
           <span v-if="issue.priority">
             <svg class="icon" aria-hidden="true">
@@ -87,6 +87,14 @@
           'High'
         ];
         return texts[priority];
+      },
+      stateType(state) {
+        if (state === 'Closed') {
+          return 'success';
+        } else if (state === 'Doing') {
+          return 'warning';
+        }
+        return 'danger';
       }
     }
   }

@@ -92,3 +92,14 @@ sudo apt-get install gitlab-runner
 
 ### 部署
 todo
+
+# issue 状态说明
+状态有四种：
+- Open
+- To Do
+- Doing
+- Closed
+
+其中Open代表To Do或Doing
+所有新建Issue和重新打开的Issue状态初始为To Do
+Issue 状态可在To Do, Doing, Closed 之间任意跳转
