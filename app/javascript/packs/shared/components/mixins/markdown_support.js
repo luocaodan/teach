@@ -61,19 +61,11 @@ export default {
         'underline', 'strikethrough',
         'superscript', 'subscript',
         'readmodel', 'htmlcode',
-        'help', 'trash', 'subfield',
+        'trash', 'subfield',
         'navigation'
       ];
       for (let field of disables) {
         this.toolbars[field] = full;
-      }
-    },
-    navigateToHelp(status, value) {
-      if (status) {
-        const $navbar = document.getElementById('navbar');
-        const gitlabHost = $navbar.dataset.gitlabhost;
-        let helpUrl = gitlabHost + '/help/user/markdown';
-        window.open(helpUrl);
       }
     },
     getMarkdownIt() {

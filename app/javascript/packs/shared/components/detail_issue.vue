@@ -218,14 +218,13 @@
             v-if="policy.description"
             id="issue-description"
             ref="mdEditor"
-            :style="{maxHeight: maxHeight + 'px'}"
+            :style="{maxHeight: maxHeight + 'px', margin: '0px'}"
             v-model="issue.description"
             :subfield="false"
             :toolbars="toolbars"
             @fullScreen="resizeMarkdown"
             @imgAdd="$imgAdd"
             @imgDel="$imgDel"
-            @helpToggle="navigateToHelp"
             @save="update('description')"
             placeholder="输入问题描述">
           </mavon-editor>

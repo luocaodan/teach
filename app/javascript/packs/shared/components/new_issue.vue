@@ -21,7 +21,6 @@
           @fullScreen="resizeMarkdown"
           @imgAdd="$imgAdd"
           @imgDel="$imgDel"
-          @helpToggle="navigateToHelp"
           placeholder="输入问题描述">
         </mavon-editor>
       </el-form-item>
