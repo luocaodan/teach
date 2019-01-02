@@ -70,6 +70,5 @@
 
   .detail {
     overflow-x: hidden;
-    overflow-y: scroll;
   }
 </style>

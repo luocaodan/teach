@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .all(filterParams)
           .then(res => res.data)
           .then(data => {
+            console.log('hah');
             let list = data;
             this.issues = list.map((issue) => Issue.valueOf(issue));
             if (this.issues.length > 0) {
@@ -133,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.loading = false;
           })
           .catch((e) => {
-            // 貌似有bug 复现不了???
+            // todo 貌似有bug 复现不了???
             this.alert('Server error');
             console.log('error', e);
             this.loading = false;

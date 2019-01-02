@@ -5,9 +5,9 @@
         <el-col :span="16">
           <el-input class="big-label" id="issue-title" v-if="policy.title" v-model="issue.title"
                     @blur="update('title')"></el-input>
-          <label class="align big-label" v-else @click="openPolicy('title')">{{ issue.title }}</label>
+          <label class="big-label" v-else @click="openPolicy('title')">{{ issue.title }}</label>
         </el-col>
-        <el-col :span="6" :offset="2" style="line-height: 60px;">
+        <el-col :span="6" :offset="2" >
           <el-button style="width: auto" v-if="issue.state === 'Closed'" @click="update('Open')">
             Reopen
           </el-button>
@@ -24,7 +24,7 @@
           <div class="clearFloat">
             <span class="info-attr">状态：</span>
             <span class="info-value">
-                <el-tag size="mini">
+                <el-tag size="mini" :type="stateType(issue.state)">
                   {{ issue.state }}
                 </el-tag>
                 <el-button
@@ -477,6 +477,14 @@
         } else {
           return this.issue[attr] === this.issueDup[attr];
         }
+      },
+      stateType(state) {
+        if (state === 'Closed') {
+          return 'success';
+        } else if (state === 'Doing') {
+          return 'warning';
+        }
+        return 'danger';
       }
     }
   }
@@ -484,13 +492,13 @@
 <style scoped>
   .detail-issue {
     padding: 20px;
+    -ms-overflow-y: auto;
     overflow-y: auto;
   }
 
   .big-label {
-    font-size: 24px;
-    height: 60px;
-    line-height: 60px;
+    font-size: 26px;
+    font-weight: 600;
   }
 
   .big-label > input {

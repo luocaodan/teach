@@ -7,7 +7,7 @@
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="all">所有</el-dropdown-item>
+        <el-dropdown-item command="all,所有">所有</el-dropdown-item>
         <el-dropdown-item v-for="(project, index) in projects" :key="index" :command="project.id+','+project.name">
           {{ project.name }}
         </el-dropdown-item>
@@ -75,7 +75,7 @@
           'Closed'
         ],
         currentP: 'all',
-        currentPN: '',
+        currentPN: '所有',
         currentL: 'all',
         currentM: 'all',
         currentMN: '',
