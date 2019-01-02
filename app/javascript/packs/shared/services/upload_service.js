@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default class UploadService {
   static upload(projectId, formdata) {
     let uploadUrl = `/projects/${projectId}/uploads.json`;
