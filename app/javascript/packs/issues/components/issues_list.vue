@@ -1,6 +1,6 @@
 <template>
   <div class="left-bar list-board">
-    <div id="sort" class="sort center">
+    <div id="sort" class="sort center clearFloat">
       <span @click="reverse()">
         Order by {{ fieldMap(sort_field) }}
         <i class="iconfont" :class="{ 'icon-icarrowup': asc, 'icon-icarrowdown': !asc }"></i>
@@ -16,10 +16,17 @@
           <el-dropdown-item command="priority">优先级</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+      <span style="float: right">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-weight"></use>
+        </svg>
+        <span style="font-size: 16px">{{ totalWeight }}</span>
+      </span>
     </div>
     <div :style="{height: height + 'px'}">
       <el-scrollbar class="scroll center">
-        <issue-card class="issue-item" :clicked="clicked === index" v-for="(issue, index) in issues" :issue="issue" :key="index" @click.native="clickIssue(index)"></issue-card>
+        <issue-card class="issue-item" :clicked="clicked === index" v-for="(issue, index) in issues" :issue="issue"
+                    :key="index" @click.native="clickIssue(index)"></issue-card>
       </el-scrollbar>
     </div>
   </div>
@@ -49,6 +56,15 @@
       height() {
         let heightDiff = this.sortHeight + 2;
         return this.totalHeight - heightDiff;
+      },
+      totalWeight() {
+        let total = 0;
+        for (let issue of this.issues) {
+          if (issue.weight) {
+            total += issue.weight;
+          }
+        }
+        return total;
       }
     },
     mounted() {
