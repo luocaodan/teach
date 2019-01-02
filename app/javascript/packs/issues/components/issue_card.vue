@@ -74,9 +74,9 @@
       },
       priorityClass(priority) {
         let classes = [
-          'icon-low_priority',
-          'icon-medium_priority',
-          'icon-high_priority'
+          'icon-low_priority1',
+          'icon-medium_priority1',
+          'icon-high_priority1'
         ];
         return '#' + classes[priority-1];
       },
