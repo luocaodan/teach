@@ -16,7 +16,11 @@
           <el-dropdown-item command="priority">优先级</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <span style="float: right">
+      <span style="float: right" :title="'共' + issues.length + '个问题 总权重' + totalWeight">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-Issue"></use>
+        </svg>
+        <span style="font-size: 16px">{{ issues.length }}</span>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-weight"></use>
         </svg>
