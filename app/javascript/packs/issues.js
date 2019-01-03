@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
       eventhub.$on('sort', this.sortList);
       eventhub.$on('updateParams', this.updateIssues);
       eventhub.$on('updateAsideWidth', this.updateAsideWidth);
-      eventhub.$on('updateDetailIndex', this.updateDetailIndex);
       eventhub.$on('addNewIssue', this.addNewIssue);
       eventhub.$on('updateIssue', this.updateIssue);
       // 设置为全局变量 保证编译完成的不同js引用同一个对象
@@ -74,6 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
         this.height = document.documentElement.clientHeight - navHeight - filterHeight;
       };
       window.onresize();
+    },
+    watch: {
+      detailIndex(value) {
+        this.reDupIssue();
+      },
+      issues(value) {
+        this.reDupIssue();
+      }
     },
     methods: {
       reverseList() {
@@ -122,19 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => res.data)
           .then(data => {
             this.issues = data.map((issue) => Issue.valueOf(issue));
-            if (this.issues.length > 0) {
-              this.reDupIssue();
-            }
-            else {
-              this.curIssue = null;
-              this.alert('没有结果', 'warning');
-            }
+            this.updateDetailIndex(0);
             this.loading = false;
           })
           .catch((e) => {
-            // todo 貌似有bug 复现不了???
             this.alert('Server error');
-            console.log('error', e);
             this.loading = false;
           })
       },
@@ -148,9 +147,13 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       updateDetailIndex(index) {
         this.detailIndex = index;
-        this.reDupIssue();
       },
       reDupIssue() {
+        if (this.issues.length === 0) {
+          this.curIssue = null;
+          this.alert('没有结果', 'warning');
+          return;
+        }
         this.curIssue = Object.assign(
           new Issue(),
           JSON.parse(JSON.stringify(this.issues[this.detailIndex]))

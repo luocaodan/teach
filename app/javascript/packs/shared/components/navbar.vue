@@ -29,6 +29,15 @@
             :index="'2-' + milestone.project_id + '-' + milestone.id + '-burndown'">
             燃尽图
           </el-menu-item>
+          <el-menu-item :index="'2-' + milestone.project_id + '-' + milestone.iid + '-edit'">
+            冲刺详情
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="2-new" v-if="this.projects.length">
+          <template slot="title">新建冲刺</template>
+          <el-menu-item v-for="(project, index) in projects" :key="index" :index="'2-new-' + project.id">
+            {{ project.name }}
+          </el-menu-item>
         </el-submenu>
       </el-submenu>
       <el-menu-item index="3">
@@ -64,15 +73,29 @@
         <el-button type="primary" @click="addIssue('newIssueForm')">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!--<el-dialog-->
+      <!--title="新建冲刺"-->
+      <!--top="50px"-->
+      <!--:visible.sync="milestoneDialogVisible"-->
+      <!--width="80%">-->
+      <!--<new-milestone ref="newMilestone" :milestone="newMilestone" :milestones="milestones"></new-milestone>-->
+      <!--<span slot="footer" class="dialog-footer">-->
+        <!--<el-button @click="milestoneDialogVisible = false">取 消</el-button>-->
+        <!--<el-button type="primary" @click="addMilestone('newMilestoneForm')">确 定</el-button>-->
+      <!--</span>-->
+    <!--</el-dialog>-->
   </div>
 </template>
 <script>
   import NewIssue from './new_issue.vue'
+  import NewMilestone from './new_milestone.vue'
   import Issue from '../../issues/models/issue'
 
   export default {
     components: {
-      NewIssue
+      NewIssue,
+      NewMilestone
     },
     data() {
       return {
@@ -84,6 +107,7 @@
         gitlabHost: '',
         dialogVisible: false,
         newIssue: new Issue(),
+        // newMilestone: {},
       };
     },
     mounted() {
@@ -105,6 +129,7 @@
         this.projects.push({
           id: project.id,
           name: project.name,
+          webUrl: project.web_url,
           access: project.access
         });
       }
@@ -124,13 +149,26 @@
           let project_id = key.substr(2);
           window.location.href = '/boards/' + project_id;
         }
+        // 新建冲刺
+        else if (key.startsWith('2-new')) {
+          let list = key.split('-');
+          let projectId = parseInt(list[list.length - 1]);
+          let webUrl = this.projects.find((p) => p.id === projectId).webUrl;
+          window.open(`${webUrl}/milestones/new`);
+        }
         else if (key.startsWith('2-')) {
           let list = key.substr(2).split('-');
           if (list.length === 3) {
-            let project_id = list[0];
+            let project_id = parseInt(list[0]);
             let milestone_id = list[1];
             let route = list[2];
-            window.location.href = `/projects/${project_id}/milestones/${milestone_id}/${route}`;
+            if (route === 'edit') {
+              let projectWebUrl = this.projects.find((p) => p.id === project_id).webUrl;
+              window.open(`${projectWebUrl}/milestones/${milestone_id}`);
+            }
+            else {
+              window.location.href = `/projects/${project_id}/milestones/${milestone_id}/${route}`;
+            }
           }
         } else if (key.startsWith('5-')) {
           this.newIssue.projectId = parseInt(key.substr(2));

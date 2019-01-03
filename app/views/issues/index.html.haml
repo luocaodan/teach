@@ -8,7 +8,7 @@
     %issues-filter
   %el-container
     %el-aside{':width': "asideWidth + 'px'"}
-      %issues-list{':issues': 'issues', ':total-height': 'height'}
+      %issues-list{':issues': 'issues', ':total-height': 'height', ':clicked.sync': 'detailIndex'}
     %el-main
       %sidebar{':detail-issue': 'curIssue', ':raw-issue': 'rawIssue', ':detail-index': 'detailIndex', ':total-height': 'height'}
 

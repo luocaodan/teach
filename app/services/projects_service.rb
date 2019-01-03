@@ -28,6 +28,7 @@ class ProjectsService < BaseService
     list.each do |milestone|
       milestones << {
         id: milestone['id'],
+        iid: milestone['iid'],
         project_id: milestone['project_id'],
         title: milestone['title']
       }

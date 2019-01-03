@@ -45,12 +45,12 @@
         sort_field: 'created_at',
         asc: false,
         sortHeight: 10,
-        clicked: 0,
       }
     },
     props: {
       issues: Array,
-      totalHeight: Number
+      totalHeight: Number,
+      clicked: Number,
     },
     computed: {
       height() {
@@ -97,8 +97,7 @@
         eventhub.$emit('reverse');
       },
       clickIssue(index) {
-        this.clicked = index;
-        eventhub.$emit('updateDetailIndex', index);
+        this.$emit('update:clicked', index);
       },
     }
   }
