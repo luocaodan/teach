@@ -7,11 +7,11 @@
                     @blur="update('title')"></el-input>
           <label class="big-label" v-else @click="openPolicy('title')">{{ issue.title }}</label>
         </el-col>
-        <el-col :span="6" :offset="2" >
-          <el-button style="width: auto" v-if="issue.state === 'Closed'" @click="update('Open')">
-            Reopen
-          </el-button>
-          <el-button v-else style="width: auto;" type="danger" @click="update('Closed')">Close</el-button>
+        <el-col :span="6" :offset="2">
+            <el-button style="width: auto" v-if="issue.state === 'Closed'" @click="update('Open')">
+              Reopen
+            </el-button>
+            <el-button style="width: auto" v-else type="danger" @click="update('Closed')">Close</el-button>
         </el-col>
       </el-row>
     </div>
@@ -384,9 +384,16 @@
           let value = this.issue[attr];
           if (['assignee', 'milestone'].includes(attr)) {
             value = this.issue[attr].id;
-          }
-          if (['Closed', 'Open', 'To Do'].includes(attr)) {
+          } else if (attr === 'labels') {
+            if (['To Do', 'Doing'].includes(this.issue.state)) {
+              value = this.issue.labels.concat(this.issue.state);
+            }
+          } else if (['Closed', 'Open', 'To Do'].includes(attr)) {
+            // 更新值加上其他labels
             value = attr;
+            if (attr === 'To Do') {
+              value = this.issue.labels.concat(value);
+            }
             attr = 'state';
           }
           eventhub.$emit('updateIssue', {
@@ -492,8 +499,6 @@
 <style scoped>
   .detail-issue {
     padding: 20px;
-    -ms-overflow-y: auto;
-    overflow-y: auto;
   }
 
   .big-label {

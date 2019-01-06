@@ -147,7 +147,7 @@
       handleSelect(key, keyPath) {
         if (key.startsWith('1-')) {
           let project_id = key.substr(2);
-          window.location.href = '/boards/' + project_id;
+          window.location.href = `/projects/${project_id}/kanban`;
         }
         // 新建冲刺
         else if (key.startsWith('2-new')) {
@@ -167,7 +167,7 @@
               window.open(`${projectWebUrl}/milestones/${milestone_id}`);
             }
             else {
-              window.location.href = `/projects/${project_id}/milestones/${milestone_id}/${route}`;
+              window.location.href = `/milestones/${milestone_id}/${route}`;
             }
           }
         } else if (key.startsWith('5-')) {

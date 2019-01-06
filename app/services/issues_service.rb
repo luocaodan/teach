@@ -38,8 +38,9 @@ class IssuesService < BaseService
       attr = 'assignee_ids' if attr == 'assignee'
       attr = 'milestone_id' if attr == 'milestone'
       if attr == 'state'
-        if ['To Do', 'Doing'].include?(value)
+        if value.include?('To Do') || value.include?('Doing')
           attr = 'labels'
+          value = value.join ','
         else
           attr = 'state_event'
           value = value == 'Open' ? 'reopen' : 'close'

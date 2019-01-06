@@ -51,7 +51,7 @@ class IssuesController < ApplicationController
   private
 
   def filter_params
-    params.permit :project, :labels, :state, :scope, :assignee_id
+    params.permit :project, :labels, :state, :scope, :assignee_id, :milestone
   end
 
   def issues_service

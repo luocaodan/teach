@@ -1,8 +1,14 @@
 <template>
-  <div class="sidebar">
-    <div v-on:mousedown="drag" class="divider" :style="{height: totalHeight + 'px'}">
+  <div
+    class="sidebar"
+    :style="{height: totalHeight + 'px', width: totalWidth + 'px'}">
+    <div
+      v-if="divider"
+      v-on:mousedown="drag"
+      class="divider"
+      :style="{height: totalHeight + 'px'}">
     </div>
-    <div :style="{height: totalHeight + 'px'}" class="detail">
+    <div class="detail">
       <detail-issue :issue="detailIssue" :issue-dup="rawIssue"></detail-issue>
     </div>
   </div>
@@ -26,7 +32,9 @@
       detailIssue: Issue,
       rawIssue: Issue,
       totalHeight: Number,
-      detailIndex: Number
+      totalWidth: Number,
+      detailIndex: Number,
+      divider: Boolean
     },
     computed: {
 
@@ -55,6 +63,10 @@
   }
 </script>
 <style scoped>
+  .sidebar {
+    overflow: auto;
+    border-bottom: 1px solid #e5e5e5;
+  }
   .divider {
     position: absolute;
     margin-top: 0em;
@@ -69,6 +81,6 @@
   }
 
   .detail {
-    overflow-x: hidden;
+    min-width: 300px;
   }
 </style>

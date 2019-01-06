@@ -1,0 +1,35 @@
+- content_for :scripts do
+  = javascript_pack_tag 'boards'
+- content_for :styles do
+  = stylesheet_pack_tag 'boards'
+
+#boards-app{data: issues_data, 'v-loading': 'loading', 'element-loading-text': '加载中'}
+  %el-container
+    %el-aside{':width': "asideWidth + 'px'", 'style': 'padding-right: 15px'}
+      %issues-list{':issues': 'todoIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'todo', ':cur-label': 'curLabel'}
+    %el-aside{':width': "asideWidth + 'px'", 'style': 'padding-right: 15px'}
+      %issues-list{':issues': 'doingIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'doing', ':cur-label': 'curLabel'}
+    %el-aside{':width': "asideWidth + 'px'"}
+      %issues-list{':issues': 'doneIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'done', ':cur-label': 'curLabel'}
+    %el-main{'v-if': 'detailVisible'}
+      %sidebar{':detail-issue': 'curIssue', ':raw-issue': 'rawIssue', ':detail-index': 'detailIndex', ':total-height': 'height - 1', ':total-width': 'width', ':divider': 'divider'}
+
+:css
+  .el-main {
+    padding: 0;
+  }
+
+  .el-main {
+    overflow: inherit;
+  }
+
+  .el-aside {
+    min-width: 280px;
+  }
+
+  #boards-app {
+    width: auto;
+    height: auto;
+    overflow: auto;
+  }
+

@@ -1,0 +1,163 @@
+import Vue from 'vue/dist/vue.esm'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import MavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+import IssuesMixin from './shared/components/mixins/issues_mixin'
+
+Vue.use(ElementUI);
+Vue.use(MavonEditor);
+
+document.addEventListener('DOMContentLoaded', () => {
+  const boardsApp = new Vue({
+    el: '#boards-app',
+    components: {
+
+    },
+    data() {
+      return {
+        detailVisible: false,
+        projectId: null,
+        milestoneId: null,
+        todoIssues: [],
+        doingIssues: [],
+        doneIssues: [],
+        escCallback: null,
+        isNotified: false
+      }
+    },
+    computed: {
+      width() {
+        return Math.max(this.totalWidth / 4, 280);
+      }
+    },
+    watch: {
+      curLabel(value) {
+        if (value) {
+          this.detailVisible = true;
+        }
+        else {
+          this.detailVisible = false;
+        }
+      },
+      totalWidth(value) {
+        let div = 3;
+        if (this.detailVisible) {
+          div = 4;
+        }
+        this.asideWidth = this.totalWidth / div;
+      },
+      detailVisible(value) {
+        if (value) {
+          this.asideWidth = this.totalWidth / 4;
+          if (!this.isNotified) {
+            this.notify('按Esc键关闭问题详情');
+            this.isNotified = true;
+          }
+          // 响应esc键关闭详情页
+          this.escCallback = (event) => {
+            // esc
+            if (event.keyCode === 27) {
+              this.curLabel = null;
+            }
+          };
+          document.addEventListener('keydown', this.escCallback);
+        }
+        else {
+          this.asideWidth = this.totalWidth / 3;
+          if (this.escCallback) {
+            document.removeEventListener('keydown', this.escCallback);
+            this.escCallback = null;
+          }
+        }
+      }
+    },
+    mixins: [IssuesMixin],
+    mounted() {
+      this.asideWidth = document.documentElement.clientWidth / 3;
+      let pathname = window.location.pathname;
+      let list = pathname.split('/');
+      if (list[1] === 'projects') {
+        this.projectId = parseInt(list[2]);
+      }
+      else if (list[1] === 'milestones') {
+        this.milestoneId = parseInt(list[2]);
+      }
+      this.updateIssues(this.getInitParams());
+      this.divider = false;
+    },
+    methods: {
+      getIssuesEndpoint() {
+        const $boardsApp = document.getElementById('boards-app');
+        return $boardsApp.dataset.endpoint;
+      },
+      updateIssuesCallback() {
+        this.todoIssues = this.issues.filter((item) => item.state === 'To Do');
+        this.doingIssues = this.issues.filter((item) => item.state === 'Doing');
+        this.doneIssues = this.issues.filter((item) => item.state === 'Closed');
+      },
+      getIssuesList(label) {
+        if (label === 'todo') {
+          return this.todoIssues;
+        }
+        else if (label === 'doing') {
+          return this.doingIssues;
+        }
+        else if (label === 'done') {
+          return this.doneIssues;
+        }
+        else {
+          return null;
+        }
+      },
+      setIssuesList(list, label) {
+        if (label === 'todo') {
+          this.todoIssues = list;
+        }
+        else if (label === 'doing') {
+          this.doingIssues = list;
+        }
+        else if (label === 'done') {
+          this.doneIssues = list;
+        }
+        else {
+          this.alert('set error');
+        }
+      },
+      getInitParams() {
+        // milestone
+        let milestone = null;
+        let projectId = null;
+        if (this.milestoneId) {
+          const $navbar = document.getElementById('navbar');
+          const projects = JSON.parse($navbar.dataset.projects);
+          for (let project of projects) {
+            milestone = project.milestones.find(
+              (m) => m.id === this.milestoneId
+            );
+            if (milestone) {
+              projectId = project.id;
+              break;
+            }
+          }
+          return {
+            milestone: milestone.title,
+            project: projectId
+          }
+        }
+        // project
+        else if (this.projectId) {
+          return {project: this.projectId};
+        }
+      },
+      belongsToMe(issue) {
+        if (this.milestoneId) {
+          return issue.milestone.id === this.milestoneId;
+        }
+        else {
+          return issue.projectId === this.projectId;
+        }
+      }
+    }
+  })
+});
