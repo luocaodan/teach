@@ -44,10 +44,12 @@
         this.preX = src.clientX;
         this.dragable = true;
         let mousemoveCb = (des) => {
+          des = des || event;
           this.updateWidth(des);
         };
         document.addEventListener('mousemove', mousemoveCb);
         let mouseupCb = (des) => {
+          des = des || event;
           this.updateWidth(des);
           this.dragable = false;
           document.removeEventListener('mousemove', mousemoveCb);

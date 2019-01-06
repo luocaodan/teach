@@ -55,9 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
             this.isNotified = true;
           }
           // 响应esc键关闭详情页
-          this.escCallback = (event) => {
+          this.escCallback = (e) => {
+            e = e || event;
             // esc
-            if (event.keyCode === 27) {
+            if (e.keyCode === 27) {
               this.curLabel = null;
             }
           };
