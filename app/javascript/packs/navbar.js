@@ -16,4 +16,4 @@ document.addEventListener('DOMContentLoaded', () => {
       Navbar
     },
   })
-})
+});

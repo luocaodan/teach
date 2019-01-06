@@ -43,13 +43,17 @@
       drag(src) {
         this.preX = src.clientX;
         this.dragable = true;
-        document.onmousemove = (des) => {
+        let mousemoveCb = (des) => {
           this.updateWidth(des);
         };
-        document.onmouseup = (des) => {
+        document.addEventListener('mousemove', mousemoveCb);
+        let mouseupCb = (des) => {
           this.updateWidth(des);
           this.dragable = false;
-        }
+          document.removeEventListener('mousemove', mousemoveCb);
+          document.removeEventListener('mouseup', mouseupCb);
+        };
+        document.addEventListener('mouseup', mouseupCb);
       },
       updateWidth(des) {
         if (!this.dragable) {

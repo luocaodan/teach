@@ -2,6 +2,9 @@
   <div class="left-bar list-board">
     <div v-if="this.label" ref="header" class="label-header" :style="{color: labelColor()}">
       {{ labelText() }}
+      <svg class="icon" aria-hidden="true">
+        <use :xlink:href="labelIcon()"></use>
+      </svg>
     </div>
     <div ref="sort" class="sort center clearFloat">
       <span @click="reverse()">
@@ -132,6 +135,14 @@
           'done': '#67C23A'
         };
         return colors[this.label];
+      },
+      labelIcon() {
+        const icons = {
+          'todo': '#icon-daibanshixiang',
+          'doing': '#icon-mux-task-doing',
+          'done': '#icon-wancheng'
+        };
+        return icons[this.label];
       }
     }
   }
@@ -186,7 +197,7 @@
 
   .label-header {
     text-align: center;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid #dcdfe6;
     padding: 7px 0;
   }
 </style>
