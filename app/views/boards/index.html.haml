@@ -5,12 +5,12 @@
 
 #boards-app{data: issues_data, 'v-loading': 'loading', 'element-loading-text': '加载中'}
   %el-container
-    %el-aside{':width': "asideWidth + 'px'", 'style': 'padding-right: 15px'}
-      %issues-list{':issues': 'todoIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'todo', ':cur-label': 'curLabel'}
-    %el-aside{':width': "asideWidth + 'px'", 'style': 'padding-right: 15px'}
-      %issues-list{':issues': 'doingIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'doing', ':cur-label': 'curLabel'}
-    %el-aside{':width': "asideWidth + 'px'"}
-      %issues-list{':issues': 'doneIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'done', ':cur-label': 'curLabel'}
+    %el-aside{':width': "asideWidth + 'px'", 'style': 'padding-right: 10px'}
+      %issues-list{':issues': 'todoIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'todo', ':cur-label': 'curLabel', ':is-box': 'isBox.todo'}
+    %el-aside{':width': "asideWidth + 'px'", 'style': 'padding-right: 5px;padding-left: 5px'}
+      %issues-list{':issues': 'doingIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'doing', ':cur-label': 'curLabel', ':is-box': 'isBox.doing'}
+    %el-aside{':width': "asideWidth + 'px'", 'style': 'padding-left: 10px'}
+      %issues-list{':issues': 'doneIssues', ':total-height': 'height', ':clicked': 'detailIndex', 'label': 'done', ':cur-label': 'curLabel', ':is-box': 'isBox.done'}
     %el-main{'v-if': 'detailVisible'}
       %sidebar{':detail-issue': 'curIssue', ':raw-issue': 'rawIssue', ':detail-index': 'detailIndex', ':total-height': 'height - 1', ':total-width': 'width', ':divider': 'divider'}
 
@@ -24,7 +24,7 @@
   }
 
   .el-aside {
-    min-width: 280px;
+    min-width: 290px;
   }
 
   #boards-app {
@@ -32,4 +32,3 @@
     height: auto;
     overflow: auto;
   }
-

@@ -1,6 +1,7 @@
 <template>
-  <div class="clearFloat">
-    <el-card shadow="hover" :class="{clicked: clicked}" :body-style="{ padding: '0px' }">
+  <div class="clearFloat issue-card">
+    <el-card shadow="hover" :class="{clicked: clicked}"
+             :body-style="{ padding: '0px' }">
       <div style="padding: 14px">
         <div class="main-info">
           <span>{{ issue.title | shorten }}</span>
@@ -46,6 +47,7 @@
     props: {
       issue: Issue,
       clicked: false,
+      label: String
     },
     computed: {
       closed() {

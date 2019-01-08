@@ -37,10 +37,12 @@ class IssuesService < BaseService
       value = value.join ',' if attr == 'labels'
       attr = 'assignee_ids' if attr == 'assignee'
       attr = 'milestone_id' if attr == 'milestone'
+      state_flag = false
       if attr == 'state'
         if value.include?('To Do') || value.include?('Doing')
           attr = 'labels'
           value = value.join ','
+          state_flag = true
         else
           attr = 'state_event'
           value = value == 'Open' ? 'reopen' : 'close'
@@ -49,6 +51,9 @@ class IssuesService < BaseService
       payload = {attr => value}
       if attr == 'state_event' && value == 'reopen'
         payload[:labels] = 'To Do'
+      end
+      if state_flag
+        payload[:state_event] = 'reopen'
       end
       issue = put "projects/#{project_id}/issues/#{iid}", payload
     end

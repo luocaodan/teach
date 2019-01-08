@@ -155,7 +155,6 @@ export default {
     updateDetailIndex(index, label) {
       this.detailIndex = index;
       this.curLabel = label ? label : null;
-      console.log(this.curLabel);
       this.reDupIssue();
     },
     reDupIssue() {

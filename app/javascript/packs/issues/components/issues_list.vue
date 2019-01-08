@@ -34,9 +34,16 @@
       </span>
     </div>
     <div :style="{height: height + 'px'}">
-      <el-scrollbar class="scroll center">
-        <issue-card class="issue-item" :clicked="clicked === index && label === curLabel" v-for="(issue, index) in issues" :issue="issue"
-                    :key="index" @click.native="clickIssue(index)"></issue-card>
+      <div v-if="isBox" class="drag-box" :style="dragBoxStyle()">
+
+      </div>
+      <el-scrollbar class="scroll center" v-else>
+        <issue-card class="issue-item draggable-issue" :label="label"
+                    :data-label="label" :data-index="index"
+                    :clicked="clicked === index && label === curLabel"
+                    v-for="(issue, index) in issues" :issue="issue"
+                    :key="index" @click.native="clickIssue(index)">
+        </issue-card>
       </el-scrollbar>
     </div>
   </div>
@@ -64,7 +71,8 @@
       totalHeight: Number,
       clicked: Number,
       label: String,
-      curLabel: String
+      curLabel: String,
+      isBox: Boolean
     },
     computed: {
       height() {
@@ -85,7 +93,6 @@
       this.handleSortField(this.sort_field);
     },
     updated() {
-      console.log(this.issues);
       if (!this.heightFlag) {
         const sort = this.$refs.sort;
         this.sortHeight = sort.offsetHeight;
@@ -143,7 +150,15 @@
           'done': '#icon-wancheng'
         };
         return icons[this.label];
-      }
+      },
+      dragBoxStyle() {
+        const borderColor = this.labelColor();
+        const height = this.height > 400 ? 400 : this.height * 0.9;
+        return {
+          height: `${height}px`,
+          border: `3px dashed ${borderColor}`
+        }
+      },
     }
   }
 </script>
@@ -199,5 +214,28 @@
     text-align: center;
     border-bottom: 1px solid #dcdfe6;
     padding: 7px 0;
+  }
+
+  .drag-box {
+    background-color: #ebf2f9;
+    margin: 10px;
+  }
+
+  .draggable-issue {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .draggable-issue:hover {
+    cursor: move;
+  }
+
+  body .draggable-issue {
+    -webkit-transition: 0ms;
+    -moz-transition:  0ms;
+    -o-transition:  0ms;
+    transition:  0ms;
   }
 </style>
