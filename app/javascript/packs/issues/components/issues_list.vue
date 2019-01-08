@@ -39,10 +39,11 @@
       </div>
       <el-scrollbar class="scroll center" v-else>
         <issue-card class="issue-item draggable-issue" :label="label"
-                    :data-label="label" :data-index="index"
                     :clicked="clicked === index && label === curLabel"
                     v-for="(issue, index) in issues" :issue="issue"
-                    :key="index" @click.native="clickIssue(index)">
+                    :key="index" @click.native="clickIssue(index)"
+                    @mousemove.native="checkMove"
+                    @mousedown.native.stop="startDrag(index, $event)">
         </issue-card>
       </el-scrollbar>
     </div>
@@ -159,6 +160,100 @@
           border: `3px dashed ${borderColor}`
         }
       },
+      startDrag(index, e) {
+        this.isDrag = true;
+        this.cardIndex = index;
+        e = e || event;
+        this.card = e.currentTarget;
+        this.isMoveFirst = true;
+        document.addEventListener('mousemove', this.dragMove);
+        document.addEventListener('mouseup', this.endDrag);
+        this.leftDis = document.getElementById('boards-app').scrollLeft;
+      },
+      dragMove(e) {
+        if (!this.isDrag) {
+          return;
+        }
+        if (!this.isMove) {
+          return;
+        }
+
+        if (this.isMoveFirst) {
+          this.isMoveFirst = false;
+          this.dx = e.layerX;
+          this.dy = e.layerY;
+          let sx = e.clientX - this.dx;
+          let sy = e.clientY - this.dy;
+          const width = document.querySelector('.draggable-issue').offsetWidth;
+          const stylus = {
+            position: 'fixed',
+            width: width + 'px',
+            zIndex: 10,
+            left: sx + 'px',
+            top: sy + 'px'
+          };
+          // 创建临时元素
+          this.tempNode = this.card.cloneNode(true);
+          Object.assign(this.tempNode.style, stylus);
+          document.body.appendChild(this.tempNode);
+          // 显示吸附框
+          eventhub.$emit('displayBox', this.label);
+        }
+
+        e = e || event;
+        let mx = e.clientX - this.dx;
+        let my = e.clientY - this.dy;
+        this.tempNode.style.left = mx + 'px';
+        this.tempNode.style.top = my + 'px';
+        document.removeEventListener('mousemove', this.dragMove);
+        setTimeout(() => {
+          document.addEventListener('mousemove', this.dragMove);
+        }, 30);
+      },
+      endDrag(e) {
+        if (!this.isDrag) {
+          return;
+        }
+        this.isDrag = false;
+        if (!this.isMove) {
+          this.clickIssue(this.cardIndex);
+          return;
+        }
+        this.isMove = false;
+        e = e || event;
+        const x = e.clientX + this.leftDis;
+        this.leftDis = null;
+        const d = document.querySelector('.el-aside').offsetWidth;
+        let label = null;
+        if (x > 0.2 * d && x < d * 0.8) {
+          label = 'todo';
+        } else if (x > 1.2 * d && x < 1.8 * d) {
+          label = 'doing';
+        } else if (x > 2.2 * d && x < 2.8 * d) {
+          label = 'done';
+        } else {
+          // do nothing
+        }
+
+        eventhub.$emit('displayBox', null);
+        // clear up for gc
+        document.body.removeChild(this.tempNode);
+        this.tempNode = null;
+        this.dx = null;
+        this.dy = null;
+
+        if (label) {
+          eventhub.$emit('updateIssueState', this.label, this.cardIndex, label);
+        }
+        this.cardIndex = null;
+        document.removeEventListener('mousemove', this.dragMove);
+        document.removeEventListener('mouseup', this.endDrag);
+      },
+      checkMove() {
+        if (this.isDrag) {
+          this.isMove = true;
+        }
+      }
     }
   }
 </script>
@@ -234,8 +329,8 @@
 
   body .draggable-issue {
     -webkit-transition: 0ms;
-    -moz-transition:  0ms;
-    -o-transition:  0ms;
-    transition:  0ms;
+    -moz-transition: 0ms;
+    -o-transition: 0ms;
+    transition: 0ms;
   }
 </style>
