@@ -46,6 +46,10 @@
         let mousemoveCb = (des) => {
           des = des || event;
           this.updateWidth(des);
+          document.removeEventListener('mousemove', mousemoveCb);
+          setTimeout(() => {
+            document.addEventListener('mousemove', mousemoveCb);
+          }, 30);
         };
         document.addEventListener('mousemove', mousemoveCb);
         let mouseupCb = (des) => {
