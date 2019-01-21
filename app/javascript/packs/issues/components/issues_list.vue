@@ -38,7 +38,7 @@
 
       </div>
       <el-scrollbar class="scroll center" v-else>
-        <issue-card class="issue-item draggable-issue" :label="label"
+        <issue-card class="issue-item" :class="{ 'draggable-issue': canDrag}" :label="label"
                     :clicked="clicked === index && label === curLabel"
                     v-for="(issue, index) in issues" :issue="issue"
                     :key="index" @click.native="clickIssue(index)"
@@ -73,7 +73,8 @@
       clicked: Number,
       label: String,
       curLabel: String,
-      isBox: Boolean
+      isBox: Boolean,
+      canDrag: Boolean
     },
     computed: {
       height() {
@@ -161,6 +162,9 @@
         }
       },
       startDrag(index, e) {
+        if (!this.canDrag) {
+          return;
+        }
         this.isDrag = true;
         this.cardIndex = index;
         e = e || event;

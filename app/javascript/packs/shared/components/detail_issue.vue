@@ -219,6 +219,7 @@
       <div class="up-left description-info">
         <div class="block-title">
           <span>问题描述</span>
+          <i class="el-icon-edit description-edit" @click="openPolicy('description')"></i>
         </div>
         <div class="info-list clearFloat">
           <mavon-editor
@@ -235,7 +236,7 @@
             @save="update('description')"
             placeholder="输入问题描述">
           </mavon-editor>
-          <div v-else @click="openPolicy('description')">
+          <div v-else>
             <div class="issue-html-container" v-if="issue.description" v-html="renderedDescription ">
             </div>
             <div v-else>
@@ -576,6 +577,16 @@
 
   .issue-title {
     margin-bottom: 20px;
+  }
+
+  .description-edit {
+    padding: 5px;
+  }
+
+  .description-edit:hover {
+    background-color: #e6e6e6;
+    border-radius: 3px;
+    cursor: pointer;
   }
 
 </style>

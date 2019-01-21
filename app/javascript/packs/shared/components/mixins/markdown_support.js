@@ -70,7 +70,6 @@ export default {
     },
     getMarkdownIt() {
       if (!this.markdownIt) {
-        // this.markdownIt = this.$refs.mdEditor.markdownIt;
         this.markdownIt = mavonEditor.getMarkdownIt();
       }
       return this.markdownIt;
@@ -107,7 +106,8 @@ export default {
       UploadService.upload(this.issue.projectId, formData)
         .then(res => res.data)
         .then((data) => {
-          this.getMarkdownIt().$img2Url(pos, data.url);
+          const mdEditor = this.$refs.mdEditor;
+          mdEditor.$img2Url(pos, data.url);
         })
         .catch((e) => {
           // this.$refs.mdEditor.$refs.toolbar_left.$imgDel(pos);
