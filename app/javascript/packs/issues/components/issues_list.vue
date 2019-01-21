@@ -228,6 +228,7 @@
         const x = e.clientX + this.leftDis;
         this.leftDis = null;
         const d = document.querySelector('.el-aside').offsetWidth;
+        console.log(x, d);
         let label = null;
         if (x > 0.2 * d && x < d * 0.8) {
           label = 'todo';
@@ -246,7 +247,7 @@
         this.dx = null;
         this.dy = null;
 
-        if (label) {
+        if (label && label !== this.label) {
           eventhub.$emit('updateIssueState', this.label, this.cardIndex, label);
         }
         this.cardIndex = null;
