@@ -30,7 +30,9 @@ class ProjectsService < BaseService
         id: milestone['id'],
         iid: milestone['iid'],
         project_id: milestone['project_id'],
-        title: milestone['title']
+        title: milestone['title'],
+        start_date: milestone['start_date'],
+        due_date: milestone['due_date']
       }
     end
     milestones

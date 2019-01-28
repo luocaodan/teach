@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   # milestone board
   get '/milestones/:milestone_id/kanban', to: 'boards#index'
 
+  # burndown chart
+  get '/milestones/:milestone_id/burndown', to: 'burndown#index'
+
   # issues as root
   root 'issues#index'
 end
