@@ -114,14 +114,12 @@
       const navbar = document.getElementById('navbar');
       this.gitlabHost = navbar.dataset.gitlabhost;
       const projects = JSON.parse(navbar.dataset.projects);
-      const milestonesMap = new Map();
+      // const milestonesMap = new Map();
       for (let project of projects) {
         let milestones = project.milestones;
         for (let milestone of milestones) {
-          if (!milestonesMap.get(project.id)) {
-            milestonesMap.set(project.id, true);
-            this.milestones.push(milestone);
-          }
+          // milestonesMap.set(project.id, true);
+          this.milestones.push(milestone);
         }
         if (!project.own) {
           continue;
