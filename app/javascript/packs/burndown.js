@@ -46,11 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
           .all(params)
           .then(res => res.data)
           .then(data => {
-            // const burnData = this.getBurnData(data);
-            const burnData = this.getMockData();
+            // 默认为任务数燃尽图
+            const burnData = this.getBurnData(data, true);
             const guideData = this.getGuideData(burnData);
             const start = Date.parse(this.dateStr(this.milestone.start_date)) / 1000;
             const end = Date.parse(this.dateStr(this.milestone.due_date)) / 1000;
+            const that = this;
             this.burnOption = {
               title: {
                 text: '燃尽图',
@@ -62,13 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
                   type: 'cross',
                   label: {
                     backgroundColor: '#6a7985',
-                    formatter: function(params) {
+                    formatter: function (params) {
                       const time = params.value;
                       if (time < start) {
-                        return Math.round(time);
-                      }
-                      else {
-                        return new Date(time * 1000).toLocaleString();
+                        return Math.round(time * 10) / 10;
+                      } else {
+                        return that.dateFmt(time * 1000, true);
                       }
                     }
                   }
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 interval: 3600 * 24,
                 axisLabel: {
                   formatter: function (value, index) {
-                    return new Date(value * 1000).toLocaleDateString();
+                    return that.dateFmt(value * 1000);
                   }
                 }
               },
@@ -146,21 +146,96 @@ document.addEventListener('DOMContentLoaded', () => {
           project: projectId
         }
       },
-      getBurnData(data) {
+      getBurnData(data, isWeight) {
         const start = this.milestone.start_date;
-        const end = this.milestone.end_date;
         // 总任务数
-        const total = 0;
+        let total = 0;
         // 总工时
-        const totalTime = 0;
+        let totalWeight = 0;
         for (let issue of data) {
           let create = this.dateStr(issue.created_at);
-
+          if (create === this.dateStr(start)) {
+            total += 1;
+            totalWeight += issue.weight;
+          }
         }
+
+        const res = [];
+        // 起始值
+        const startX = Date.parse(start + 'GMT +8') / 1000;
+        if (isWeight) {
+          res.push([startX, totalWeight]);
+        } else {
+          res.push([startX, total]);
+        }
+
+        data.sort((a, b) => {
+          const stampA = Date.parse(a);
+          const stampB = Date.parse(b);
+          if (stampA <= stampB) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+
+
+        // 时间 任务数映射
+        const timeMap = {};
+        const def = {
+          count: total,
+          weight: totalWeight,
+          isModify: false
+        };
+        // 每个时间赋值为默认值
+        for (let issue of data) {
+          const create = Date.parse(issue.created_at) / 1000;
+          timeMap[create] = Object.assign({}, def);
+          if (issue.closed_at) {
+            const close = Date.parse(issue.closed_at) / 1000;
+            timeMap[close] = def;
+          }
+        }
+
+        // 积累的完成任务数
+        let cumulateCount = 0;
+        let cumulateWeight = 0;
+        const startDate = new Date(startX * 1000).toLocaleDateString();
+        for (let issue of data) {
+          const create = Date.parse(issue.created_at) / 1000;
+
+          // 非首日
+          if (this.dateStr(issue.created_at) !== startDate) {
+            cumulateCount -= 1;
+            cumulateWeight -= issue.weight;
+
+            timeMap[create]['count'] -= cumulateCount;
+            timeMap[create]['weight'] -= cumulateWeight;
+            timeMap[create]['isModify'] = true;
+          }
+
+          if (issue.closed_at) {
+            const close = Date.parse(issue.closed_at) / 1000;
+            cumulateCount += 1;
+            cumulateWeight += issue.weight;
+            timeMap[close]['count'] -= cumulateCount;
+            timeMap[close]['weight'] -= cumulateWeight;
+            timeMap[close]['isModify'] = true;
+          }
+        }
+        for (let time in timeMap) {
+          const info = timeMap[time];
+          if (!info.isModify) {
+            continue;
+          }
+          const val = isWeight ? info.weight : info.count;
+          res.push([time, val]);
+        }
+        return res;
       },
       getGuideData(burnData) {
-        const start = Date.parse(this.dateStr(this.milestone.start_date)) / 1000;
-        const end = Date.parse(this.dateStr(this.milestone.due_date)) / 1000;
+        const start = Date.parse(this.milestone.start_date + 'GMT +8') / 1000;
+        const end = Date.parse(this.milestone.due_date + 'GMT +8') / 1000;
 
         const total = burnData.length > 0 ? burnData[0][1] : 0;
         const diff = total / ((end - start) / 3600 / 24);
@@ -178,12 +253,26 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       getMockData() {
         const d = 3600 * 24;
-        const start = Date.parse(this.dateStr(this.milestone.start_date)) / 1000;
-        const end = Date.parse(this.dateStr(this.milestone.due_date)) / 1000;
-        return [[start, 100], [start+d, 94], [start+1.5*d, 85]];
+        const start = Date.parse(this.milestone.start_date + 'GMT +8') / 1000;
+        const end = Date.parse(this.milestone.due_date + 'GMT +8') / 1000;
+        return [[start, 100], [start + d, 94], [start + 1.5 * d, 85]];
       },
-      dateStr(str) {
+      dateStr(str, isUtc = false) {
+        if (isUtc) {
+          return new Date(Date.parse(str)).toDateString();
+        }
         return new Date(Date.parse(str)).toLocaleDateString();
+      },
+      dateFmt(timestamp, isFull = false) {
+        const d = new Date(timestamp);
+        let res = `${d.getMonth() + 1}/${d.getDate()}`;
+        if (isFull) {
+          const h = d.getHours(), m = d.getMinutes(), s = d.getSeconds();
+          if (h + m + s > 0) {
+            res += ` ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+          }
+        }
+        return res;
       }
     }
   })
