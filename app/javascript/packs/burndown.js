@@ -147,14 +147,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       },
       getBurnData(data, isWeight) {
+        // X 坐标转换函数
+        const toX = (timestamp) => {
+          return Math.round(timestamp / 1000);
+        };
         const start = this.milestone.start_date;
         // 总任务数
         let total = 0;
-        // 总工时
+        // 总工时 开始日之前创建的任务
         let totalWeight = 0;
+        const startTime = Date.parse(start + 'GMT +8') + 3600 * 24 * 1000;
         for (let issue of data) {
-          let create = this.dateStr(issue.created_at);
-          if (create === this.dateStr(start)) {
+          const createTime = Date.parse(issue.created_at);
+          if (createTime < startTime) {
             total += 1;
             totalWeight += issue.weight;
           }
@@ -162,38 +167,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const res = [];
         // 起始值
-        const startX = Date.parse(start + 'GMT +8') / 1000;
+        const startX = toX(Date.parse(start + 'GMT +8'));
         if (isWeight) {
           res.push([startX, totalWeight]);
         } else {
           res.push([startX, total]);
         }
 
-        data.sort((a, b) => {
-          const stampA = Date.parse(a);
-          const stampB = Date.parse(b);
-          if (stampA <= stampB) {
-            return -1;
-          } else {
-            return 1;
+        const events = [];
+        for (let issue of data) {
+          const create = toX(Date.parse(issue.created_at));
+          events.push({
+            time: create,
+            event: 'create',
+            weight: issue.weight
+          });
+          if (issue.closed_at) {
+            const close = toX(Date.parse(issue.closed_at));
+            events.push({
+              time: close,
+              type: 'close',
+              weight: issue.weight
+            });
           }
-        });
+        }
 
+        // 事件按事件排序
+        events.sort((a, b) => {
+          return a.time - b.time;
+        });
 
         // 时间 任务数映射
         const timeMap = {};
-        const def = {
-          count: total,
-          weight: totalWeight,
-          isModify: false
-        };
-        // 每个时间赋值为默认值
-        for (let issue of data) {
-          const create = Date.parse(issue.created_at) / 1000;
-          timeMap[create] = Object.assign({}, def);
-          if (issue.closed_at) {
-            const close = Date.parse(issue.closed_at) / 1000;
-            timeMap[close] = def;
+        for (let event of events) {
+          // 每个时间赋值为默认值
+          timeMap[event.time] = {
+            count: total,
+            weight: totalWeight,
+            isModify: false
           }
         }
 
@@ -201,23 +212,23 @@ document.addEventListener('DOMContentLoaded', () => {
         let cumulateCount = 0;
         let cumulateWeight = 0;
         const startDate = new Date(startX * 1000).toLocaleDateString();
-        for (let issue of data) {
-          const create = Date.parse(issue.created_at) / 1000;
+        for (let event of events) {
+          const create = event.time;
 
           // 非首日
-          if (this.dateStr(issue.created_at) !== startDate) {
+          if (event.type === 'create' && this.dateStr(create) !== startDate) {
             cumulateCount -= 1;
-            cumulateWeight -= issue.weight;
+            cumulateWeight -= event.weight;
 
             timeMap[create]['count'] -= cumulateCount;
             timeMap[create]['weight'] -= cumulateWeight;
             timeMap[create]['isModify'] = true;
           }
 
-          if (issue.closed_at) {
-            const close = Date.parse(issue.closed_at) / 1000;
+          if (event.type === 'close') {
+            const close = event.time;
             cumulateCount += 1;
-            cumulateWeight += issue.weight;
+            cumulateWeight += event.weight;
             timeMap[close]['count'] -= cumulateCount;
             timeMap[close]['weight'] -= cumulateWeight;
             timeMap[close]['isModify'] = true;
@@ -231,6 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
           const val = isWeight ? info.weight : info.count;
           res.push([time, val]);
         }
+        res.sort((a, b) => {
+          return a[0] - b[0];
+        });
         return res;
       },
       getGuideData(burnData) {
@@ -258,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return [[start, 100], [start + d, 94], [start + 1.5 * d, 85]];
       },
       dateStr(str, isUtc = false) {
+        // str 为UTC时间
         if (isUtc) {
           return new Date(Date.parse(str)).toDateString();
         }
