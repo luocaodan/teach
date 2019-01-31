@@ -8,7 +8,7 @@ import 'echarts/lib/component/title';
 import 'echarts/lib/component/toolbox';
 import 'echarts/lib/component/legend';
 import IssuesService from "./issues/services/issues_service";
-import AlertMixin from './shared/components/mixins/alert';
+import IssuesMixin from './shared/components/mixins/issues_mixin'
 
 Vue.use(ElementUI);
 Vue.component('v-chart', ECharts);
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const burndownApp = new Vue({
     el: '#burndown-app',
     components: {},
-    mixins: [AlertMixin],
+    mixins: [IssuesMixin],
     data() {
       return {
         milestone: null,
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => res.data)
           .then(data => {
             // 默认为任务数燃尽图
-            const burnData = this.getBurnData(data, true);
+            const burnData = this.getBurnData(data, false);
             const guideData = this.getGuideData(burnData);
             const start = Date.parse(this.dateStr(this.milestone.start_date)) / 1000;
             const end = Date.parse(this.dateStr(this.milestone.due_date)) / 1000;
@@ -152,14 +152,18 @@ document.addEventListener('DOMContentLoaded', () => {
           return Math.round(timestamp / 1000);
         };
         const start = this.milestone.start_date;
+        // 判断是否为开始日之前
+        const isBeforeFirstDay = (timestamp) => {
+          const startTime = Date.parse(start + 'GMT +8') + 3600 * 24 * 1000;
+          return timestamp < startTime;
+        };
         // 总任务数
         let total = 0;
         // 总工时 开始日之前创建的任务
         let totalWeight = 0;
-        const startTime = Date.parse(start + 'GMT +8') + 3600 * 24 * 1000;
         for (let issue of data) {
           const createTime = Date.parse(issue.created_at);
-          if (createTime < startTime) {
+          if (isBeforeFirstDay(createTime)) {
             total += 1;
             totalWeight += issue.weight;
           }
@@ -179,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const create = toX(Date.parse(issue.created_at));
           events.push({
             time: create,
-            event: 'create',
+            type: 'create',
             weight: issue.weight
           });
           if (issue.closed_at) {
@@ -211,12 +215,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // 积累的完成任务数
         let cumulateCount = 0;
         let cumulateWeight = 0;
-        const startDate = new Date(startX * 1000).toLocaleDateString();
         for (let event of events) {
           const create = event.time;
 
-          // 非首日
-          if (event.type === 'create' && this.dateStr(create) !== startDate) {
+          if (event.type === 'create' && !isBeforeFirstDay(create * 1000)) {
             cumulateCount -= 1;
             cumulateWeight -= event.weight;
 
@@ -288,6 +290,13 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
         return res;
+      },
+      getIssuesEndpoint() {
+        const $burndownApp = document.getElementById('burndown-app');
+        return $burndownApp.dataset.endpoint;
+      },
+      belongsToMe(issue) {
+        return false;
       }
     }
   })
