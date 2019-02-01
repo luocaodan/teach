@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => res.data)
           .then(data => {
             // 默认为任务数燃尽图
-            const burnData = this.getBurnData(data, false);
+            const burnData = this.getBurnData(data, true);
             const guideData = this.getGuideData(burnData);
             const start = Date.parse(this.dateStr(this.milestone.start_date)) / 1000;
             const end = Date.parse(this.dateStr(this.milestone.due_date)) / 1000;
@@ -157,6 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const startTime = Date.parse(start + 'GMT +8') + 3600 * 24 * 1000;
           return timestamp < startTime;
         };
+        // weight 默认 0
+        const defWeight = weight => weight ? weight : 0;
         // 总任务数
         let total = 0;
         // 总工时 开始日之前创建的任务
@@ -165,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const createTime = Date.parse(issue.created_at);
           if (isBeforeFirstDay(createTime)) {
             total += 1;
-            totalWeight += issue.weight;
+            totalWeight += defWeight(issue.weight);
           }
         }
 
@@ -184,14 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
           events.push({
             time: create,
             type: 'create',
-            weight: issue.weight
+            weight: defWeight(issue.weight)
           });
           if (issue.closed_at) {
             const close = toX(Date.parse(issue.closed_at));
             events.push({
               time: close,
               type: 'close',
-              weight: issue.weight
+              weight: defWeight(issue.weight)
             });
           }
         }
@@ -247,6 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
         res.sort((a, b) => {
           return a[0] - b[0];
         });
+        // 加入实时数据
+        res.push([Math.round(new Date().getTime()/ 1000), res[res.length-1][1]]);
         return res;
       },
       getGuideData(burnData) {
