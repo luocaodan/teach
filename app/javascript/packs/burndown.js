@@ -58,29 +58,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 show: true
               },
               tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                  type: 'cross',
-                  label: {
-                    backgroundColor: '#6a7985',
-                    formatter: function (params) {
-                      const time = params.value;
-                      if (time < start) {
-                        return Math.round(time * 10) / 10;
-                      } else {
-                        return that.dateFmt(time * 1000, true);
-                      }
-                    }
-                  }
+                // trigger: 'axis',
+                // axisPointer: {
+                //   type: 'cross',
+                //   label: {
+                //     backgroundColor: '#6a7985',
+                //     formatter: function (params) {
+                //       const time = params.value;
+                //       if (time < start) {
+                //         return Math.round(time * 10) / 10;
+                //       } else {
+                //         return that.dateFmt(time * 1000, true);
+                //       }
+                //     }
+                //   }
+                // },
+                formatter: function (params) {
+                  const data = params.data;
+                  const time = new Date(data[0] * 1000).toLocaleDateString();
+                  return `${time} 剩余 ${Math.round(data[1]*10)/10}`
                 }
               },
               toolbox: {
                 // 图片另存为
                 feature: {
-                  saveAsImage: {},
+                  dataZoom: {},
+                  saveAsImage: {
+                    title: '下载'
+                  },
                   dataView: {},
                 },
-                showTitle: false
               },
               legend: {
                 data: ['实际', '计划']
@@ -118,7 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   name: '计划',
                   data: guideData,
                   type: 'line'
-                }]
+                }],
+              animation: false
             };
             this.loading = false;
           })
