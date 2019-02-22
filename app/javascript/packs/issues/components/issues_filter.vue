@@ -185,7 +185,7 @@
         this.currentM = user_id;
         this.currentMN = user_name;
         if (str === 'all') {
-          this.currentMN = '所有';
+            this.currentMN = '所有';
         }
         this.update();
       },

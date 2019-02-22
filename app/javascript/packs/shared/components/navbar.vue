@@ -27,10 +27,10 @@
           </el-menu-item>
           <el-menu-item
             :index="'2-' + milestone.project_id + '-' + milestone.id + '-burndown'">
-            燃尽图
+            冲刺详情
           </el-menu-item>
           <el-menu-item :index="'2-' + milestone.project_id + '-' + milestone.iid + '-edit'">
-            冲刺详情
+            gitlab
           </el-menu-item>
         </el-submenu>
         <el-submenu index="2-new" v-if="this.projects.length">

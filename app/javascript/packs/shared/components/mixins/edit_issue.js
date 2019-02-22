@@ -1,7 +1,9 @@
 // mixin
 import Issue from '../../../issues/models/issue'
+import DateMixin from './date_support'
 
 export default {
+  mixins: [DateMixin],
   data() {
     return {
       projects: [],
@@ -9,26 +11,6 @@ export default {
       labels: {},
       members: {},
       milestones: {},
-      pickerOptions: {
-        disabledDate(time) {
-          const date = new Date();
-          let previousDay = date.setTime(date - 3600 * 1000 * 24);
-          return time.getTime() < previousDay;
-        },
-        shortcuts: [{
-          text: '今天',
-          onClick(picker) {
-            picker.$emit('pick', new Date());
-          }
-        }, {
-          text: '明天',
-          onClick(picker) {
-            const date = new Date();
-            date.setTime(date.getTime() + 3600 * 1000 * 24);
-            picker.$emit('pick', date);
-          }
-        }]
-      },
     }
   },
   props: {

@@ -27,7 +27,7 @@ export default {
         undo: true, // 上一步
         redo: true, // 下一步
         trash: false, // 清空
-        save: false, // 保存（触发events中的save事件）
+        save: true, // 保存（触发events中的save事件）
         navigation: false, // 导航目录
         alignleft: false, // 左对齐
         aligncenter: false, // 居中

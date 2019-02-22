@@ -7,20 +7,32 @@ import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/toolbox';
 import 'echarts/lib/component/legend';
+import MavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 import IssuesService from "./issues/services/issues_service";
+import SprintsService from './burndown/services/sprints_service';
 import IssuesMixin from './shared/components/mixins/issues_mixin'
+import DetailSprint from './burndown/components/detail_sprint.vue'
 
 Vue.use(ElementUI);
+Vue.use(MavonEditor);
 Vue.component('v-chart', ECharts);
 
 document.addEventListener('DOMContentLoaded', () => {
   const burndownApp = new Vue({
     el: '#burndown-app',
-    components: {},
+    components: {
+      DetailSprint
+    },
     mixins: [IssuesMixin],
     data() {
       return {
-        milestone: null,
+        milestone: {
+          title: null,
+          description: null,
+          start_date: null,
+          due_date: null
+        },
         loading: false,
         isShow: false,
         burnOption: null,
@@ -38,9 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     mounted() {
       const $app = document.getElementById('burndown-app');
-      const issuesEndpoint = $app.dataset.endpoint;
+      const issuesEndpoint = $app.dataset.issuesEndpoint;
       this.issuesService = new IssuesService({
         issuesEndpoint: issuesEndpoint
+      });
+      const sprintsEndpoint = $app.dataset.sprintsEndpoint;
+      this.sprintsService = new SprintsService({
+        sprintsEndpoint: sprintsEndpoint
       });
 
       this.updateBurnInfo();
@@ -60,7 +76,16 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(data => {
             this.issues = data;
             this.updateEchartsOption();
+            return this.sprintsService
+              .getSprint(this.milestone.id, this.projectId);
+          })
+          .then(res => res.data)
+          .then(sprint => {
+            this.milestone.description = sprint.description;
             this.loading = false;
+          })
+          .catch(e => {
+            alert('服务器错误');
           })
       },
       updateEchartsOption() {
@@ -73,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.burnOption = {
           title: {
             text: '燃尽图',
-            show: true
+            show: false
           },
           tooltip: {
             // trigger: 'axis',
@@ -172,7 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
           }
         }
-        this.milestone = milestone;
+        this.milestone = Object.assign(milestone, {description: null});
+        this.projectId = projectId;
         return {
           milestone: milestone.title,
           project: projectId

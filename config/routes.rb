@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   resources :issues
 
+  resources :sprints
+
   # file upload
   post '/projects/:project_id/uploads', to: 'uploads#index'
 
