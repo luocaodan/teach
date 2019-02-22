@@ -22,7 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return {
         milestone: null,
         loading: false,
-        burnOption: null
+        isShow: false,
+        burnOption: null,
+        yAxisOption: '任务数',
+      }
+    },
+    computed: {
+      isWeight() {
+        if (this.yAxisOption === '任务数') {
+          return false;
+        } else {
+          return true;
+        }
       }
     },
     mounted() {
@@ -38,98 +49,111 @@ document.addEventListener('DOMContentLoaded', () => {
       updateBurnInfo() {
         const params = this.getParams();
         if (!this.milestone.start_date || !this.milestone.due_date) {
-          this.alert('请为冲刺添加开始日期和截止日期');
+          this.isShow = false;
           return;
         }
+        this.isShow = true;
         this.loading = true;
         this.issuesService
           .all(params)
           .then(res => res.data)
           .then(data => {
-            // 默认为任务数燃尽图
-            const burnData = this.getBurnData(data, true);
-            const guideData = this.getGuideData(burnData);
-            const start = Date.parse(this.dateStr(this.milestone.start_date)) / 1000;
-            const end = Date.parse(this.dateStr(this.milestone.due_date)) / 1000;
-            const that = this;
-            this.burnOption = {
-              title: {
-                text: '燃尽图',
-                show: true
-              },
-              tooltip: {
-                // trigger: 'axis',
-                // axisPointer: {
-                //   type: 'cross',
-                //   label: {
-                //     backgroundColor: '#6a7985',
-                //     formatter: function (params) {
-                //       const time = params.value;
-                //       if (time < start) {
-                //         return Math.round(time * 10) / 10;
-                //       } else {
-                //         return that.dateFmt(time * 1000, true);
-                //       }
-                //     }
-                //   }
-                // },
-                formatter: function (params) {
-                  const data = params.data;
-                  const time = new Date(data[0] * 1000).toLocaleDateString();
-                  return `${time} 剩余 ${Math.round(data[1]*10)/10}`
-                }
-              },
-              toolbox: {
-                // 图片另存为
-                feature: {
-                  dataZoom: {},
-                  saveAsImage: {
-                    title: '下载'
-                  },
-                  dataView: {},
-                },
-              },
-              legend: {
-                data: ['实际', '计划']
-              },
-              xAxis: {
-                type: 'value',
-                data() {
-                  const res = [];
-                  for (let i = start; i <= end; i += 3600 * 24) {
-                    res.push(i);
-                  }
-                  return res;
-                },
-                min: start,
-                max: end,
-                interval: 3600 * 24,
-                axisLabel: {
-                  formatter: function (value, index) {
-                    return that.dateFmt(value * 1000);
-                  }
-                }
-              },
-              yAxis: {
-                type: 'value',
-                min: 0
-              },
-              series: [
-                {
-                  name: '实际',
-                  data: burnData,
-                  type: 'line',
-                  smooth: true
-                },
-                {
-                  name: '计划',
-                  data: guideData,
-                  type: 'line'
-                }],
-              animation: false
-            };
+            this.issues = data;
+            this.updateEchartsOption();
             this.loading = false;
           })
+      },
+      updateEchartsOption() {
+        // 默认为任务数燃尽图
+        const burnData = this.getBurnData(this.issues, this.isWeight);
+        const guideData = this.getGuideData(burnData);
+        const start = Date.parse(this.dateStr(this.milestone.start_date)) / 1000;
+        const end = Date.parse(this.dateStr(this.milestone.due_date)) / 1000;
+        const that = this;
+        this.burnOption = {
+          title: {
+            text: '燃尽图',
+            show: true
+          },
+          tooltip: {
+            // trigger: 'axis',
+            // axisPointer: {
+            //   type: 'cross',
+            //   label: {
+            //     backgroundColor: '#6a7985',
+            //     formatter: function (params) {
+            //       const time = params.value;
+            //       if (time < start) {
+            //         return Math.round(time * 10) / 10;
+            //       } else {
+            //         return that.dateFmt(time * 1000, true);
+            //       }
+            //     }
+            //   }
+            // },
+            formatter: function (params) {
+              const data = params.data;
+              const day = 24 * 3600;
+              // 判断整天
+              let time = null;
+              let date = new Date(data[0] * 1000).toLocaleDateString();
+              if (data[0] % day === 57600) {
+                time = date;
+              }
+              else {
+                time = `${date} ${new Date(data[0] * 1000).toLocaleTimeString()}`;
+              }
+              return `${time} 剩余 ${Math.round(data[1] * 10) / 10}`
+            }
+          },
+          toolbox: {
+            // 图片另存为
+            feature: {
+              dataZoom: {},
+              saveAsImage: {
+                title: '下载'
+              },
+            },
+          },
+          legend: {
+            data: ['实际', '计划']
+          },
+          xAxis: {
+            type: 'value',
+            data() {
+              const res = [];
+              for (let i = start; i <= end; i += 3600 * 24) {
+                res.push(i);
+              }
+              return res;
+            },
+            min: start,
+            max: Math.max(end, burnData[burnData.length - 1][0]),
+            interval: 3600 * 24,
+            axisLabel: {
+              formatter: function (value, index) {
+                return that.dateFmt(value * 1000);
+              }
+            }
+          },
+          yAxis: {
+            type: 'value',
+            min: 0
+          },
+          series: [
+            {
+              name: '实际',
+              data: burnData,
+              type: 'line',
+              // smooth: true
+            },
+            {
+              name: '计划',
+              data: guideData,
+              type: 'line'
+            }],
+          animation: false
+        };
       },
       getParams() {
         const pathname = window.location.pathname;
@@ -258,7 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
           return a[0] - b[0];
         });
         // 加入实时数据
-        res.push([Math.round(new Date().getTime()/ 1000), res[res.length-1][1]]);
+        const last = res[res.length - 1][1];
+        if (last > 0) {
+          res.push([Math.round(new Date().getTime() / 1000), last]);
+        }
         return res;
       },
       getGuideData(burnData) {
@@ -270,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let w = total;
         const res = [];
         for (let i = start; i <= end; i += 3600 * 24) {
-          if (total === 0) {
+          if (w <= 0) {
             res.push([i, 0]);
           } else {
             res.push([i, w]);
@@ -278,6 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
         return res;
+      },
+      changeYAxis() {
+        this.updateEchartsOption();
       },
       getMockData() {
         const d = 3600 * 24;

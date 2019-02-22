@@ -3,13 +3,33 @@
 - content_for :styles do
   = stylesheet_pack_tag 'burndown'
 
-#burndown-app{data: issues_data, 'v-loading': 'loading', 'element-loading-text': '加载中'}
-  %v-chart{':options': 'burnOption'}
+#burndown-app{data: issues_data, 'v-loading': 'loading', 'element-loading-text': '加载中', ':style': "{height: height + 'px'}"}
+  .chart{'v-if': 'isShow'}
+    .change-tab
+      %el-radio-group{'v-model': 'yAxisOption', '@change': 'changeYAxis'}
+        %el-radio-button{'label': '任务数'}
+        %el-radio-button{'label': '权重'}
+    %v-chart{':options': 'burnOption'}
+  .alert{'v-else': 'isShow'}
+    %el-alert{'title': '请为冲刺添加开始日期和截止日期', 'type': 'error', ':closable': 'false', 'show-icon': '', 'description': '设置开始日期和结束日期后才能正常显示燃尽图'}
 
 :css
-  .echarts {
+  #burndown-app {
+    overflow-y: auto;
+  }
+
+  #burndown-app > * {
     width: 60%;
     margin: auto;
     min-width: 400px;
+  }
+
+  .echarts {
+    margin: auto;
+    width: 100%;
+  }
+
+  .change-tab {
+    margin: 10px auto;
   }
 
