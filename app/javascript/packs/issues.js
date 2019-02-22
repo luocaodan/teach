@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.issues = list;
       },
       getInitParams() {
-        return {};
+        return {state: 'opened'};
       },
       belongsToMe(issue) {
         return true;

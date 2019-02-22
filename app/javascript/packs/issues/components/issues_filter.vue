@@ -78,8 +78,8 @@
         currentPN: '所有',
         currentL: 'all',
         currentM: 'all',
-        currentMN: '',
-        currentS: 'all'
+        currentMN: '所有',
+        currentS: 'Open'
       }
     },
     computed: {
@@ -184,6 +184,9 @@
         }
         this.currentM = user_id;
         this.currentMN = user_name;
+        if (str === 'all') {
+          this.currentMN = '所有';
+        }
         this.update();
       },
       update() {
