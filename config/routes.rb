@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   resources :sprints
 
+  resources :daily_scrums
+
   # file upload
   post '/projects/:project_id/uploads', to: 'uploads#index'
 

@@ -342,7 +342,7 @@
       issueDup: Issue,
     },
     mounted() {
-      this.toolbars.save = true;
+      // this.toolbars.save = true;
     },
     updated() {
       if (!this.issue) {

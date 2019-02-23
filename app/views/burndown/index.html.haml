@@ -10,7 +10,7 @@
       %el-radio-group{'v-model': 'yAxisOption', '@change': 'changeYAxis', 'size': 'mini'}
         %el-radio-button{'label': '任务数'}
         %el-radio-button{'label': '权重'}
-    %v-chart{':options': 'burnOption'}
+    %v-chart{':options': 'burnOption', 'ref': 'burnChart'}
   .alert{'v-else': 'isShow'}
     %el-alert{'title': '请为冲刺添加开始日期和截止日期', 'type': 'error', ':closable': 'false', 'show-icon': '', 'description': '设置开始日期和结束日期后才能正常显示燃尽图'}
 

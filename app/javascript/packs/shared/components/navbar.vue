@@ -43,19 +43,26 @@
         </a>
       </el-menu-item>
 
-      <el-menu-item index="4">
+      <el-menu-item index="4" style="float: right">
+        <a href="/daily_scrums" target="_blank">Daily Scrum</a>
+      </el-menu-item>
+
+      <el-menu-item index="5">
         <a :href="gitlabHost" target="_blank">
           GitLab
           <i class="iconfont icon-link"></i>
         </a>
       </el-menu-item>
 
-      <el-submenu index="5" style="float: right">
+
+
+      <el-submenu index="6" style="float: right">
         <template slot="title">新建问题</template>
         <el-menu-item v-for="(project, index) in projects" :key="index" :index="'5-' + project.id">
           {{ project.name }}
         </el-menu-item>
       </el-submenu>
+
     </el-menu>
 
     <el-dialog
@@ -158,7 +165,7 @@
             let route = list[2];
             window.location.href = `/milestones/${milestone_id}/${route}`;
           }
-        } else if (key.startsWith('5-')) {
+        } else if (key.startsWith('6-')) {
           this.newIssue.projectId = parseInt(key.substr(2));
           this.dialogVisible = true;
         }

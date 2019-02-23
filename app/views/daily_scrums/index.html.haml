@@ -1,0 +1,7 @@
+- content_for :scripts do
+  = javascript_pack_tag 'daily_scrums'
+- content_for :styles do
+  = stylesheet_pack_tag 'daily_scrums'
+
+#daily-scrums-app{data: {issues: issues_data, dailyScrums: daily_scrums_data}}, 'v-loading': 'loading', 'element-loading-text': '加载中', ':style': "{height: height + 'px'}"}
+

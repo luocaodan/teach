@@ -58,9 +58,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
       eventhub.$on('updateSprint', this.updateSprint);
 
+      this.initSprint();
       this.updateBurnInfo();
     },
     methods: {
+      initSprint() {
+        this.loading = true;
+        this.getParams();
+        this.sprintsService
+          .getSprint(this.milestone.id, this.projectId)
+          .then(res => res.data)
+          .then(sprint => {
+            this.milestone = Sprint.valueOf(sprint);
+            this.milestone.isCome = true;
+            this.loading = false;
+          })
+          .catch(e => {
+            this.alert('服务器错误');
+          })
+      },
       updateSprint(update) {
         this.loading = true;
         this.sprintsService
@@ -89,18 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(data => {
             this.issues = data;
             this.updateEchartsOption();
-            return this.sprintsService
-              .getSprint(this.milestone.id, this.projectId);
-          })
-          .then(res => res.data)
-          .then(sprint => {
-            this.milestone = Sprint.valueOf(sprint);
-            this.milestone.isCome = true;
             this.loading = false;
           })
           .catch(e => {
             this.alert('服务器错误');
-          })
+          });
       },
       updateEchartsOption() {
         // 默认为任务数燃尽图
@@ -376,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       getIssuesEndpoint() {
         const $burndownApp = document.getElementById('burndown-app');
-        return $burndownApp.dataset.endpoint;
+        return $burndownApp.dataset.issuesEndpoint;
       },
       belongsToMe(issue) {
         return false;
