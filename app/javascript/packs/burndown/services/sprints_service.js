@@ -21,4 +21,15 @@ export default class IssuesService {
       }
     });
   }
+
+  updateSprint(id, projectId, update) {
+    let index = this.sprintsEndpoint.lastIndexOf('.json');
+    let prefix = this.sprintsEndpoint.substr(0, index);
+    return axios.put(`${prefix}/${id}.json`, {update: update}, {
+      params: {
+        project_id: projectId,
+        milestone_id: id
+      }
+    });
+  }
 }

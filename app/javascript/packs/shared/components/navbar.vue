@@ -29,9 +29,6 @@
             :index="'2-' + milestone.project_id + '-' + milestone.id + '-burndown'">
             冲刺详情
           </el-menu-item>
-          <el-menu-item :index="'2-' + milestone.project_id + '-' + milestone.iid + '-edit'">
-            gitlab
-          </el-menu-item>
         </el-submenu>
         <el-submenu index="2-new" v-if="this.projects.length">
           <template slot="title">新建冲刺</template>
@@ -157,16 +154,9 @@
         else if (key.startsWith('2-')) {
           let list = key.substr(2).split('-');
           if (list.length === 3) {
-            let project_id = parseInt(list[0]);
             let milestone_id = list[1];
             let route = list[2];
-            if (route === 'edit') {
-              let projectWebUrl = this.projects.find((p) => p.id === project_id).webUrl;
-              window.open(`${projectWebUrl}/milestones/${milestone_id}`);
-            }
-            else {
-              window.location.href = `/milestones/${milestone_id}/${route}`;
-            }
+            window.location.href = `/milestones/${milestone_id}/${route}`;
           }
         } else if (key.startsWith('5-')) {
           this.newIssue.projectId = parseInt(key.substr(2));

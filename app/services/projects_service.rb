@@ -26,7 +26,7 @@ class ProjectsService < BaseService
     milestones = []
     list = get "projects/#{project_id}/milestones"
     list.each do |milestone|
-      next if milestone['state'] ==  'closed'
+      # next if milestone['state'] == 'closed'
       milestones << {
         id: milestone['id'],
         iid: milestone['iid'],

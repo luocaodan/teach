@@ -6,6 +6,7 @@
     "axios": "^0.18.0",
     "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.4.11",
+    "github-markdown-css": "^3.0.1",
     "mavon-editor": "^2.6.17",
     "vue": "^2.5.21",
     "vue-echarts": "^4.0.0",

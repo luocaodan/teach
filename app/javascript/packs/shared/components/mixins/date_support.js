@@ -3,9 +3,12 @@ export default {
     return {
       pickerOptions: {
         disabledDate(time) {
+          return false;
+          /*
           const date = new Date();
           let previousDay = date.setTime(date - 3600 * 1000 * 24);
           return time.getTime() < previousDay;
+          */
         },
         shortcuts: [{
           text: '今天',

@@ -13,6 +13,8 @@ import IssuesService from "./issues/services/issues_service";
 import SprintsService from './burndown/services/sprints_service';
 import IssuesMixin from './shared/components/mixins/issues_mixin'
 import DetailSprint from './burndown/components/detail_sprint.vue'
+import eventhub from './issues/eventhub'
+import Sprint from './burndown/models/sprint'
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
@@ -27,12 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mixins: [IssuesMixin],
     data() {
       return {
-        milestone: {
-          title: null,
-          description: null,
-          start_date: null,
-          due_date: null
-        },
+        milestone: new Sprint(),
         loading: false,
         isShow: false,
         burnOption: null,
@@ -59,9 +56,25 @@ document.addEventListener('DOMContentLoaded', () => {
         sprintsEndpoint: sprintsEndpoint
       });
 
+      eventhub.$on('updateSprint', this.updateSprint);
+
       this.updateBurnInfo();
     },
     methods: {
+      updateSprint(update) {
+        this.loading = true;
+        this.sprintsService
+          .updateSprint(this.milestone.id, this.projectId, update)
+          .then(res => res.data)
+          .then((data) => {
+            this.milestone = Sprint.valueOf(data);
+            this.updateEchartsOption();
+            this.loading = false;
+          })
+          .catch(e => {
+            this.alert('服务器错误');
+          })
+      },
       updateBurnInfo() {
         const params = this.getParams();
         if (!this.milestone.start_date || !this.milestone.due_date) {
@@ -81,11 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
           })
           .then(res => res.data)
           .then(sprint => {
-            this.milestone.description = sprint.description;
+            this.milestone = Sprint.valueOf(sprint);
+            this.milestone.isCome = true;
             this.loading = false;
           })
           .catch(e => {
-            alert('服务器错误');
+            this.alert('服务器错误');
           })
       },
       updateEchartsOption() {
@@ -197,7 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
           }
         }
-        this.milestone = Object.assign(milestone, {description: null});
+        this.milestone = Sprint.valueOf(milestone);
+        this.milestone.isCome = false;
         this.projectId = projectId;
         return {
           milestone: milestone.title,

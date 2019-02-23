@@ -8,10 +8,10 @@
           <label class="big-label" v-else @click="openPolicy('title')">{{ issue.title }}</label>
         </el-col>
         <el-col :span="6" :offset="2">
-            <el-button style="width: auto" v-if="issue.state === 'Closed'" @click="update('Open')">
-              Reopen
-            </el-button>
-            <el-button style="width: auto" v-else type="danger" @click="update('Closed')">Close</el-button>
+          <el-button style="width: auto" v-if="issue.state === 'Closed'" @click="update('Open')">
+            Reopen
+          </el-button>
+          <el-button style="width: auto" v-else type="danger" @click="update('Closed')">Close</el-button>
         </el-col>
       </el-row>
     </div>
@@ -237,7 +237,7 @@
             placeholder="输入问题描述">
           </mavon-editor>
           <div v-else>
-            <div class="issue-html-container" v-if="issue.description" v-html="renderedDescription ">
+            <div class="issue-html-container markdown-body" v-if="issue.description" v-html="renderedDescription ">
             </div>
             <div v-else>
               无问题描述
@@ -308,6 +308,7 @@
   import EditMixin from './mixins/edit_issue'
   import AlertMixin from './mixins/alert'
   import MarkdownMixin from './mixins/markdown_support'
+  import 'github-markdown-css'
 
   export default {
     mixins: [EditMixin, AlertMixin, MarkdownMixin],
@@ -527,7 +528,7 @@
   }
 
   .description-info > .info-list > div {
-    width: 100%;
+    width: auto;
   }
 
   .user-info {
@@ -591,6 +592,10 @@
 
 </style>
 <style>
+  .markdown-body {
+    padding: 15px;
+  }
+
   .issue-html-container img {
     max-width: 100%;
   }

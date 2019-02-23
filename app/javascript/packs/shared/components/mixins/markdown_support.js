@@ -116,6 +116,9 @@ export default {
     },
     $imgDel(filename) {
       // todo
+    },
+    getPorjectId() {
+      alert('未实现');
     }
   }
 }
