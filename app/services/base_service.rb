@@ -18,6 +18,10 @@ class BaseService
     user_api_get url, user_token, params
   end
 
+  def plain_get(url, params = {})
+    user_api_plain_get url, user_token, params
+  end
+
   def post(url, params)
     user_api_post url, user_token, params
   end

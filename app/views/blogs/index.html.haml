@@ -1,0 +1,82 @@
+- content_for :scripts do
+  = javascript_pack_tag 'blogs'
+- content_for :styles do
+  = stylesheet_pack_tag 'blogs'
+
+#blogs-app{data: {issues: issues_data, blogs: blogs_data}, 'v-loading': 'loading', 'element-loading-text': '加载中'}
+  #blog-filter
+    %el-row
+      %el-col{':span': 12}
+        %el-radio-group.filter-item{'v-model': 'searchParams.type', size: 'mini'}
+          %el-radio-button{'label': 'blog'}
+            博客
+          %el-radio-button{'label': 'daily_scrum'}
+            Daily Scrum
+          %el-radio-button{'label': 'all'}
+            所有
+        %el-radio-group.filter-item{'v-model': 'searchParams.scope', size: 'mini'}
+          %el-radio-button{'label': 'my'}
+            我的
+          %el-radio-button{'label': 'all'}
+            所有
+      %el-col.clearFloat{':span': 12}
+        %el-dropdown.choose-project{'@command': 'chooseProject'}
+          %span.el-dropdown-link
+            {{ projectText }}
+            %i.el-icon-arrow-down.el-icon--right
+          %el-dropdown-menu{slot: 'dropdown'}
+            %el-dropdown-item{command: 'all'}
+              所有
+            %el-dropdown-item{'v-for': "(project, index) in projects", ':key': 'index', ':command': 'project.id'}
+              {{ project.name }}
+  .blogs{':style': "{height: blogsHeight + 'px'}"}
+    %el-scrollbar{style: "{height: 100%}"}
+      %el-card{shadow: 'always', 'v-for': "(blog, index) in blogs", class: 'blog-card'}
+        .blog-info
+          {{ blog }}
+:css
+  #blogs-app {
+    overflow-y: auto;
+  }
+
+  #blogs-app > * {
+    width: 60%;
+    margin: 0 auto;
+    min-width: 400px;
+  }
+
+  #blog-filter {
+    border-bottom: 1px solid #e6e6e6;
+    padding: 10px 0;
+  }
+
+  .filter-item {
+    margin: 0 10px;
+  }
+
+  .choose-project {
+    float: right;
+    line-height: 2;
+  }
+
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-icon-arrow-down {
+    font-size: 15px;
+  }
+
+  #blogs-app > .blogs {
+    border: 1px solid #e5e5e5;
+    background-color: #fafafa;
+    margin-top: 10px;
+  }
+
+  .blog-card {
+    margin: 10px;
+  }
+
+  .blog-info {
+    padding: 14px;
+  }

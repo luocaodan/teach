@@ -11,7 +11,7 @@ import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import IssuesService from "./issues/services/issues_service";
 import SprintsService from './burndown/services/sprints_service';
-import IssuesMixin from './shared/components/mixins/issues_mixin'
+import CommonMixin from './shared/components/mixins/common_mixin'
 import DetailSprint from './burndown/components/detail_sprint.vue'
 import eventhub from './issues/eventhub'
 import Sprint from './burndown/models/sprint'
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     components: {
       DetailSprint
     },
-    mixins: [IssuesMixin],
+    mixins: [CommonMixin],
     data() {
       return {
         milestone: new Sprint(),
@@ -47,10 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     mounted() {
       const $app = document.getElementById('burndown-app');
-      const issuesEndpoint = $app.dataset.issuesEndpoint;
-      this.issuesService = new IssuesService({
-        issuesEndpoint: issuesEndpoint
-      });
       const sprintsEndpoint = $app.dataset.sprintsEndpoint;
       this.sprintsService = new SprintsService({
         sprintsEndpoint: sprintsEndpoint
@@ -383,13 +379,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return res;
       },
-      getIssuesEndpoint() {
-        const $burndownApp = document.getElementById('burndown-app');
-        return $burndownApp.dataset.issuesEndpoint;
-      },
-      belongsToMe(issue) {
-        return false;
-      }
     }
   })
 });

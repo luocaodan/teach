@@ -1,6 +1,6 @@
 <template>
   <div class="new-issue">
-    <el-form ref="newIssueForm" :model="issvue" :rules="rules" label-width="80px">
+    <el-form ref="newIssueForm" :model="issue" :rules="rules" label-width="80px">
       <el-form-item label="项目" prop="projectId">
         <el-select v-model="issue.projectId" placeholder="选择项目">
           <el-option v-for="(project, index) in projects" :key="index" :label="project.name"

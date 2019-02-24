@@ -43,8 +43,8 @@
         </a>
       </el-menu-item>
 
-      <el-menu-item index="4" style="float: right">
-        <a href="/daily_scrums" target="_blank">Daily Scrum</a>
+      <el-menu-item index="4">
+        <a href="/blogs" target="_blank">博客</a>
       </el-menu-item>
 
       <el-menu-item index="5">
@@ -58,7 +58,7 @@
 
       <el-submenu index="6" style="float: right">
         <template slot="title">新建问题</template>
-        <el-menu-item v-for="(project, index) in projects" :key="index" :index="'5-' + project.id">
+        <el-menu-item v-for="(project, index) in projects" :key="index" :index="'6-' + project.id">
           {{ project.name }}
         </el-menu-item>
       </el-submenu>
