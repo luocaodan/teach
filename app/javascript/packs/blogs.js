@@ -34,6 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return this.height - $filter.offsetHeight - 2 - 10;
       }
     },
+    watch: {
+      searchParams: {
+        handler: function(val, oldVal) {
+          this.updateBlogs(this.searchParams);
+        },
+        deep: true
+      }
+    },
     mounted() {
       const $app = this.getContainer();
       this.blogsService = new BlogsService({
