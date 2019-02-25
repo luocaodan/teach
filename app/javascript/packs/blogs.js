@@ -10,9 +10,7 @@ Vue.use(ElementUI);
 document.addEventListener('DOMContentLoaded', () => {
   const blogsApp = new Vue({
     el: '#blogs-app',
-    components: {
-
-    },
+    components: {},
     mixins: [CommonMixin],
     data() {
       return {
@@ -29,10 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     computed: {
       projectText() {
         const projectId = this.searchParams.project;
-        if (projectId === 'all') {
-          return '所有';
-        }
-        return this.projects.find(p => p.id === projectId).name;
+        return this.getProjectName(projectId);
       },
       blogsHeight() {
         const $filter = document.getElementById('blog-filter');
@@ -68,6 +63,23 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       chooseProject(projectId) {
         this.searchParams.project = projectId;
+      },
+      getProjectName(projectId) {
+        if (projectId === 'all') {
+          return '所有';
+        }
+        return this.projects.find(p => p.id === projectId).name;
+      },
+      blogTagType(blogType) {
+        if (blogType === 'Blog') {
+          return 'success';
+        }
+        return 'primary'
+      },
+      dateStr(utcStr) {
+        return new Date(Date.parse(utcStr))
+          .toLocaleDateString()
+          .replace(/\//g, '-');
       }
     }
   })

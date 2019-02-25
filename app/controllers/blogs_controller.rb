@@ -9,6 +9,10 @@ class BlogsController < ApplicationController
     end
   end
 
+  def new
+    
+  end
+
   private
 
   def blogs_service

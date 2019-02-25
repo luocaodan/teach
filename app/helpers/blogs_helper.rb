@@ -5,7 +5,7 @@ module BlogsHelper
     }
   end
 
-  def blogs_service
-    ::BlogsService.new(current_user)
+  def new_blog_data
+    blogs_data.merge!(type: params[:type])
   end
 end

@@ -1,0 +1,11 @@
+- content_for :scripts do
+  = javascript_pack_tag 'new_blog'
+- content_for :styles do
+  = stylesheet_pack_tag 'new_blog'
+
+#new-blog-app{data: {issues: issues_data, blogs: new_blog_data}, 'element-loading-text': '加载中', ':style': "{height: height + 'px'}"}
+
+:css
+  #new-blog-app {
+    overflow-y: auto;
+  }

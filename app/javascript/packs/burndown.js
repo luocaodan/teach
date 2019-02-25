@@ -9,7 +9,6 @@ import 'echarts/lib/component/toolbox';
 import 'echarts/lib/component/legend';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import IssuesService from "./issues/services/issues_service";
 import SprintsService from './burndown/services/sprints_service';
 import CommonMixin from './shared/components/mixins/common_mixin'
 import DetailSprint from './burndown/components/detail_sprint.vue'
