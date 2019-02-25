@@ -592,7 +592,7 @@
 
 </style>
 <style>
-  .markdown-body {
+  .detail-issue .markdown-body {
     padding: 15px;
   }
 

@@ -181,7 +181,7 @@
   }
 </style>
 <style>
-  .markdown-body {
+  .sprint-html-container {
     padding: 15px;
   }
 
