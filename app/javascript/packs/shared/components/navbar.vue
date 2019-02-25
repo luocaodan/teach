@@ -120,13 +120,13 @@
       const projects = JSON.parse(navbar.dataset.projects);
       // const milestonesMap = new Map();
       for (let project of projects) {
+        if (!project.is_member) {
+          continue;
+        }
         let milestones = project.milestones;
         for (let milestone of milestones) {
           // milestonesMap.set(project.id, true);
           this.milestones.push(milestone);
-        }
-        if (!project.own) {
-          continue;
         }
         this.projects.push({
           id: project.id,

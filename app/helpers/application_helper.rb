@@ -11,12 +11,14 @@ module ApplicationHelper
         id: project['id'],
         name: project['name'],
         web_url: project['web_url'],
+        # own 字段暂时废弃
         own: project['owner']['id'] == current_user.id
       }
       members = project_service.all_members project['id']
       editable = members.any? do |member|
         member[:id] == current_user.id && member.delete(:access) == 'edit'
       end
+      info[:is_member] = editable
       info[:access] = if editable
                         'edit'
                       else
