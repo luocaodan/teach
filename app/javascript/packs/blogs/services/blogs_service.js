@@ -10,4 +10,10 @@ export default class BlogsService {
       params: params
     });
   }
+
+  newBlog(blog) {
+    return axios.post(this.blogsEndpoint, {
+      blog: blog
+    });
+  }
 }

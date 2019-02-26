@@ -25,6 +25,12 @@ class BlogsService < BaseService
     get_comments_count snippets
   end
 
+  def new_blog(blog)
+    project_id = blog.delete 'project_id'
+    blog['visibility'] = 'public'
+    post "projects/#{project_id}/snippets", blog
+  end
+
   private
 
   def get_blogs(snippets)

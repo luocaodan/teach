@@ -10,7 +10,13 @@ class BlogsController < ApplicationController
   end
 
   def new
-    
+
+  end
+
+  def create
+    new_blog = params[:blog]
+    blog = blogs_service.new_blog new_blog
+    render json: blog
   end
 
   private

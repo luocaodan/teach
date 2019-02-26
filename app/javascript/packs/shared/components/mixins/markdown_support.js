@@ -103,7 +103,7 @@ export default {
     $imgAdd(pos, $file) {
       let formData = new FormData();
       formData.append('image', $file);
-      UploadService.upload(this.issue.projectId, formData)
+      UploadService.upload(this.getProjectId(), formData)
         .then(res => res.data)
         .then((data) => {
           const mdEditor = this.$refs.mdEditor;
