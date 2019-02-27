@@ -33,7 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     updated() {
       if (this.blog.isCome) {
-        this.rawBlog = this.blog;
+        this.rawBlog = Object.assign({}, this.blog);
+        this.blog.isCome = false;
       }
     },
     data() {
@@ -71,6 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
         this.policy[attr] = false;
       },
       update(attr) {
+        if (this.blog[attr] === this.rawBlog[attr]) {
+          this.closePolicy(attr);
+          return;
+        }
         const update = {};
         update[attr] = this.blog[attr];
         this.loading = true;
@@ -84,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.loading = false;
             this.closePolicy(attr);
             this.blog.code = code;
+            this.blog.isCome = true;
           })
           .catch(e => {
             this.alert('更新失败');
