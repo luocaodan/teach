@@ -31,6 +31,28 @@ class BlogsService < BaseService
     post "projects/#{project_id}/snippets", blog
   end
 
+  def get_blog(project_id, blog_id)
+    get "projects/#{project_id}/snippets/#{blog_id}"
+  end
+
+  def get_blog_raw_code(project_id, blog_id)
+    plain_get "projects/#{project_id}/snippets/#{blog_id}/raw"
+  end
+
+  def update_blog(project_id, blog_id, update)
+    blog = put "projects/#{project_id}/snippets/#{blog_id}", update
+    blog.delete 'file_name'
+    blog.delete 'description'
+    blog.delete 'visibility'
+    blog.delete 'web_url'
+    blog['can_edit'] = blog['author']['id'] == user_id
+    blog
+  end
+
+  def delete_blog(project_id, blog_id)
+    delete "projects/#{project_id}/snippets/#{blog_id}"
+  end
+
   private
 
   def get_blogs(snippets)

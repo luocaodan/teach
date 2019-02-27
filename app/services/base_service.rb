@@ -33,4 +33,8 @@ class BaseService
   def put(url, params)
     user_api_put url, user_token, params
   end
+
+  def delete(url, params = {})
+    user_api_delete url, user_token, params
+  end
 end

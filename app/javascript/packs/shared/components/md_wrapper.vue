@@ -11,7 +11,10 @@
       @fullScreen="resizeMarkdown"
       @imgAdd="$imgAdd"
       @imgDel="$imgDel"
-      :placeholder="placeholder">
+      @save="save"
+      :placeholder="placeholder"
+      :style="styleObj"
+    >
     </mavon-editor>
   </div>
 </template>
@@ -32,6 +35,13 @@
         }
         return 'edit';
       },
+      styleObj() {
+        if (this.preview) {
+          return {
+            height: 'auto',
+          }
+        }
+      }
     },
     watch: {
       d_value(val, oldVal) {
@@ -45,7 +55,10 @@
     },
     props: {
       value: String,
-      editable: Boolean,
+      editable: {
+        type: Boolean,
+        default: true
+      },
       placeholder: String,
       project: Number,
       preview: Boolean,
@@ -56,6 +69,9 @@
       this.d_value = this.value;
     },
     methods: {
+      save() {
+        this.$emit('save');
+      },
       getProjectId() {
         return this.project;
       }

@@ -1,0 +1,45 @@
+- content_for :scripts do
+  = javascript_pack_tag 'show_blog'
+- content_for :styles do
+  = stylesheet_pack_tag 'show_blog'
+
+#show-blog-app{data: {issues: issues_data, blog: current_blog, blogs: blogs_data}, ':style': "{height: height + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
+  .blog-title.clearFloat
+    %el-row
+      %el-col{':span': 18}
+        %el-input#blog-title.big-label{'v-if': 'policy.title && blog.can_edit', 'v-model': 'blog.title', '@blur': "update('title')"}
+        %label.big-label{'v-else': 'policy.title', '@click': "openPolicy('title')"}
+          {{ blog.title }}
+      %el-col{':span': 6}
+        %el-button.floatRight{'v-if': 'blog.can_edit', type: 'danger', '@click': 'deleteBlog'}
+          删除
+  .block-title{'v-if': 'blog.can_edit'}
+    %span 内容
+    %i.el-icon-edit.title-icon{'@click': "openPolicy('code')"}
+  %md-wrapper{'v-if': 'blog', 'v-model': 'blog.code', '@save': "update('code')", ':project': 'blog.project_id', ':preview': '!policy.code', 'v-loading': 'codeLoading', 'element-loading-spinner': 'el-icon-loading', 'element-loading-text': '加载中'}
+
+:css
+  #show-blog-app {
+    overflow-y: auto;
+  }
+
+  #show-blog-app > * {
+    width: 80%;
+    margin: 20px auto;
+    min-width: 500px;
+  }
+
+  .big-label {
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  .block-title {
+    font-size: 16px;
+    border-bottom: 1px solid #e6e6e6;
+    padding-bottom: 10px;
+  }
+
+  .title-icon {
+    padding: 5px;
+  }

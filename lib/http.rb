@@ -22,6 +22,15 @@ class Http
     response.body
   end
 
+  def self.delete(url, headers = {})
+    response = RestClient.delete url, headers
+    if response.code == 204
+      'success'
+    else
+      'fail'
+    end
+  end
+
   # post json and return json
   def self.json_post(url, payload, headers = {})
     json_headers headers

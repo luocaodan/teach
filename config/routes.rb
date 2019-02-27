@@ -12,6 +12,9 @@ Rails.application.routes.draw do
 
   resources :blogs
 
+  get '/projects/:project_id/blogs/:blog_id', to: 'blogs#show'
+  get '/blogs/:blog_id/raw', to: 'blogs#show_raw'
+
   # file upload
   post '/projects/:project_id/uploads', to: 'uploads#index'
 

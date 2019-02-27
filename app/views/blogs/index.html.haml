@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'blogs'
 
-#blogs-app{data: {issues: issues_data, blogs: blogs_data}, 'v-loading': 'loading', 'element-loading-text': '加载中'}
+#blogs-app{data: {issues: issues_data, blogs: blogs_data}}
   #blog-filter.clearFloat
     %el-radio-group.filter-item{'v-model': 'searchParams.type', size: 'mini'}
       %el-radio-button{'label': 'blog'}
@@ -33,9 +33,9 @@
       %el-button{size: 'mini'}
         %a{href: '/blogs/new?type=daily_scrum'}
           新建 Daily Scrum
-  .blogs{':style': "{height: blogsHeight + 'px'}"}
-    %el-scrollbar{style: "{height: 100%}"}
-      %el-card{shadow: 'always', 'v-for': "(blog, index) in blogs", ':key': 'index', class: 'blog-card'}
+  .blogs{':style': "{height: blogsHeight + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
+    %el-scrollbar{style: "height: 100%"}
+      %el-card{shadow: 'always', 'v-for': "(blog, index) in blogs", ':key': 'index', class: 'blog-card', ':body-style': "{ padding: '10px' }"}
         .blog-info
           .blog-title
             %a{':href': "'/projects/' + blog.project_id + '/blogs/' + blog.id"}
@@ -59,14 +59,11 @@
                 {{ blog.author.name }}
 
 :css
-  #blogs-app {
-    overflow-y: auto;
-  }
-
   #blogs-app > * {
-    width: 60%;
+    width: 80%;
     margin: 0 auto;
     min-width: 400px;
+    overflow-x: auto;
   }
 
   #blog-filter {
@@ -120,4 +117,8 @@
   .author > img {
     width: 20px;
     height: 20px;
+  }
+
+  .blogs .el-scrollbar__wrap {
+    overflow-x: hidden;
   }

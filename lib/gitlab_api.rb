@@ -33,6 +33,11 @@ module GitlabApi
     Http.json_put url, payload, user_headers(token)
   end
 
+  def user_api_delete(url, token, params = {})
+    url = get_api_url url
+    Http.delete url, user_headers(token).merge!(params)
+  end
+
   def user_auth(access_code)
     parameters = {
       'client_id': app_id,

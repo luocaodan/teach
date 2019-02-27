@@ -102,9 +102,9 @@
 
   export default {
     updated() {
-      if (this.sprint.isCome && !this.copied) {
+      if (this.sprint.isCome) {
         this.rawSprint = Object.assign({}, this.sprint);
-        this.copied = true;
+        this.sprint.isCome = false;
       }
     },
     mixins: [MarkdownMixin, DateMixin],

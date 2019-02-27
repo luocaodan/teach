@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => res.data)
           .then((data) => {
             this.milestone = Sprint.valueOf(data);
+            this.milestone.isCome = true;
             this.updateEchartsOption();
             this.loading = false;
           })
