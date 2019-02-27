@@ -10,22 +10,32 @@ Rails.application.routes.draw do
 
   resources :sprints
 
-  resources :blogs
+  resources :blogs, only: [:index]
 
-  get '/projects/:project_id/blogs/:blog_id', to: 'blogs#show'
-  get '/blogs/:blog_id/raw', to: 'blogs#show_raw'
+  resources :projects, only: [], param: :project_id do
+    member do
+      # project board
+      get 'kanban', to: 'boards#index'
+      # file upload
+      post 'uploads', to: 'uploads#index'
+      resources :blogs, only: %i[new show create update destroy] do
+        member do
+          get 'raw', to: 'blogs#show_raw'
+        end
 
-  # file upload
-  post '/projects/:project_id/uploads', to: 'uploads#index'
+        resources :comments, only: %i[index create update destroy], constraints: ->(req) {req.format == :json}
+      end
+    end
+  end
 
-  # project board
-  get '/projects/:project_id/kanban', to: 'boards#index'
-
-  # milestone board
-  get '/milestones/:milestone_id/kanban', to: 'boards#index'
-
-  # burndown chart
-  get '/milestones/:milestone_id/burndown', to: 'burndown#index'
+  resources :milestones, only: [], param: :milestone_id do
+    member do
+      # milestone board
+      get 'kanban', to: 'boards#index'
+      # burndown chart
+      get 'burndown', to: 'burndown#index'
+    end
+  end
 
   # issues as root
   root 'issues#index'
