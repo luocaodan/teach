@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return {
         loading: false,
         codeLoading: false,
-        blog: new Blog('blog'),
+        blog: null,
         policy: {
           title: false,
           code: false,
@@ -111,6 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }).catch(() => {
 
         });
+      },
+      dateStr(utcStr) {
+        return new Date(Date.parse(utcStr))
+          .toLocaleDateString()
+          .replace(/\//g, '-');
       }
     }
   });

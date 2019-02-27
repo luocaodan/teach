@@ -8,6 +8,7 @@
       :toolbarsFlag="!preview"
       :editable="editable"
       :defaultOpen="defaultType"
+      :boxShadow="boxShadow"
       @fullScreen="resizeMarkdown"
       @imgAdd="$imgAdd"
       @imgDel="$imgDel"
@@ -62,7 +63,11 @@
       placeholder: String,
       project: Number,
       preview: Boolean,
-      cantSave: Boolean
+      cantSave: Boolean,
+      boxShadow: {
+        type: Boolean,
+        default: true
+      }
     },
     mounted() {
       this.toolbars.save = !this.cantSave;

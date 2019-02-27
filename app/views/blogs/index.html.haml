@@ -53,7 +53,7 @@
             %i{class: 'el-icon-date'}
             %span{title: '创建时间'}
               {{ dateStr(blog.created_at) }}
-            %span{class: "author"}
+            %span.author
               %img{':title': "'作者: ' + blog.author.username", ':src': "blog.author.avatar_url"}
               %a{href: 'blog.author.web_url'}
                 {{ blog.author.name }}
