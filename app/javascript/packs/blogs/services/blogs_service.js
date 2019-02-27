@@ -18,32 +18,17 @@ export default class BlogsService {
   }
 
   getBlogCode(projectId, blogId) {
-    let index = this.blogsEndpoint.lastIndexOf('.json');
-    let prefix = this.blogsEndpoint.substr(0, index);
-    return axios.get(`${prefix}/${blogId}/raw`, {
-      params: {
-        project_id: projectId
-      }
-    });
+    return axios.get(`/projects/${projectId}/blogs/${blogId}/raw`);
   }
 
   updateBlog(projectId, blogId, update) {
-    let index = this.blogsEndpoint.lastIndexOf('.json');
-    let prefix = this.blogsEndpoint.substr(0, index);
-    return axios.put(`${prefix}/${blogId}.json`, {update: update}, {
-      params: {
-        project_id: projectId
+    return axios.put(`/projects/${projectId}/blogs/${blogId}.json`, {
+        update: update
       }
-    });
+    );
   }
 
   deleteBlog(projectId, blogId) {
-    let index = this.blogsEndpoint.lastIndexOf('.json');
-    let prefix = this.blogsEndpoint.substr(0, index);
-    return axios.delete(`${prefix}/${blogId}.json`, {
-      params: {
-        project_id: projectId
-      }
-    });
+    return axios.delete(`/projects/${projectId}/blogs/${blogId}.json`);
   }
 }

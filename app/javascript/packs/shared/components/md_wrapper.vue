@@ -40,6 +40,7 @@
         if (this.preview) {
           return {
             height: 'auto',
+            minHeight: `${this.minHeight}px`
           }
         }
       }
@@ -67,6 +68,10 @@
       boxShadow: {
         type: Boolean,
         default: true
+      },
+      minHeight: {
+        type: Number,
+        default: 200
       }
     },
     mounted() {

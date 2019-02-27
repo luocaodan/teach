@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'show_blog'
 
-#show-blog-app{data: {issues: issues_data, blog: current_blog, blogs: blogs_data}, ':style': "{height: height + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
+#show-blog-app{data: {issues: issues_data, blog: current_blog, blogs: blogs_data, comments: comments_data}, ':style': "{height: height + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
   .root{'v-if': 'blog'}
     .blog-title.clearFloat
       %el-row
@@ -24,6 +24,9 @@
         更新于 {{ dateStr(blog.updated_at) }}
       %i.el-icon-edit.title-icon.floatRight{'@click': "openPolicy('code')", 'v-if': 'blog.can_edit'}
     %md-wrapper{'v-if': 'blog', 'v-model': 'blog.code', '@save': "update('code')", ':project': 'blog.project_id', ':preview': '!policy.code', ':box-shadow': 'false', 'v-loading': 'codeLoading', 'element-loading-spinner': 'el-icon-loading', 'element-loading-text': '加载中'}
+    .block-title
+      评论
+      %i.el-icon-loading{'v-if': 'commentsLoading'}
 
 :css
   #show-blog-app {

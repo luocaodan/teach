@@ -7,6 +7,7 @@ import CommonMixin from './shared/components/mixins/common_mixin'
 import mdWrapper from './shared/components/md_wrapper.vue'
 import BlogsService from "./blogs/services/blogs_service";
 import Blog from "./blogs/models/blog";
+import CommentsService from "./comments/services/comments_service";
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
@@ -29,7 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
       this.blogsService = new BlogsService({
         blogsEndpoint: $app.dataset.blogsEndpoint
       });
+      this.commentsService = new CommentsService({
+        commentsEndpoint: $app.dataset.commentsEndpoint
+      });
       this.getBlogCode();
+      this.getComments();
     },
     updated() {
       if (this.blog.isCome) {
@@ -41,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return {
         loading: false,
         codeLoading: false,
+        commentsLoading: false,
         blog: null,
         policy: {
           title: false,
@@ -58,6 +64,19 @@ document.addEventListener('DOMContentLoaded', () => {
             this.blog.code = data;
             this.blog.isCome = true;
             this.codeLoading = false;
+          })
+          .catch(() => {
+            this.alert('获取博客内容失败');
+          });
+      },
+      getComments() {
+        this.commentsLoading = true;
+        this.commentsService
+          .getComments()
+          .then(res => res.data)
+          .then(data => {
+            console.log(data);
+            this.commentsLoading = false;
           })
       },
       openPolicy(attr) {

@@ -19,7 +19,7 @@ class BlogsController < ApplicationController
 
   def show_raw
     project_id = params[:project_id]
-    blog_id = params[:blog_id]
+    blog_id = params[:id]
     code = blogs_service.get_blog_raw_code project_id, blog_id
     render plain: code
   end

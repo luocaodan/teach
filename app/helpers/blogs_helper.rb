@@ -13,7 +13,7 @@ module BlogsHelper
 
   def current_blog
     project_id = params[:project_id]
-    blog_id = params[:blog_id]
+    blog_id = params[:id]
     blog = blogs_service.get_blog project_id, blog_id
     blog.delete 'file_name'
     blog.delete 'description'
