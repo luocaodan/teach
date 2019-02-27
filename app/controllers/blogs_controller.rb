@@ -13,6 +13,17 @@ class BlogsController < ApplicationController
 
   end
 
+  def show
+
+  end
+
+  def show_raw
+    project_id = params[:project_id]
+    blog_id = params[:blog_id]
+    code = blogs_service.get_blog_raw_code project_id, blog_id
+    render plain: code
+  end
+
   def create
     new_blog = params[:blog]
     blog = blogs_service.new_blog new_blog

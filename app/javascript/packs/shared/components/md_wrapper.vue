@@ -2,10 +2,12 @@
   <div class="md-wrapper">
     <mavon-editor
       ref="mdEditor"
-      v-model="myContent"
+      v-model="d_value"
       :subfield="false"
       :toolbars="toolbars"
+      :toolbarsFlag="!preview"
       :editable="editable"
+      :defaultOpen="defaultType"
       @fullScreen="resizeMarkdown"
       @imgAdd="$imgAdd"
       @imgDel="$imgDel"
@@ -20,23 +22,38 @@
     mixins: [MarkdownMixin],
     data() {
       return {
-        myContent: ''
+        d_value: ''
       }
     },
+    computed: {
+      defaultType() {
+        if (this.preview) {
+          return 'preview';
+        }
+        return 'edit';
+      },
+    },
     watch: {
-      myContent(value) {
-        this.$emit('update:content', value);
+      d_value(val, oldVal) {
+        this.$emit('input', val);
+      },
+      value(val, oldVal) {
+        if (val !== this.d_value) {
+          this.d_value = val;
+        }
       }
     },
     props: {
-      content: String,
+      value: String,
       editable: Boolean,
       placeholder: String,
-      project: Number
+      project: Number,
+      preview: Boolean,
+      cantSave: Boolean
     },
     mounted() {
-      this.toolbars.save = false;
-      this.myContent = this.content;
+      this.toolbars.save = !this.cantSave;
+      this.d_value = this.value;
     },
     methods: {
       getProjectId() {
