@@ -15,6 +15,7 @@
       @save="save"
       :placeholder="placeholder"
       :style="styleObj"
+      :class="{ 'no-border': !border && preview }"
     >
     </mavon-editor>
   </div>
@@ -40,8 +41,16 @@
         if (this.preview) {
           return {
             height: 'auto',
+            minHeight: 'unset'
+          }
+        }
+        else if (this.minHeight) {
+          return {
             minHeight: `${this.minHeight}px`
           }
+        }
+        else {
+          return {};
         }
       }
     },
@@ -63,7 +72,10 @@
       },
       placeholder: String,
       project: Number,
-      preview: Boolean,
+      preview: {
+        type: Boolean,
+        default: false
+      },
       cantSave: Boolean,
       boxShadow: {
         type: Boolean,
@@ -71,11 +83,27 @@
       },
       minHeight: {
         type: Number,
-        default: 200
+        default: 0
+      },
+      border: {
+        type: Boolean,
+        default: true
+      },
+      func: {
+        // full | middle | mini
+        type: String,
+        default: 'middle'
       }
     },
     mounted() {
       this.toolbars.save = !this.cantSave;
+      if (this.func === 'mini') {
+        this.fullFunction(false);
+        const disables = ['undo', 'redo', 'header', 'mark'];
+        for (let attr of disables) {
+          this.toolbars[attr] = false;
+        }
+      }
       this.d_value = this.value;
     },
     methods: {
@@ -88,3 +116,13 @@
     }
   }
 </script>
+<style>
+  .no-border > .v-note-panel {
+    border: none !important;
+  }
+  
+  .no-border .v-show-content {
+    background: #fff !important;
+    padding: 0 !important;
+  }
+</style>

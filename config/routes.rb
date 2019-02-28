@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   resources :sprints
 
-  resources :blogs, only: [:index]
+  resources :blogs, only: %i[index new create]
 
   resources :projects, only: [], param: :project_id do
     member do
@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       get 'kanban', to: 'boards#index'
       # file upload
       post 'uploads', to: 'uploads#index'
-      resources :blogs, only: %i[new show create update destroy] do
+      resources :blogs, only: %i[show create update destroy] do
         member do
           get 'raw', to: 'blogs#show_raw'
         end

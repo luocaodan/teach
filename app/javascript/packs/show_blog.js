@@ -48,9 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
         codeLoading: false,
         commentsLoading: false,
         blog: null,
+        comments: [],
         policy: {
           title: false,
           code: false,
+        },
+        currentEditComment: null,
+        n_comment: {
+          body: ''
         }
       }
     },
@@ -75,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .getComments()
           .then(res => res.data)
           .then(data => {
-            console.log(data);
+            this.comments = data;
             this.commentsLoading = false;
           })
       },
@@ -137,9 +142,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
         });
       },
+      isPreview(commentId) {
+        return this.currentEditComment !== commentId;
+      },
+      editComment(commentId) {
+        this.currentEditComment = parseInt(commentId);
+        this.currentEditCommentBody = this.comments.find((c) =>
+          c.id === commentId
+        ).body;
+      },
+      newComment() {
+        this.loading = true;
+        this.commentsService
+          .newComment(this.n_comment)
+          .then(res => res.data)
+          .then(data => {
+            this.comments.splice(this.comments.length, 0, data);
+            this.n_comment = {
+              body: ''
+            };
+            this.loading = false;
+          })
+      },
+      updateComment() {
+        const comment = this.comments.find(c => c.id === this.currentEditComment);
+        const body = comment.body;
+        if (body === this.currentEditCommentBody) {
+          this.currentEditComment = null;
+          this.currentEditCommentBody = null;
+          return;
+        }
+        const update = {
+          body
+        };
+        this.loading = true;
+        this.commentsService
+          .updateComment(this.currentEditComment, update)
+          .then(res => res.data)
+          .then(data => {
+            this.currentEditComment = null;
+            this.currentEditCommentBody = null;
+            comment.updated_at = data.updated_at;
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+            this.alert('更新失败');
+          });
+      },
+      deleteComment(commentId) {
+        this.$confirm('确认删除？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true;
+          this.commentsService.deleteComment(commentId)
+            .then(res => res.data)
+            .then(data => {
+              this.loading = false;
+              if (data === 'success') {
+                this.success('删除成功');
+                const index = this.comments.findIndex(c => c.id === commentId);
+                this.comments.splice(index, 1);
+              }
+              else {
+                this.alert('删除失败');
+              }
+            })
+        });
+      },
       dateStr(utcStr) {
         return new Date(Date.parse(utcStr))
           .toLocaleDateString()
+          .replace(/\//g, '-');
+      },
+      timeStr(utcStr) {
+        return new Date(Date.parse(utcStr))
+          .toLocaleString()
           .replace(/\//g, '-');
       }
     }

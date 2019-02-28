@@ -44,7 +44,7 @@
       </el-menu-item>
 
       <el-menu-item index="4">
-        <a href="/blogs" target="_blank">博客</a>
+        <a href="/blogs">博客</a>
       </el-menu-item>
 
       <el-menu-item index="5">
