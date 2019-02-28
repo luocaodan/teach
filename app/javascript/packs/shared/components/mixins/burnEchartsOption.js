@@ -1,3 +1,5 @@
+import 'echarts/lib/component/markLine'
+
 export default {
   data() {
     return {
@@ -19,11 +21,29 @@ export default {
       // 默认为任务数燃尽图
       const burnData = this.getBurnData(this.issues, this.isWeight);
       const guideData = this.getGuideData(burnData);
-      const start = Date.parse(this.dateStr(this.milestone.start_date)) / 1000;
-      const end = Date.parse(this.dateStr(this.milestone.due_date)) / 1000;
+      const start = Date.parse(this.milestone.start_date + ' GMT +8') / 1000;
+      const end = Date.parse(this.milestone.due_date + ' GMT +8') / 1000;
       const day = 3600 * 24;
       const tmp = end - start;
-      const xAxisInterval = (tmp / day / 10 + 1) * day;
+      const xAxisInterval = Math.ceil(tmp / day / 10) * day;
+
+      const last = burnData[burnData.length - 1][1];
+      let markline = {};
+      if (last > 0) {
+        markline = {
+          silent: true,
+          symbol: 'none',
+          label: {
+            formatter: '今天'
+          },
+          data: [
+            {
+              name: '今天',
+              xAxis: burnData[burnData.length - 1][0]
+            }
+          ]
+        }
+      }
       const that = this;
       this.burnOption = {
         title: {
@@ -76,7 +96,7 @@ export default {
         xAxis: {
           type: 'value',
           min: start,
-          max: Math.max(end, burnData[burnData.length - 1][0]),
+          max: Math.max(end, this.roundDate(burnData[burnData.length - 1][0])),
           interval: xAxisInterval,
           axisLabel: {
             formatter: function (value, index) {
@@ -93,7 +113,8 @@ export default {
             name: '实际',
             data: burnData,
             type: 'line',
-            smooth: true
+            smooth: true,
+            markLine: markline
           },
           {
             name: '计划',
@@ -225,7 +246,7 @@ export default {
         if (w <= 0) {
           res.push([i, 0]);
         } else {
-          res.push([i, w]);
+          res.push([i, Math.round(w*10) / 10]);
           w -= diff;
         }
       }
@@ -251,6 +272,10 @@ export default {
     },
     changeYAxis() {
       this.updateEchartsOption();
+    },
+    roundDate(second) {
+      const day = 3600 * 24;
+      return second - second % day + day
     },
     getMockData() {
       const d = 3600 * 24;

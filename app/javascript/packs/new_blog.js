@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(data => {
             this.issues = data;
             this.updateEchartsOption();
+            this.burnOption.toolbox = {};
             this.chartVisible = true;
             this.isChartButtonLoading = false;
           })
