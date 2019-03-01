@@ -155,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const blob = new Blob([ia], {type: mime});
         this.uploadImage(blob);
-        this.createBlog();
       },
       uploadImage(blob) {
         let formData = new FormData();
@@ -163,7 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
         UploadService.upload(this.getProjectId(), formData)
           .then(res => res.data)
           .then((data) => {
-            this.blog.code += `# 燃尽图\n![燃尽图](${data.url})`;
+            this.blog.code += `\n# 燃尽图\n![燃尽图](${data.url})`;
+            this.createBlog();
           })
           .catch((e) => {
             this.$message.error('上传失败');
