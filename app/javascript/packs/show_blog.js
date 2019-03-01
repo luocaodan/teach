@@ -69,10 +69,22 @@ document.addEventListener('DOMContentLoaded', () => {
             this.blog.code = data;
             this.blog.isCome = true;
             this.codeLoading = false;
+            this.gotoComments();
           })
           .catch(() => {
             this.alert('获取博客内容失败');
           });
+      },
+      gotoComments() {
+        const hash = window.location.hash;
+        if (hash) {
+          this.$nextTick(() => {
+            const anchorId = hash.substr(1);
+            setTimeout(() => {
+              document.getElementById(anchorId).scrollIntoView()
+            }, 0)
+          });
+        }
       },
       getComments() {
         this.commentsLoading = true;

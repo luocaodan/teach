@@ -25,10 +25,11 @@
       %i.el-icon-loading{'v-if': 'codeLoading'}
       %i.el-icon-edit.icon-button.floatRight{'@click': "openPolicy('code')", 'v-if': 'blog.can_edit'}
     %md-wrapper{'v-if': 'blog', 'v-model': 'blog.code', '@save': "update('code')", ':project': 'blog.project_id', ':preview': '!policy.code', ':box-shadow': 'false'}
-    .block-title
-      %span.light 评论
-      %i.el-icon-loading{'v-if': 'commentsLoading'}
+
     #comments
+      .block-title
+        %span.light 评论
+        %i.el-icon-loading{'v-if': 'commentsLoading'}
       %el-card{'v-for': "(comment, index) in comments", ':key': 'index', 'shadow': 'never', ':body-style': "{padding: '16px'}"}
         .comment-card
           .commenter
