@@ -11,8 +11,10 @@ Rails.application.config.content_security_policy do |policy|
   # vue eval
   if Rails.env.development?
     policy.script_src :self, :https, :unsafe_eval
-  else
-    policy.script_src :self, :https
+    # ？？？ 不注释下面 Production 无法使用
+    # https://github.com/rails/webpacker/issues/1520
+  # else
+  #   policy.script_src :self, :https
   end
 
 
