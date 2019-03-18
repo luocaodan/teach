@@ -57,7 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
         this.issues = list;
       },
       getInitParams() {
-        return {state: 'opened'};
+        const $navbar = document.getElementById('navbar');
+        // projects which current user is a member
+        let projects = JSON.parse($navbar.dataset.projects);
+        if (!projects.length) {
+          return null;
+        }
+        return {
+          project: projects[0].id
+        }
       },
       belongsToMe(issue) {
         return true;

@@ -7,7 +7,6 @@
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="all,所有">所有</el-dropdown-item>
         <el-dropdown-item v-for="(project, index) in projects" :key="index" :command="project.id+','+project.name">
           {{ project.name }}
         </el-dropdown-item>
@@ -74,8 +73,8 @@
           'Doing',
           'Closed'
         ],
-        currentP: 'all',
-        currentPN: '所有',
+        currentP: null,
+        currentPN: null,
         currentL: 'all',
         currentM: 'all',
         currentMN: '所有',
@@ -112,13 +111,19 @@
     },
     mounted() {
       const $navbar = document.getElementById('navbar');
+      // projects which current user is a member
       let projects = JSON.parse($navbar.dataset.projects);
+      if (!projects.length) {
+        this.currentPN = '暂无项目'
+        this.currentP = null;
+      }
+      else {
+        this.currentPN = projects[0].name;
+        this.currentP = projects[0].id;
+      }
       const labelsMap = new Map();
       const membersMap = new Map();
       for (let project of projects) {
-        if (!project.is_member) {
-          continue;
-        }
         this.projects.push({
           id: project.id,
           name: project.name,

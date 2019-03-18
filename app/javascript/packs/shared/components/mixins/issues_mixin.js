@@ -134,6 +134,10 @@ export default {
       return 1;
     },
     updateIssues(filterParams) {
+      if (!filterParams) {
+        this.warn('没有结果');
+        return;
+      }
       this.loading = true;
       this.issuesService
         .all(filterParams)
