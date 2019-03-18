@@ -1,0 +1,13 @@
+- content_for :scripts do
+  = javascript_pack_tag 'test_records'
+- content_for :styles do
+  = stylesheet_pack_tag 'test_records'
+
+#test-records{data: student_test_records, ':style': "{height: height + 'px'}"}
+  %test-records
+
+
+:css
+  #test-records {
+    overflow: auto;
+  }

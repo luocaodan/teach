@@ -38,25 +38,24 @@
         </el-submenu>
       </el-submenu>
       <el-menu-item index="3">
-        <a href="/issues">
-          问题
-        </a>
+        问题
       </el-menu-item>
 
       <el-menu-item index="4">
-        <a href="/blogs">博客</a>
+        博客
       </el-menu-item>
 
       <el-menu-item index="5">
-        <a :href="gitlabHost" target="_blank">
-          GitLab
-          <i class="iconfont icon-link"></i>
-        </a>
+        个人 & 结对 项目
+      </el-menu-item>
+
+      <el-menu-item index="6">
+        GitLab
+        <i class="iconfont icon-link"></i>
       </el-menu-item>
 
 
-
-      <el-submenu index="6" style="float: right">
+      <el-submenu index="7" style="float: right">
         <template slot="title">新建问题</template>
         <el-menu-item v-for="(project, index) in projects" :key="index" :index="'6-' + project.id">
           {{ project.name }}
@@ -79,15 +78,15 @@
     </el-dialog>
 
     <!--<el-dialog-->
-      <!--title="新建冲刺"-->
-      <!--top="50px"-->
-      <!--:visible.sync="milestoneDialogVisible"-->
-      <!--width="80%">-->
-      <!--<new-milestone ref="newMilestone" :milestone="newMilestone" :milestones="milestones"></new-milestone>-->
-      <!--<span slot="footer" class="dialog-footer">-->
-        <!--<el-button @click="milestoneDialogVisible = false">取 消</el-button>-->
-        <!--<el-button type="primary" @click="addMilestone('newMilestoneForm')">确 定</el-button>-->
-      <!--</span>-->
+    <!--title="新建冲刺"-->
+    <!--top="50px"-->
+    <!--:visible.sync="milestoneDialogVisible"-->
+    <!--width="80%">-->
+    <!--<new-milestone ref="newMilestone" :milestone="newMilestone" :milestones="milestones"></new-milestone>-->
+    <!--<span slot="footer" class="dialog-footer">-->
+    <!--<el-button @click="milestoneDialogVisible = false">取 消</el-button>-->
+    <!--<el-button type="primary" @click="addMilestone('newMilestoneForm')">确 定</el-button>-->
+    <!--</span>-->
     <!--</el-dialog>-->
   </div>
 </template>
@@ -157,15 +156,22 @@
           let projectId = parseInt(list[list.length - 1]);
           let webUrl = this.projects.find((p) => p.id === projectId).webUrl;
           window.open(`${webUrl}/milestones/new`);
-        }
-        else if (key.startsWith('2-')) {
+        } else if (key.startsWith('2-')) {
           let list = key.substr(2).split('-');
           if (list.length === 3) {
             let milestone_id = list[1];
             let route = list[2];
             window.location.href = `/milestones/${milestone_id}/${route}`;
           }
-        } else if (key.startsWith('6-')) {
+        } else if (key === '3') {
+          window.location.href = '/issues';
+        } else if (key === '4') {
+          window.location.href = '/blogs'
+        } else if (key === '5') {
+          window.location.href = "/auto_test_projects";
+        } else if (key === '6') {
+          window.location.href = this.gitlabHost;
+        } else if (key.startsWith('7-')) {
           this.newIssue.projectId = parseInt(key.substr(2));
           this.dialogVisible = true;
         }
@@ -185,8 +191,7 @@
             this.newIssue.state = 'opened';
             window.eventhub.$emit('addNewIssue', this.newIssue);
             this.newIssue = new Issue();
-          }
-          else {
+          } else {
             return false;
           }
         })

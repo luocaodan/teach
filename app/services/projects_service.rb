@@ -3,6 +3,10 @@ class ProjectsService < BaseService
     get("projects/#{project_id}")
   end
 
+  def forks(project_id, params = {})
+    get "projects/#{project_id}/forks", params
+  end
+
   def all(params = {})
     get('projects', params)
   end

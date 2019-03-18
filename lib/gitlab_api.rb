@@ -3,6 +3,11 @@ module GitlabApi
     "#{gitlab_host}/api/v4/#{url}"
   end
 
+  def admin_api_get(url, params = {})
+    url = get_api_url url
+    Http.json_get url, admin_headers.merge!(params: params)
+  end
+
   def admin_api_post(url, payload)
     url = get_api_url url
     Http.json_post url, payload, admin_headers

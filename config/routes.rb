@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   # system hook for add system-wide webhook
   post '/system', to: 'system#index'
 
+  # report interface for receive auto test result
+  post '/report', to: 'report#index'
+
   # oauth application
   get '/login', to: 'users#login'
   get '/oauth/callback', to: 'users#login'
@@ -27,6 +30,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :auto_test_projects, only: %i[index show]
 
   resources :milestones, only: [], param: :milestone_id do
     member do

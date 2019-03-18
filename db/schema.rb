@@ -10,13 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_27_102613) do
+ActiveRecord::Schema.define(version: 2019_03_17_123255) do
+
+  create_table "auto_test_projects", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "issues", force: :cascade do |t|
     t.integer "weight"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "priority"
+  end
+
+  create_table "student_test_records", force: :cascade do |t|
+    t.integer "project_id"
+    t.string "student"
+    t.string "score"
+    t.string "unittest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "auto_test_project_id"
+    t.index ["auto_test_project_id"], name: "index_student_test_records_on_auto_test_project_id"
   end
 
 end

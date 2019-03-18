@@ -4,7 +4,7 @@ module ApplicationHelper
   def projects_data
     data = {}
     project_service = ProjectsService.new current_user
-    projects = project_service.all(simple: false)
+    projects = project_service.all(simple: false, membership: true)
     infos = []
     projects.each do |project|
       info = {
@@ -12,7 +12,7 @@ module ApplicationHelper
         name: project['name'],
         web_url: project['web_url'],
         # own 字段暂时废弃
-        own: project['owner']['id'] == current_user.id
+        # own: project['owner']['id'] == current_user.id
       }
       members = project_service.all_members project['id']
       editable = members.any? do |member|
