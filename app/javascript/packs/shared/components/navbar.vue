@@ -57,7 +57,7 @@
 
       <el-submenu index="7" style="float: right">
         <template slot="title">新建问题</template>
-        <el-menu-item v-for="(project, index) in projects" :key="index" :index="'6-' + project.id">
+        <el-menu-item v-for="(project, index) in projects" :key="index" :index="'7-' + project.id">
           {{ project.name }}
         </el-menu-item>
       </el-submenu>
