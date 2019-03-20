@@ -90,6 +90,7 @@
         label="耗时/秒"
         prop="cost"
         align="center"
+        :formatter="doubleFmt"
         sortable
         :sort-method="compareRecord">
       </el-table-column>
@@ -151,6 +152,12 @@
           return 1;
         }
         return a.cost - b.cost;
+      },
+      doubleFmt(row) {
+        if (isNaN(row.cost)) {
+          return row.cost;
+        }
+        return Math.round(row.cost * 1000) / 1000;
       }
     }
   }
