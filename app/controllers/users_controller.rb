@@ -1,14 +1,12 @@
 class UsersController < ApplicationController
   def new
     classroom = Classroom.find params[:classroom_id]
-    # 添加一个学生到班级
-    @students = users_service.all.find_all{ |u| Tools.is_student(u['username'])}
+    @type = params[:type]
+    # type: student 添加一个学生到班级
+    # type: teacher 添加一个老师或助教
+    @students = users_service.all.find_all{ |u| u['id'] != current_user.id && u['id'] != 1}
     @students.each do |s|
-      if classroom.users.find_by(gitlab_id: s['id'])
-        s['added'] = true
-      else
-        s['added'] = false
-      end
+      s['added'] = !classroom.users.find_by(gitlab_id: s['id']).nil?
     end
   end
 
@@ -19,26 +17,31 @@ class UsersController < ApplicationController
     sc = SelectClassroom.find_by(user_id: user.id, classroom_id: classroom.id)
     sc.destroy
     groups_service.delete_member classroom.gitlab_group_id, gitlab_user_id
-    render json: {statue: 'success'}
+    render json: {status: 'success'}
   end
 
   def create
+    type = params[:type]
     @classroom = Classroom.find(params[:classroom_id])
     gitlab_user_id = params[:user]
     user = User.find_by(gitlab_id: gitlab_user_id)
-    user ||= User.create gitlab_id: gitlab_user_id, role: 'student'
+    user ||= User.create gitlab_id: gitlab_user_id, role: type
     SelectClassroom.create(user_id: user.id, classroom_id: @classroom.id)
     # 添加学生为 group 成员
     reporter = 20
     maintainer = 40
+    # 老师或助教 owner 权限
+    owner = 50
     member = {}
     member['user_id'] = gitlab_user_id
-    member['access_level'] = reporter
+    member['access_level'] = type == 'teacher' ? owner : reporter
     groups_service.add_member @classroom.gitlab_group_id, member
-    # 重新添加到 团队项目 subgroup 团队项目group可以创建项目
-    member['access_level'] = maintainer
-    groups_service.add_member @classroom.team_project_subgroup_id, member
-    render json: {statue: 'success'}
+    # 学生重新添加到 团队项目 subgroup 团队项目group可以创建项目
+    if type == 'student'
+      member['access_level'] = maintainer
+      groups_service.add_member @classroom.team_project_subgroup_id, member
+    end
+    render json: {status: 'success'}
   end
 
   private

@@ -3,9 +3,9 @@
 - content_for :styles do
   = stylesheet_pack_tag 'new_student'
 
-#new-student-app.small-container{data: {students: @students.to_json, endpoint: classroom_users_url}}
+#new-student-app.small-container{data: {students: @students.to_json, endpoint: classroom_users_url(type: @type)}}
   .page-title-holder
-    .page-title 添加学生
+    .page-title= @type == 'student'? '添加学生' : '添加老师或助教'
   %el-table{':data': 'students'}
     %el-table-column{label: '学号', prop: 'username'}
     %el-table-column{label: '姓名', prop: 'name'}

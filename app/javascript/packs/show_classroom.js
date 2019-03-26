@@ -12,15 +12,22 @@ document.addEventListener('DOMContentLoaded', () => {
     data() {
       return {
         students: null,
-        btnLoadings: null
+        teachers: null,
+        btnTeacherLoadings: null,
+        btnStudentLoadings: null
       }
     },
     mixins: [AlertMixin],
     mounted() {
       this.students = JSON.parse(this.$el.dataset.students);
-      this.btnLoadings = [];
+      this.teachers = JSON.parse(this.$el.dataset.teachers);
+      this.btnTeacherLoadings = [];
+      this.btnStudentLoadings = [];
       for (let i = 0;i < this.students.length;i++) {
-        this.btnLoadings.push(false);
+        this.btnStudentLoadings.push(false);
+      }
+      for (let i = 0;i < this.teachers.length;i++) {
+        this.btnTeacherLoadings.push(false);
       }
       const endpoint = this.$el.dataset.endpoint;
       this.classroomStudentsService = new ClassroomStudentService({
@@ -29,17 +36,37 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     methods: {
       deleteStudent(index, user_id) {
+        this.deleteUser(index, user_id, 'student');
+      },
+      deleteTeacher(index, user_id) {
+        this.deleteUser(index, user_id, 'teacher');
+      },
+      deleteUser(index, user_id, type) {
         this.$confirm('确认移出班级？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.btnLoadings.splice(index, 0, true);
-          this.classroomStudentsService.deleteStudent(user_id)
+          if (type === 'student') {
+            this.btnStudentLoadings.splice(index, 0, true);
+          }
+          else {
+            this.btnTeacherLoadings.splice(index, 0, true);
+          }
+          this.classroomStudentsService.deleteUser(user_id, type)
             .then(res => res.data)
             .then(data => {
-              this.students.splice(index, 1);
-              this.btnLoadings.splice(index, 0, false);
+              if (type === 'student') {
+                this.students.splice(index, 1);
+                this.btnStudentLoadings.splice(index, 0, false);
+              }
+              else {
+                this.teachers.splice(index, 1);
+                this.btnTeacherLoadings.splice(index, 0, false);
+              }
+            })
+            .catch(e => {
+              this.alert('移出失败');
             })
         })
       }

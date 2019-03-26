@@ -63,9 +63,14 @@ class ClassroomsController < ApplicationController
     @personal_projects = groups_service.get_projects @classroom_record.personal_project_subgroup_id
     @pair_projects = groups_service.get_projects @classroom_record.pair_project_subgroup_id
     @team_projects = groups_service.get_projects @classroom_record.team_project_subgroup_id
-    @students = groups_service.get_members @classroom_record.gitlab_group_id
-    @students = @students.find_all do |s|
+    users = groups_service.get_members @classroom_record.gitlab_group_id
+    # 所有 student
+    @students = users.find_all do |s|
       !@classroom_record.users.find_by(gitlab_id: s['id'], role: 'student').nil?
+    end
+    # 所有 teacher
+    @teachers = users.find_all do |s|
+      !@classroom_record.users.find_by(gitlab_id: s['id'], role: 'teacher').nil?
     end
   end
 

@@ -11,7 +11,7 @@ export default class ClassroomStudentService {
     })
   }
 
-  deleteStudent(user_id) {
-    return axios.delete(`${this.classroomStudentsEndpoint}/${user_id}`)
+  deleteUser(user_id, type) {
+    return axios.delete(`${this.classroomStudentsEndpoint}/${user_id}?type=${type}`)
   }
 }

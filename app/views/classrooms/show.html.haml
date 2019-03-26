@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'show_classroom'
 
-#show-classroom-app.small-container{data: {students: @students.to_json, endpoint: classroom_users_url(classroom_id: params[:id])}}
+#show-classroom-app.small-container{data: {students: @students.to_json, teachers: @teachers.to_json, endpoint: classroom_users_url(classroom_id: params[:id])}}
   .page-title-holder
     .page-title= @classroom['name']
     .page-title-controls
@@ -16,14 +16,27 @@
       .page-title-holder-small
         .page-title 学生列表
         .page-title-controls
-          %a.el-button.el-button--mini{href: new_classroom_user_path(@classroom_record)}
+          %a.el-button.el-button--mini{href: new_classroom_user_path(@classroom_record, type: 'student')}
             添加学生
       %el-table{':data': 'students'}
         %el-table-column{label: '学号', prop: 'username'}
         %el-table-column{label: '姓名', prop: 'name'}
         %el-table-column{align: 'right'}
           %template{'slot-scope': 'scope'}
-            %el-button{type: 'danger', '@click': 'deleteStudent(scope.$index, scope.row.id)', ':loading': 'btnLoadings[scope.$index]', size: 'mini'}
+            %el-button{type: 'danger', '@click': 'deleteStudent(scope.$index, scope.row.id)', ':loading': 'btnStudentLoadings[scope.$index]', size: 'mini'}
+              移出班级
+    %el-tab-pane{label: '教师&助教'}
+      .page-title-holder-small
+        .page-title 教师&助教列表
+        .page-title-controls
+          %a.el-button.el-button--mini{href: new_classroom_user_path(@classroom_record, type: 'teacher')}
+            添加助教或教师
+      %el-table{':data': 'teachers'}
+        %el-table-column{label: '用户名', prop: 'username'}
+        %el-table-column{label: '姓名', prop: 'name'}
+        %el-table-column{align: 'right'}
+          %template{'slot-scope': 'scope'}
+            %el-button{type: 'danger', '@click': 'deleteTeacher(scope.$index, scope.row.id)', ':loading': 'btnTeacherLoadings[scope.$index]', size: 'mini'}
               移出班级
     %el-tab-pane{label: '个人项目'}
       .page-title-holder-small
