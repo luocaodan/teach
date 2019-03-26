@@ -24,7 +24,7 @@ export default {
       const start = Date.parse(this.milestone.start_date + ' GMT +8') / 1000;
       const end = Date.parse(this.milestone.due_date + ' GMT +8') / 1000;
       const day = 3600 * 24;
-      const tmp = end - start;
+      const tmp = Math.max(end, this.roundDate(burnData[burnData.length-1][0])) - start;
       const xAxisInterval = Math.ceil(tmp / day / 10) * day;
 
       const last = burnData[burnData.length - 1][1];
