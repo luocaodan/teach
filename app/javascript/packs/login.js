@@ -17,12 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     },
     mounted() {
-      const login = document.getElementById('login');
-      this.authUrl = login.dataset.auth;
     },
     methods: {
-      redirectToGitlab() {
-        window.location.href = this.authUrl;
+      redirectToGitlab(authUrl) {
+        window.location.href = authUrl;
       }
     }
   });

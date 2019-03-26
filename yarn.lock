@@ -337,7 +337,7 @@ aws4@^1.8.0:
 
 axios@^0.18.0:
   version "0.18.0"
-  resolved "http://registry.npm.taobao.org/axios/download/axios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"
+  resolved "http://registry.npm.taobao.org/axios/download/axios-0.18.0.tgz?cache=0&other_urls=http%3A%2F%2Fregistry.npm.taobao.org%2Faxios%2Fdownload%2Faxios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"
   integrity sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=
   dependencies:
     follow-redirects "^1.3.0"
@@ -5382,6 +5382,11 @@ querystringify@^2.0.0:
   version "2.1.0"
   resolved "http://registry.npm.taobao.org/querystringify/download/querystringify-2.1.0.tgz#7ded8dfbf7879dcc60d0a644ac6754b283ad17ef"
   integrity sha1-fe2N+/eHncxg0KZErGdUsoOtF+8=
+
+rails-ujs@^5.2.2-1:
+  version "5.2.2-1"
+  resolved "http://registry.npm.taobao.org/rails-ujs/download/rails-ujs-5.2.2-1.tgz#31905d2b7973b98f13dfaa9cac0667c879cfa2bb"
+  integrity sha1-MZBdK3lzuY8T36qcrAZnyHnPors=
 
 randomatic@^3.0.0:
   version "3.1.1"

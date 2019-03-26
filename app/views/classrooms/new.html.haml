@@ -1,0 +1,22 @@
+- content_for :scripts do
+  = javascript_pack_tag 'new_classroom'
+- content_for :styles do
+  = stylesheet_pack_tag 'new_classroom'
+
+#new-classroom-app.small-container{data: {classroom: @classroom.to_json}}
+  .page-title-holder
+    .page-title 创建班级
+  %el-form{':model': "classroom", ref: 'classroom', ':rules': 'rules', 'label-width': '80px', action: classrooms_path, method: 'post'}
+    - @errors.each do |error|
+      %el-alert.error-item{type: 'error', 'title': error}
+    %csrf
+    %el-form-item{label: '班级名称', prop: 'name'}
+      %el-input{'v-model': 'classroom.name', name: 'classroom[name]'}
+    %el-form-item{label: '班级地址', prop: 'path'}
+      %el-input{'v-model': 'classroom.path', name: 'classroom[path]'}
+        %template{slot: 'prepend'}
+          = gitlab_host+'/'
+    %el-form-item{label: '班级描述', prop: 'description'}
+      %el-input{'v-model': 'classroom.description', name: 'classroom[description]', type: 'textarea', ':autosize': '{minRows: 4, maxRows: 8}'}
+    %el-form-item.clearFloat
+      %el-button.floatRight{'@click': 'submitForm', type: 'primary'} 创建

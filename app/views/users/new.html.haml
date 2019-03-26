@@ -1,0 +1,16 @@
+- content_for :scripts do
+  = javascript_pack_tag 'new_student'
+- content_for :styles do
+  = stylesheet_pack_tag 'new_student'
+
+#new-student-app.small-container{data: {students: @students.to_json, endpoint: classroom_users_url}}
+  .page-title-holder
+    .page-title 添加学生
+  %el-table{':data': 'students'}
+    %el-table-column{label: '学号', prop: 'username'}
+    %el-table-column{label: '姓名', prop: 'name'}
+    %el-table-column{align: 'right'}
+      %template{'slot-scope': 'scope'}
+        %el-button{':type': 'addBtnType(scope.row.added)', '@click': 'addStudent(scope.$index, scope.row.id)', ':loading': 'btnLoadings[scope.$index]', size: 'mini', ':disabled': 'scope.row.added'}
+          {{ addBtnText(scope.row.added) }}
+

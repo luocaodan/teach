@@ -10,9 +10,14 @@
     = csp_meta_tag
     %script{type: 'text/javascript', src: '/font/iconfont.js'}
     %link{rel: 'stylesheet', href: '/font/iconfont.css'}
+    = javascript_pack_tag 'application'
     - if logged_in?
-      = javascript_pack_tag 'navbar'
-      = stylesheet_pack_tag 'navbar'
+      - if student?
+        = javascript_pack_tag 'navbar'
+        = stylesheet_pack_tag 'navbar'
+      - else
+        = javascript_pack_tag 'teacher_navbar'
+        = stylesheet_pack_tag 'teacher_navbar'
     = yield :scripts
     = yield :styles
 
@@ -43,6 +48,10 @@
         overflow: hidden;
       }
 
+      a.el-button:hover {
+        color: #606266;
+      }
+
       .floatLeft {
         float: left
       }
@@ -61,4 +70,66 @@
         content: "";
         clear: both;
         display: block;;
+      }
+
+      .page-title-holder {
+        padding-top: 10px;
+        border-bottom: 1px solid #e5e5e5;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+      }
+
+      .page-title-holder .page-title {
+        margin: 16px 0;
+        font-size: 1.75em;
+        font-weight: 600;
+        color: #2e2e2e;
+      }
+
+      .page-title-holder .page-title-controls {
+        margin-left: auto;
+      }
+
+      .page-title-holder-small {
+        border-bottom: 1px solid #e5e5e5;
+        display: flex;
+        align-items: center;
+      }
+
+      .page-title-holder-small .page-title {
+        margin: 10px 0;
+        font-size: 1.25em;
+        color: #2e2e2e;
+      }
+
+      .page-title-holder-small .page-title-controls {
+        margin-left: auto;
+      }
+
+      .container {
+        padding: 0 16px;
+      }
+
+      .small-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 0 16px;
+      }
+
+      .content-list > * {
+        margin: 10px 0;
+      }
+
+      .error-item {
+        margin: 16px 0;
+      }
+
+      .card-title {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+      }
+
+      .card-info {
+        font-size: 16px;
       }

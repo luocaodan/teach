@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include ::GitlabApi
-  include UsersHelper
+  include SessionsHelper
 
   before_action :require_login
   skip_before_action :verify_authenticity_token #, unless: csrf_required?
@@ -19,5 +19,13 @@ class ApplicationController < ActionController::Base
 
   def require_login
     redirect_to login_url unless logged_in?
+  end
+
+  def get_record_errors(record)
+    errors = []
+    record.errors.each do |attr, msg|
+      errors.push msg
+    end
+    errors
   end
 end

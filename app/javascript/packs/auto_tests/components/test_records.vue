@@ -1,5 +1,5 @@
 <template>
-  <div class="test-records">
+  <div class="test-records small-container">
     <el-table
       :data="records"
       style="width: 100%"
@@ -175,7 +175,5 @@
 <style scoped>
   .test-records {
     min-width: 600px;
-    width: 80%;
-    margin: 0 auto;
   }
 </style>

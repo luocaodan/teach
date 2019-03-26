@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'blogs'
 
-#blogs-app{data: {issues: issues_data, blogs: blogs_data}}
+#blogs-app.small-container{data: {issues: issues_data, blogs: blogs_data}}
   #blog-filter.clearFloat
     %el-radio-group.filter-item{'v-model': 'searchParams.type', size: 'mini'}
       %el-radio-button{'label': 'blog'}
@@ -27,12 +27,10 @@
         %el-dropdown-item{'v-for': "(project, index) in projects", ':key': 'index', ':command': 'project.id'}
           {{ project.name }}
     %el-button-group.floatRight
-      %el-button{ size: 'mini'}
-        %a{href: '/blogs/new?type=blog'}
-          新建博客
-      %el-button{size: 'mini'}
-        %a{href: '/blogs/new?type=daily_scrum'}
-          新建 Daily Scrum
+      %a.el-button.el-button--mini{href: '/blogs/new?type=blog'}
+        新建博客
+      %a.el-button.el-button--mini{href: '/blogs/new?type=daily_scrum'}
+        新建 Daily Scrum
   .blogs{':style': "{height: blogsHeight + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
     %el-scrollbar{style: "height: 100%"}
       %el-card{shadow: 'always', 'v-for': "(blog, index) in blogs", ':key': 'index', class: 'blog-card', ':body-style': "{ padding: '10px' }"}
@@ -43,9 +41,8 @@
             %el-tag{style: "{margin: 4px}", ':type': 'blogTagType(blog.type)', size: 'mini'}
               {{ blog.type }}
             %el-badge.floatRight{':value': 'blog.comments_count', 'type': 'primary'}
-              %el-button{size: 'mini'}
-                %a{':href': "'/projects/' + blog.project_id + '/blogs/' + blog.id + '#comments'"}
-                  %i{class: 'iconfont icon-comments'}
+              %a.el-button.el-button--mini{':href': "'/projects/' + blog.project_id + '/blogs/' + blog.id + '#comments'"}
+                %i{class: 'iconfont icon-comments'}
           .blog-attrs.clearFloat
             %i{class: "iconfont icon-xiangmu"}
             %span{title: "项目"}
@@ -59,13 +56,6 @@
                 {{ blog.author.name }}
 
 :css
-  #blogs-app > * {
-    width: 80%;
-    margin: 0 auto;
-    min-width: 400px;
-    overflow-x: auto;
-  }
-
   #blog-filter {
     border-bottom: 1px solid #e6e6e6;
     padding: 10px 0;

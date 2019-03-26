@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  role: MyString
+  gitlab_id: 1
+
+two:
+  role: MyString
+  gitlab_id: 1

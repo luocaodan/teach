@@ -8,6 +8,7 @@
     "element-ui": "^2.4.11",
     "github-markdown-css": "^3.0.1",
     "mavon-editor": "^2.6.17",
+    "rails-ujs": "^5.2.2-1",
     "vue": "^2.5.21",
     "vue-echarts": "^4.0.0",
     "vue-loader": "14.2.2",

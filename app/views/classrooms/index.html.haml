@@ -1,0 +1,23 @@
+- content_for :scripts do
+  = javascript_pack_tag 'classrooms'
+- content_for :styles do
+  = stylesheet_pack_tag 'classrooms'
+
+#classrooms-app.small-container
+  .page-title-holder
+    .page-title 班级列表
+    .page-title-controls
+      %a.el-button{href: new_classroom_path} 新建班级
+  .content-list
+    - @classrooms.each do |classroom|
+      %el-card
+        .card-title.clearFloat
+          %span
+            %a{href: classroom_path(classroom['id'])}= classroom['name']
+          .floatRight
+            %a.el-button{href: "#{classroom['web_url']}/-/edit"} 编辑
+            = link_to '删除', classroom_path(classroom['id']), method: :delete, data: {confirm: '确定删除？'}, class: 'el-button el-button--danger'
+
+        .card-info
+          = classroom['description']
+

@@ -3,10 +3,10 @@
 - content_for :styles do
   = stylesheet_pack_tag 'auto_test_projects'
 
-#auto-test-projects{':style': "{height: height + 'px'}"}
+#auto-test-projects.small-container{':style': "{height: height + 'px'}"}
   - if auto_test_projects.length == 0
     .no-result 暂无结果
-  .project-list
+  .content-list
     - auto_test_projects.each do |project|
       %el-card.project-card{shadow: 'always', ':body-style': "{ padding: '10px' }"}
         .project-info
@@ -19,8 +19,6 @@
 
 :css
   #auto-test-projects {
-    width: 80%;
-    margin: 0 auto;
     min-width: 400px;
     overflow: auto;
   }

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'users/new'
+  get 'users/destroy'
+  root 'pages#main'
   # system hook for add system-wide webhook
   post '/system', to: 'system#index'
 
@@ -6,8 +9,8 @@ Rails.application.routes.draw do
   post '/report', to: 'report#index'
 
   # oauth application
-  get '/login', to: 'users#login'
-  get '/oauth/callback', to: 'users#login'
+  get '/login', to: 'sessions#login'
+  get '/oauth/callback', to: 'sessions#login'
 
   resources :issues
 
@@ -42,6 +45,8 @@ Rails.application.routes.draw do
     end
   end
 
-  # issues as root
-  root 'issues#index'
+  # teachers
+  resources :classrooms do
+    resources :users, only: %i[new create destroy]
+  end
 end

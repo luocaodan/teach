@@ -1,0 +1,68 @@
+- content_for :scripts do
+  = javascript_pack_tag 'show_classroom'
+- content_for :styles do
+  = stylesheet_pack_tag 'show_classroom'
+
+#show-classroom-app.small-container{data: {students: @students.to_json, endpoint: classroom_users_url(classroom_id: params[:id])}}
+  .page-title-holder
+    .page-title= @classroom['name']
+    .page-title-controls
+      %a.el-button{href: @classroom['web_url']}
+        转到 GitLab
+        %i.iconfont.icon-link
+  %p= @classroom['description']
+  %el-tabs
+    %el-tab-pane{label: '学生'}
+      .page-title-holder-small
+        .page-title 学生列表
+        .page-title-controls
+          %a.el-button.el-button--mini{href: new_classroom_user_path(@classroom_record)}
+            添加学生
+      %el-table{':data': 'students'}
+        %el-table-column{label: '学号', prop: 'username'}
+        %el-table-column{label: '姓名', prop: 'name'}
+        %el-table-column{align: 'right'}
+          %template{'slot-scope': 'scope'}
+            %el-button{type: 'danger', '@click': 'deleteStudent(scope.$index, scope.row.id)', ':loading': 'btnLoadings[scope.$index]', size: 'mini'}
+              移出班级
+    %el-tab-pane{label: '个人项目'}
+      .page-title-holder-small
+        .page-title 个人项目列表
+        .page-title-controls
+          %a.el-button.el-button--mini{href: "#{gitlab_host}/projects/new?namespace_id=#{@classroom_record.personal_project_subgroup_id}"}
+            创建个人项目
+      .content-list
+        - @personal_projects.each do |project|
+          %el-card
+            .card-title.clearFloat
+              %a{href: project['web_url']}= project['name']
+              .floatRight
+                %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+            .card-info= project['description']
+    %el-tab-pane{label: '结对项目'}
+      .page-title-holder-small
+        .page-title 结对项目列表
+        .page-title-controls
+          %a.el-button.el-button--mini{href: "#{gitlab_host}/projects/new?namespace_id=#{@classroom_record.pair_project_subgroup_id}"}
+            创建结对项目
+      .content-list
+        - @pair_projects.each do |project|
+          %el-card
+            .card-title.clearFloat
+              %a{href: project['web_url']}= project['name']
+              .floatRight
+                %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+            .card-info= project['description']
+    %el-tab-pane{label: '团队项目'}
+      .page-title-holder-small
+        .page-title 团队项目列表
+      .content-list
+        - @team_projects.each do |project|
+          %el-card
+            .card-title.clearFloat
+              %a{href: project['web_url']}= project['name']
+              .floatRight
+                %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+            .card-info= project['description']
+
+

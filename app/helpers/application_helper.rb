@@ -3,6 +3,7 @@ module ApplicationHelper
 
   def projects_data
     data = {}
+    return data if teacher?
     project_service = ProjectsService.new current_user
     projects = project_service.all(simple: false, membership: true)
     infos = []
@@ -31,14 +32,6 @@ module ApplicationHelper
     end
     data['projects'] = infos.to_json
     data['gitlabHost'] = gitlab_host
-    # user = {
-    #   id: current_user.id,
-    #   username: current_user.username,
-    #   name: current_user.name,
-    #   avatar_url: current_user.avatar_url,
-    #   web_url: current_user.web_url
-    # }
-    # data['current-user'] = user.to_json
     data
   end
 end

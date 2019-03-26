@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'new_blog'
 
-#new-blog-app{data: {issues: issues_data, blogs: new_blog_data}, 'v-loading': 'loading', 'element-loading-text': '加载中', ':style': "{height: height + 'px'}"}
+#new-blog-app.small-container{data: {issues: issues_data, blogs: new_blog_data}, 'v-loading': 'loading', 'element-loading-text': '加载中', ':style': "{height: height + 'px'}"}
   %el-form{ref: 'newBlogForm', 'v-if': 'blog', ':model': 'blog', ':rules': 'rules', 'label-width': '80px'}
     -# 项目 | 冲刺
     %el-form-item{':label': 'blogContainerName', 'prop': 'project_id'}
@@ -14,8 +14,7 @@
     %el-form-item{label: '内容', 'prop': 'code'}
       %md-wrapper.md-editor{'v-model': 'blog.code', ':editable': "containerId !== null", ':placeholder': 'mdPlaceholder', ':project': 'blog.project_id', ':cant-save': 'true'}
     %el-form-item.clearFloat
-      %el-button
-        %a{href: '/blogs'} 取消
+      %a.el-button{href: '/blogs'} 取消
       %el-button-group.floatRight
         %el-button{type: 'primary', '@click': 'createBlog'} 创建
         %el-button{type: 'success', 'v-if': "type === 'daily_scrum'", '@click': 'createBlogWithBurndown', ':loading': 'isChartButtonLoading'} 生成当前燃尽图并创建
@@ -36,7 +35,6 @@
   }
 
   #new-blog-app > * {
-    width: 80%;
     margin: 20px auto;
     min-width: 500px;
   }
