@@ -1,6 +1,9 @@
 {
   "name": "teach",
   "private": true,
+  "scripts": {
+    "webpacker": "bin/webpack-dev-server"
+  },
   "dependencies": {
     "@rails/webpacker": "3.5",
     "axios": "^0.18.0",
