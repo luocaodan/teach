@@ -46,7 +46,7 @@
       </el-menu-item>
 
       <el-menu-item index="5">
-        个人 & 结对 项目
+        我的班级
       </el-menu-item>
 
       <el-menu-item index="6">
@@ -168,7 +168,7 @@
         } else if (key === '4') {
           window.location.href = '/blogs'
         } else if (key === '5') {
-          window.location.href = "/auto_test_projects";
+          window.location.href = "/classrooms";
         } else if (key === '6') {
           window.location.href = this.gitlabHost;
         } else if (key.startsWith('7-')) {

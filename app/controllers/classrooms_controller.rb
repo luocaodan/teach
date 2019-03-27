@@ -3,8 +3,8 @@
 class ClassroomsController < ApplicationController
   def index
     @classrooms = []
-    user = User.find_by(gitlab_id: current_user)
-    Classroom.all.each do |classroom|
+    user = User.find_by(gitlab_id: current_user.id)
+    user.classrooms.all.each do |classroom|
       klass = groups_service.get_group(classroom.gitlab_group_id)
       klass['id'] = classroom.id
       @classrooms << klass

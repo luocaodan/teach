@@ -19,7 +19,7 @@ export default {
       detailIndex: 0,
       curIssue: null,
       curLabel: null,
-      loading: true,
+      loading: false,
       // 下方剩余高度
       height: 0,
       // aside 宽度
