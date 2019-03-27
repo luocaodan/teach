@@ -15,6 +15,8 @@ if [[ -d ${project} ]];then
 		kill ${pid}
 	fi
 	cd ..
+	# 删除存在的项目
+	rm -rf ${project}
 fi
 
 # 解压

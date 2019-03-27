@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
     if access_token
       session[:type] = user_type
       log_in access_token
-      unless create_user(session[:user_id], session[:type])
+      unless create_user
         render_403
         return
       end
@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
     render file: template_path, status: 403, layout: false
   end
   
-  def create_user()
+  def create_user
     gitlab_user_id = session[:user_id]
     type = session[:type]
     username = session[:username]
