@@ -15,6 +15,10 @@
       <el-menu-item index="3">
         个人&结对项目
       </el-menu-item>
+      <el-menu-item index="4">
+        GitLab
+        <i class="iconfont icon-link"></i>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -22,8 +26,11 @@
   export default {
     data() {
       return {
-
+        gitlabHost: ''
       }
+    },
+    mounted() {
+      this.gitlabHost = document.getElementById('navbar').dataset.gitlabhost;
     },
     methods: {
       handleSelect(key) {
@@ -35,6 +42,9 @@
         }
         else if (key === '3') {
           window.location.href = '/auto_test_projects'
+        }
+        else if (key === '4') {
+          window.location.href = this.gitlabHost;
         }
       }
     }

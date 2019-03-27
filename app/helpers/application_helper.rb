@@ -3,6 +3,7 @@ module ApplicationHelper
 
   def projects_data
     data = {}
+    data['gitlabHost'] = gitlab_host
     return data if teacher?
     project_service = ProjectsService.new current_user
     projects = project_service.all(simple: false, membership: true)
@@ -31,7 +32,6 @@ module ApplicationHelper
       infos << info
     end
     data['projects'] = infos.to_json
-    data['gitlabHost'] = gitlab_host
     data
   end
 end
