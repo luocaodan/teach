@@ -36,7 +36,8 @@
         %el-table-column{label: '姓名', prop: 'name'}
         %el-table-column{align: 'right'}
           %template{'slot-scope': 'scope'}
-            %el-button{type: 'danger', '@click': 'deleteTeacher(scope.$index, scope.row.id)', ':loading': 'btnTeacherLoadings[scope.$index]', size: 'mini'}
+            %el-tag{'v-if': 'scope.row.is_me', type: 'success'} It's you
+            %el-button{'v-else': 'scope.row.is_me', type: 'danger', '@click': 'deleteTeacher(scope.$index, scope.row.id)', ':loading': 'btnTeacherLoadings[scope.$index]', size: 'mini'}
               移出班级
     %el-tab-pane{label: '个人项目'}
       .page-title-holder-small

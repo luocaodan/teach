@@ -3,6 +3,7 @@
 class ClassroomsController < ApplicationController
   def index
     @classrooms = []
+    user = User.find_by(gitlab_id: current_user)
     Classroom.all.each do |classroom|
       klass = groups_service.get_group(classroom.gitlab_group_id)
       klass['id'] = classroom.id
@@ -16,8 +17,9 @@ class ClassroomsController < ApplicationController
   end
 
   def create
+    owner = User.find_by(gitlab_id: current_user.id)
     @classroom = params[:classroom]
-    classroom = Classroom.new params.require(:classroom).permit(:name, :path, :description)
+    classroom = owner.classrooms.new params.require(:classroom).permit(:name, :path, :description)
     @classroom['visibility'] = 'public'
     @classroom['request_access_enabled'] = true
     unless classroom.valid?
@@ -40,6 +42,7 @@ class ClassroomsController < ApplicationController
     pair_project_group = groups_service.new_group(pair_project_dir)
     classroom.pair_project_subgroup_id = pair_project_group['id']
     classroom.save
+    classroom.users << owner
     redirect_to classrooms_path
   rescue RestClient::BadRequest => e
     @errors = if classroom.errors.any?
@@ -71,6 +74,9 @@ class ClassroomsController < ApplicationController
     # 所有 teacher
     @teachers = users.find_all do |s|
       !@classroom_record.users.find_by(gitlab_id: s['id'], role: 'teacher').nil?
+    end
+    @teachers.each do |t|
+      t['is_me'] = t['id'] == current_user.id
     end
   end
 
