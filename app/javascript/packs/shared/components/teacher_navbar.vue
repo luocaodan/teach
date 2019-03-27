@@ -10,12 +10,6 @@
         班级
       </el-menu-item>
       <el-menu-item index="2">
-        团队项目
-      </el-menu-item>
-      <el-menu-item index="3">
-        个人&结对项目
-      </el-menu-item>
-      <el-menu-item index="4">
         GitLab
         <i class="iconfont icon-link"></i>
       </el-menu-item>
@@ -38,12 +32,6 @@
           window.location.href = '/classrooms'
         }
         else if (key === '2') {
-          window.location.href = '/team_projects'
-        }
-        else if (key === '3') {
-          window.location.href = '/auto_test_projects'
-        }
-        else if (key === '4') {
           window.location.href = this.gitlabHost;
         }
       }

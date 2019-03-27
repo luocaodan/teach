@@ -34,8 +34,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :auto_test_projects, only: %i[index show]
-
   resources :milestones, only: [], param: :milestone_id do
     member do
       # milestone board
@@ -48,5 +46,7 @@ Rails.application.routes.draw do
   # teachers
   resources :classrooms do
     resources :users, only: %i[new create destroy]
+    resources :auto_test_projects, only: %i[show]
+    resources :team_projects, only: %i[show]
   end
 end

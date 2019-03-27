@@ -5,13 +5,9 @@ class ReportController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        if params[:start]
-          add_auto_test_project params[:project], params[:forked]
-        else
-          add_student_test_record params.permit(
-            :project, :student, :score, :unittest
-          )
-        end
+        add_student_test_record params.permit(
+          :project, :score, :unittest
+        )
         render json: {status: 'success'}
       end
     end
@@ -25,35 +21,24 @@ class ReportController < ApplicationController
     end
   end
 
-  def add_auto_test_project(project_id, is_forked)
-    project = get_project project_id
-    if !project['forked_from_project'] && !is_forked
-      return nil
-    end
-    forked_id = project_id
-    unless is_forked
-      forked_id = project['forked_from_project']['id']
-      project = project['forked_from_project']
-    end
-
-    unless AutoTestProject.find_by(id: forked_id)
-      AutoTestProject.create(
-        id: forked_id,
-        name: project['name_with_namespace'],
-        description: project['description']
-      )
-    end
-  end
-
   def add_student_test_record(params)
     project_id = params[:project]
     project = get_project project_id
+    return unless project['forked_from_project']
+    # 查找项目所属班级
     forked_id = project['forked_from_project']['id']
-    exist_records = AutoTestProject.find(forked_id).student_test_records
-    student = params[:student]
-    record = exist_records.find_by student: student, project_id: project_id
+    auto_test_project = AutoTestProject.find_by(gitlab_id: forked_id)
+    return unless auto_test_project
+    classroom = auto_test_project.classroom
+    owner_id = project['owner']['id']
+    # 是否为学生
+    student = classroom.users.find_by(gitlab_id: owner_id, role: 'student')
+    return unless student
+
+    exist_records = auto_test_project.student_test_records
+    record = exist_records.find_by user_id: student.id, project_id: project_id
     unless record
-      record = exist_records.new student: student, project_id: project_id
+      record = exist_records.new user_id: student.id, project_id: project_id
     end
     record.score = params[:score]
     record.unittest = params[:unittest]

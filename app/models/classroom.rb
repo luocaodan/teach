@@ -4,4 +4,6 @@ class Classroom < ApplicationRecord
                                  message: '班级地址已被占用' }
   has_many :select_classrooms, dependent: :destroy
   has_many :users, through: :select_classrooms
+  has_many :auto_test_projects, dependent: :destroy
+  has_many :team_projects, dependent: :destroy
 end

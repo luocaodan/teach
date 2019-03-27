@@ -23,9 +23,10 @@ class UsersController < ApplicationController
   def create
     type = params[:type]
     @classroom = Classroom.find(params[:classroom_id])
-    gitlab_user_id = params[:user]
+    gitlab_user_id = params[:user_id]
+    gitlab_username = params[:username]
     user = User.find_by(gitlab_id: gitlab_user_id)
-    user ||= User.create gitlab_id: gitlab_user_id, role: type
+    user ||= User.create gitlab_id: gitlab_user_id, role: type, username: gitlab_username
     SelectClassroom.create(user_id: user.id, classroom_id: @classroom.id)
     # 添加学生为 group 成员
     reporter = 20

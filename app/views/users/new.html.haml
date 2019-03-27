@@ -11,6 +11,6 @@
     %el-table-column{label: '姓名', prop: 'name'}
     %el-table-column{align: 'right'}
       %template{'slot-scope': 'scope'}
-        %el-button{':type': 'addBtnType(scope.row.added)', '@click': 'addStudent(scope.$index, scope.row.id)', ':loading': 'btnLoadings[scope.$index]', size: 'mini', ':disabled': 'scope.row.added'}
+        %el-button{':type': 'addBtnType(scope.row.added)', '@click': 'addStudent(scope.$index, scope.row.id, scope.row.username)', ':loading': 'btnLoadings[scope.$index]', size: 'mini', ':disabled': 'scope.row.added'}
           {{ addBtnText(scope.row.added) }}
 

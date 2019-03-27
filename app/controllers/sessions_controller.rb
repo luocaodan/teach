@@ -35,10 +35,13 @@ class SessionsController < ApplicationController
     render file: template_path, status: 403, layout: false
   end
   
-  def create_user(gitlab_user_id, type)
+  def create_user()
+    gitlab_user_id = session[:user_id]
+    type = session[:type]
+    username = session[:username]
     user = User.find_by(gitlab_id: gitlab_user_id)
     return false if user && user.role != type
-    User.create(gitlab_id: gitlab_user_id, role: type) unless user
+    User.create(gitlab_id: gitlab_user_id, role: type, username: username) unless user
     true
   end
 end

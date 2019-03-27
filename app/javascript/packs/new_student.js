@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
       addBtnText(added) {
         return added? '已添加': '添加'
       },
-      addStudent(index, user_id) {
+      addStudent(index, user_id, username) {
         this.btnLoadings.splice(index, 1, true);
-        this.classroomStudentsService.addStudent(user_id)
+        this.classroomStudentsService.addStudent(user_id, username)
           .then(res => res.data)
           .then(data => {
             const students = this.students;

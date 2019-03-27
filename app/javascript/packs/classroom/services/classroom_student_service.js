@@ -5,9 +5,10 @@ export default class ClassroomStudentService {
     this.classroomStudentsEndpoint = classroomStudentsEndpoint;
   }
 
-  addStudent(user_id) {
+  addStudent(user_id, username) {
     return axios.post(this.classroomStudentsEndpoint, {
-      user: user_id
+      user_id: user_id,
+      username: username
     })
   }
 

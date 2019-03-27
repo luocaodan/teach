@@ -52,6 +52,7 @@
               %a{href: project['web_url']}= project['name']
               .floatRight
                 %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+                %a.el-button.el-button-mini{href: auto_test_path(project)} 自动测试
             .card-info= project['description']
     %el-tab-pane{label: '结对项目'}
       .page-title-holder-small
@@ -66,6 +67,7 @@
               %a{href: project['web_url']}= project['name']
               .floatRight
                 %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+                %a.el-button.el-button-mini{href: auto_test_path(project)} 自动测试
             .card-info= project['description']
     %el-tab-pane{label: '团队项目'}
       .page-title-holder-small
@@ -77,6 +79,7 @@
               %a{href: project['web_url']}= project['name']
               .floatRight
                 %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+                %a.el-button.el-button-mini{href: team_panel_path(project)} 团队面板
             .card-info= project['description']
 
 
