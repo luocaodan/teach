@@ -3,7 +3,8 @@ module AutoTestProjectsHelper
     classroom = Classroom.find(params[:classroom_id])
     auto_test_project = AutoTestProject.find(params[:id])
     parent_project_id = auto_test_project.gitlab_id
-    student_projects = projects_service.forks(parent_project_id, simple: true)
+    # 管理员权限列出所有fork
+    student_projects = project_forks(parent_project_id, simple: true)
     # 当前存在的测试记录
     exist_records = auto_test_project.student_test_records
     student_projects.each do |project|
@@ -35,7 +36,7 @@ module AutoTestProjectsHelper
 
   private
 
-  def projects_service
-    ::ProjectsService.new current_user
+  def project_forks(parent_project_id, params)
+    admin_api_get "projects/#{project_id}/forks", params
   end
 end
