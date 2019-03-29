@@ -37,6 +37,6 @@ module AutoTestProjectsHelper
   private
 
   def project_forks(parent_project_id, params)
-    admin_api_get "projects/#{project_id}/forks", params
+    admin_api_get "projects/#{parent_project_id}/forks", params
   end
 end
