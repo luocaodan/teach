@@ -3,9 +3,6 @@ set -e
 # 部署脚本
 project=`basename $PWD`
 compress=${project}.tar.gz
-# ruby 依赖
-echo "安装 Ruby 依赖...."
-bundle install > /dev/null
 # node 依赖
 echo "安装 Node 依赖...."
 yarn install > /dev/null

@@ -10,9 +10,11 @@ compress=${project}.tar.gz
 if [[ -d ${project} ]];then
 	echo "服务器已存在该项目，开始更新...."
 	cd ${project}
-	pid=`cat shared/pids/puma.pid`
-	if [[ -d /proc/${pid} ]];then
-		kill ${pid}
+	if [[ -f ${project}/shared/pids/puma.pid ]];then
+		pid=`cat shared/pids/puma.pid`
+		if [[ -d /proc/${pid} ]];then
+			kill ${pid}
+		fi
 	fi
 	cd ..
 	# 删除存在的项目
@@ -25,6 +27,11 @@ tar xzf ${compress}
 rm -rf ${compress}
 
 cd ${project}
+# ruby 依赖
+echo "安装 Ruby 依赖...."
+bundle install > /dev/null
+# 创建数据库
+bundle exec rake db:create
 # 数据库迁移
 echo "运行数据库迁移...."
 bundle exec rails db:migrate > /dev/null
