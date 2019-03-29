@@ -10,7 +10,7 @@ module AutoTestProjectsHelper
     student_projects.each do |project|
       project_id = project['id']
       unless exist_records.find_by(project_id: project_id)
-        full_project = projects_service.project project_id
+        full_project = get_project project_id
         gitlab_user_id = full_project['owner']['id']
         student = classroom.users&.find_by(gitlab_id: gitlab_user_id, role: 'student')
         next unless student
@@ -38,5 +38,9 @@ module AutoTestProjectsHelper
 
   def project_forks(parent_project_id, params)
     admin_api_get "projects/#{parent_project_id}/forks", params
+  end
+
+  def get_project(project_id)
+    admin_api_get "projects/#{project_id}"
   end
 end
