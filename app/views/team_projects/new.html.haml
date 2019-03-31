@@ -1,0 +1,24 @@
+- content_for :scripts do
+  = javascript_pack_tag 'new_team_project'
+- content_for :styles do
+  = stylesheet_pack_tag 'new_team_project'
+
+#new-project-app.small-container{data: {project: @team_project.to_json}}
+  .page-title-holder
+    .page-title 创建项目
+  %el-form{':model': "project", ref: 'project', ':rules': 'rules', 'label-width': '100px', action: classroom_team_projects_path, method: 'post'}
+    - @errors.each do |error|
+      %el-alert.error-item{type: 'error', 'title': error}
+    %csrf
+    %el-form-item{label: '项目名称', prop: 'name'}
+      %el-input{'v-model': 'project.name', name: 'team_project[name]'}
+    %el-form-item{label: '班级地址', prop: 'path'}
+      %el-input{'v-model': 'project.path', name: 'team_project[path]'}
+        %template{slot: 'prepend'}
+          = classroom_path_team_project_prefix
+    %el-form-item{label: '班级描述', prop: 'description'}
+      %el-input{'v-model': 'project.description', name: 'team_project[description]', type: 'textarea', ':autosize': '{minRows: 4, maxRows: 8}'}
+    %el-form-item{label: '初始化仓库'}
+      %el-switch{'v-model': 'project.initialize_with_readme', name: 'team_project[initialize_with_readme]', 'active-text': '使用 README 初始化仓库'}
+    %el-form-item.clearFloat
+      %el-button.floatRight{'@click': 'submitForm', type: 'primary'} 创建
