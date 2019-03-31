@@ -44,6 +44,7 @@ class ProjectsService < BaseService
   end
 
   def member_access(level)
+    # guest 权限为10
     if level > 10
       'edit'
     else

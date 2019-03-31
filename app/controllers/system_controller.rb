@@ -1,14 +1,22 @@
+require 'set'
+
 class SystemController < ApplicationController
   skip_before_action :require_login, only: [:index]
   # gitlab system hook
   def index
+    # 自动测试项目和团队项目标记
     if %w[project_transfer project_create].include? params['event_name']
       mark_auto_test_project params['project_id']
       mark_team_project params['project_id']
     end
+    # 添加 webhook 和 默认label
     if params['event_name'] == 'project_create'
       add_webhook params['project_id']
       add_default_labels params['project_id']
+    end
+    # 删除项目自动删除 active record
+    if params['event_name'] == 'project_destroy'
+      remove_project_record params['project_id']
     end
     render json: {status: 'success'}
   end
@@ -72,5 +80,16 @@ class SystemController < ApplicationController
     group_id = project['namespace']['id']
     return nil unless group_id
     return group_id
+  end
+
+  def get_members(project_id)
+    admin_api_get "projects/#{project_id}/members/all"
+  end
+
+  def remove_project_record(project_id)
+    auto_test_project = AutoTestProject.find_by(gitlab_id: project_id)
+    auto_test_project&.destroy
+    team_project = TeamProject.find_by(gitlab_id: project_id)
+    team_project&.destroy
   end
 end

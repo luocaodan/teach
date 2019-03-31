@@ -25,16 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     },
-    props: {
-      errors: Array
-    },
     components: {
       csrf
     },
     mounted() {
       this.classroom = JSON.parse(this.$el.dataset.classroom)
       this.$watch('classroom.name', (newVal, oldVal) => {
-        this.classroom.path = newVal.toLowerCase().replace(/\s+/g, '-');
+        this.classroom.path = newVal.toLowerCase().trim().replace(/\s+/g, '-');
       })
     },
     methods: {

@@ -82,7 +82,7 @@
         .page-title 团队项目列表
         - if student?
           .page-title-controls
-            %a.el-button.el-button--mini{href: "#{gitlab_host}/projects/new?namespace_id=#{@classroom_record.team_project_subgroup_id}"}
+            %a.el-button.el-button--mini{href: new_classroom_team_project_path(classroom_id: params[:id])}
               创建团队项目
       .content-list
         - @team_projects.each do |project|

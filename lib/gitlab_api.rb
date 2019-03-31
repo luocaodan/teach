@@ -13,6 +13,11 @@ module GitlabApi
     Http.json_post url, payload, admin_headers
   end
 
+  def admin_api_delete(url, params = {})
+    url = get_api_url url
+    Http.delete url, admin_headers.merge!(params: params)
+  end
+
   def user_api_get(url, token, params = {})
     url = get_api_url url
     Http.json_get url, user_headers(token).merge!(params: params)
@@ -40,7 +45,7 @@ module GitlabApi
 
   def user_api_delete(url, token, params = {})
     url = get_api_url url
-    Http.delete url, user_headers(token).merge!(params)
+    Http.delete url, user_headers(token).merge!(params: params)
   end
 
   def user_auth(access_code)

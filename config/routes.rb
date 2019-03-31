@@ -47,6 +47,6 @@ Rails.application.routes.draw do
   resources :classrooms do
     resources :users, only: %i[new create destroy]
     resources :auto_test_projects, only: %i[show]
-    resources :team_projects, only: %i[show]
+    resources :team_projects, only: %i[show new create]
   end
 end

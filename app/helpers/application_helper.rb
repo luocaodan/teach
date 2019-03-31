@@ -6,7 +6,8 @@ module ApplicationHelper
     data['gitlabHost'] = gitlab_host
     return data if teacher?
     project_service = ProjectsService.new current_user
-    projects = project_service.all(simple: false, membership: true)
+    # 最小为开发者权限
+    projects = project_service.all(simple: false, membership: true, min_access_level: 30)
     infos = []
     projects.each do |project|
       info = {

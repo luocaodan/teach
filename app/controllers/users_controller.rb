@@ -38,10 +38,10 @@ class UsersController < ApplicationController
     member['access_level'] = type == 'teacher' ? owner : reporter
     groups_service.add_member @classroom.gitlab_group_id, member
     # 学生重新添加到 团队项目 subgroup 团队项目group可以创建项目
-    if type == 'student'
-      member['access_level'] = maintainer
-      groups_service.add_member @classroom.team_project_subgroup_id, member
-    end
+    # if type == 'student'
+    #   member['access_level'] = maintainer
+    #   groups_service.add_member @classroom.team_project_subgroup_id, member
+    # end
     render json: {status: 'success'}
   end
 
