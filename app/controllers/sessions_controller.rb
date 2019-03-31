@@ -40,6 +40,8 @@ class SessionsController < ApplicationController
     type = session[:type]
     username = session[:username]
     user = User.find_by(gitlab_id: gitlab_user_id)
+    # 暂时允许老师从学生登录入口登录
+    return true if user && user.role == 'teacher'
     return false if user && user.role != type
     User.create(gitlab_id: gitlab_user_id, role: type, username: username) unless user
     true
