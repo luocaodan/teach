@@ -28,7 +28,7 @@ class SystemController < ApplicationController
     data = {}
     data[:url] = webhook_url
     data[:push_events] = true
-    data[:issue_events] = true
+    data[:issues_events] = true
     res = {}
     res = admin_api_post url, data until res.key?('id')
   end

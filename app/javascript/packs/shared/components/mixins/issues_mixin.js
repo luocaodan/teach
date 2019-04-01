@@ -16,6 +16,20 @@ export default {
   data() {
     return {
       issues: [],
+      // next page
+      nextPage: 2,
+      // total issue
+      total: 0,
+      totalWeight: 0,
+      // to do
+      todoTotal: 0,
+      todoTotalWeight: 0,
+      // doing
+      doingTotal: 0,
+      doingTotalWeight: 0,
+      // done
+      doneTotal: 0,
+      doneTotalWeight: 0,
       detailIndex: 0,
       curIssue: null,
       curLabel: null,
@@ -43,6 +57,7 @@ export default {
     eventhub.$on('addNewIssue', this.addNewIssue);
     eventhub.$on('updateIssue', this.updateIssue);
     eventhub.$on('updateDetailIndex', this.updateDetailIndex);
+    eventhub.$on('moreIssues', this.moreIssues);
     // 设置为全局变量 保证编译完成的不同js引用同一个对象
     window.eventhub = eventhub;
   },
@@ -133,17 +148,44 @@ export default {
       }
       return 1;
     },
-    updateIssues(filterParams) {
+    updateIssues(filterParams, isMore = false) {
       if (!filterParams) {
         this.warn('没有结果');
         return;
       }
-      this.loading = true;
+      this.filterParams = filterParams;
+      // 处理分页
+      if (isMore) {
+        filterParams['page'] = this.nextPage;
+      }
+      else {
+        filterParams['page'] = 1;
+      }
+      if (!isMore) {
+        this.loading = true;
+      }
       this.issuesService
         .all(filterParams)
         .then(res => res.data)
         .then(data => {
-          this.issues = data.map((issue) => Issue.valueOf(issue));
+          const issues = data.issues.map((issue) => Issue.valueOf(issue));
+          if (isMore) {
+            this.issues = this.issues.concat(issues);
+          }
+          else {
+            this.issues = issues;
+          }
+          this.total = data['total'];
+          this.totalWeight = data['total_weight'];
+          this.todoTotal = data['todo_total'];
+          this.todoTotalWeight = data['todo_total_weight'];
+          this.doingTotal = data['doing_total'];
+          this.doingTotalWeight = data['doing_total_weight'];
+          this.doneTotal = data['done_total'];
+          this.doneTotalWeight = data['done_total_weight'];
+          if (isMore) {
+            this.nextPage = data['next'];
+          }
           if (this.issues.length === 0) {
             this.warn('没有结果');
           }
@@ -155,6 +197,12 @@ export default {
           this.alert('服务器错误');
           this.loading = false;
         })
+    },
+    moreIssues() {
+      if (!this.nextPage) {
+        return;
+      }
+      this.updateIssues(this.filterParams, true);
     },
     updateDetailIndex(index, label) {
       this.detailIndex = index;
@@ -186,6 +234,10 @@ export default {
           }
           let list = this.getIssuesList(label);
           list.splice(0, 0, issue);
+          this.changeLabelIssuesCount(label, +1);
+          if (issue.weight) {
+            this.changeLabelIssuesWeight(label, +issue.weight);
+          }
           eventhub.$emit('updateDetailIndex', 0, label);
           this.loading = false;
         })
@@ -227,6 +279,6 @@ export default {
       P.remove();
 
       return scrollbarHeight;
-    }
+    },
   }
 }

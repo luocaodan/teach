@@ -9,7 +9,7 @@
   .box
     %el-container
       %el-aside{':width': "asideWidth + 'px'"}
-        %issues-list{':issues': 'issues', ':total-height': 'height', ':clicked': 'detailIndex'}
+        %issues-list{':issues': 'issues', ':total-height': 'height', ':clicked': 'detailIndex', ':total': 'total', ':total-weight': 'totalWeight'}
       %el-main
         %sidebar{':detail-issue': 'curIssue', ':raw-issue': 'rawIssue', ':detail-index': 'detailIndex', ':total-height': 'height - 1', ':total-width': 'width', ':divider': 'divider'}
 

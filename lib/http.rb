@@ -44,6 +44,11 @@ class Http
     JSON.parse res
   end
 
+  def self.json_get_with_headers(url, headers = {})
+    response = RestClient.get url, headers
+    [JSON.parse(response.body), response.headers]
+  end
+  
   # put json and return json
   def self.json_put(url, payload, headers = {})
     json_headers headers

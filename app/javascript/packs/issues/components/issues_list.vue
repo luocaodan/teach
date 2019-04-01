@@ -22,11 +22,11 @@
           <el-dropdown-item command="priority">优先级</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <span style="float: right" :title="'共' + issues.length + '个问题 总权重' + totalWeight">
+      <span style="float: right" :title="'共' + total + '个问题 总权重' + totalWeight">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-Issue"></use>
         </svg>
-        <span style="font-size: 16px">{{ issues.length }}</span>
+        <span style="font-size: 16px">{{ total }}</span>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-weight"></use>
         </svg>
@@ -37,7 +37,7 @@
       <div v-if="isBox" class="drag-box" :style="dragBoxStyle()">
 
       </div>
-      <el-scrollbar class="scroll center" v-else>
+      <el-scrollbar ref="scrollList" class="scroll center" v-else>
         <issue-card class="issue-item" :class="{ 'draggable-issue': canDrag}" :label="label"
                     :clicked="clicked === index && label === curLabel"
                     v-for="(issue, index) in issues" :issue="issue"
@@ -69,6 +69,16 @@
     },
     props: {
       issues: Array,
+      // total issues
+      total: {
+        type: Number,
+        default: 0
+      },
+      // total weight of issues
+      totalWeight: {
+        type: Number,
+        default: 0
+      },
       totalHeight: Number,
       clicked: Number,
       label: String,
@@ -80,19 +90,20 @@
       height() {
         let diff = this.sortHeight + this.headerHeight;
         return this.totalHeight - diff - 2;
-      },
-      totalWeight() {
-        let total = 0;
-        for (let issue of this.issues) {
-          if (issue.weight) {
-            total += issue.weight;
-          }
-        }
-        return total;
       }
     },
     mounted() {
       this.handleSortField(this.sort_field);
+      // 滚动到底部自动加载数据
+      const scrollDiv = this.$refs['scrollList'].$refs['wrap'];
+      scrollDiv.addEventListener('scroll', (event) => {
+        if (scrollDiv.scrollTop + scrollDiv.offsetHeight >= 0.7 * scrollDiv.scrollHeight) {
+          if (this.isDataBack) {
+            eventhub.$emit('moreIssues');
+            this.isDataBack = false;
+          }
+        }
+      })
     },
     updated() {
       if (!this.heightFlag) {
@@ -103,6 +114,9 @@
           this.headerHeight = header.offsetHeight;
         }
         this.heightFlag = true;
+      }
+      if (this.issues.length) {
+        this.isDataBack = true;
       }
     },
     methods: {

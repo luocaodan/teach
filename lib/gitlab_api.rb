@@ -28,6 +28,11 @@ module GitlabApi
     Http.get url, user_headers(token).merge!(params: params)
   end
 
+  def user_api_get_with_headers(url, token, params = {})
+    url = get_api_url url
+    Http.json_get_with_headers url, user_headers(token).merge!(params: params)
+  end
+
   def user_api_post(url, token, payload)
     url = get_api_url url
     Http.json_post url, payload, user_headers(token)

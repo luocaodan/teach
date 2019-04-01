@@ -1,14 +1,40 @@
+# frozen_string_literal: true
+
 class IssuesService < BaseService
   def all(params = {})
+    # pagination
     params[:scope] = 'all'
     project_id = params.delete 'project'
-    issue_list = if !project_id.nil?
-                   get "projects/#{project_id}/issues", params
-                 else
-                   get 'issues', params
-                 end
+    milestone_id = params.delete 'milestone_id'
+    issue_list, gitlab_headers = get_with_headers "projects/#{project_id}/issues", params
     add_external_field issue_list
-    issue_list
+    records = if milestone_id
+                Issue.where(milestone_id: milestone_id)
+              else
+                Issue.where(project_id: project_id)
+              end
+    total_weight = records.sum { |r| r.weight.to_i }
+    todos = records.where(state: 'To Do')
+    todo_total = todos.count
+    todo_total_weight = todos.sum { |r| r.weight.to_i }
+    doings = records.where(state: 'Doing')
+    doing_total = doings.count
+    doing_total_weight = doings.sum { |r| r.weight.to_i }
+    dones = records.where(state: 'Closed')
+    done_total = dones.count
+    done_total_weight = dones.sum { |r| r.weight.to_i }
+    {
+      issues: issue_list,
+      total: gitlab_headers[:x_total].to_i,
+      total_weight: total_weight,
+      todo_total: todo_total,
+      todo_total_weight: todo_total_weight,
+      doing_total: doing_total,
+      doing_total_weight: doing_total_weight,
+      done_total: done_total,
+      done_total_weight: done_total_weight,
+      next: gitlab_headers[:x_next_page].to_i
+    }
   end
 
   def new_issue(project_id, params = {})
@@ -49,12 +75,8 @@ class IssuesService < BaseService
         end
       end
       payload = {attr => value}
-      if attr == 'state_event' && value == 'reopen'
-        payload[:labels] = 'To Do'
-      end
-      if state_flag
-        payload[:state_event] = 'reopen'
-      end
+      payload[:labels] = 'To Do' if attr == 'state_event' && value == 'reopen'
+      payload[:state_event] = 'reopen' if state_flag
       issue = put "projects/#{project_id}/issues/#{iid}", payload
     end
     add_external_field [issue]

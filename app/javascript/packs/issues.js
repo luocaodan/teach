@@ -69,6 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       belongsToMe(issue) {
         return true;
+      },
+      changeLabelIssuesCount(label, value) {
+        this.total += value;
+      },
+      changeLabelIssuesWeight(label, value) {
+        this.totalWeight += value;
       }
     }
   })

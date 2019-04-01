@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   # system hook for add system-wide webhook
   post '/system', to: 'system#index'
 
+  # webhook for every project
+  post '/webhook', to: 'webhook#index'
+
   # report interface for receive auto test result
   post '/report', to: 'report#index'
 

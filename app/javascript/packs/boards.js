@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         this.doingIssues = this.issues.filter((item) => item.state === 'Doing');
         this.doneIssues = this.issues.filter((item) => item.state === 'Closed');
         this.isDataBack = true;
-        this.issues = null;
       },
       getIssuesList(label) {
         if (label === 'todo') {
@@ -142,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }
           return {
+            milestone_id: this.milestoneId,
             milestone: milestone.title,
             project: projectId
           }
@@ -183,6 +183,14 @@ document.addEventListener('DOMContentLoaded', () => {
             let list = this.getIssuesList(toLabel);
             list.splice(0, 0, updated);
             fromList.splice(fromIndex, 1);
+            // 更改list issues 总数和权重
+            this.changeLabelIssuesCount(fromLabel, -1);
+            this.changeLabelIssuesCount(toLabel, +1);
+            const weight = updated.weight;
+            if (weight) {
+              this.changeLabelIssuesWeight(fromLabel, -weight);
+              this.changeLabelIssuesWeight(toLabel, +weight);
+            }
             if (this.detailVisible) {
               eventhub.$emit('updateDetailIndex', 0, toLabel);
             }
@@ -202,6 +210,28 @@ document.addEventListener('DOMContentLoaded', () => {
           else if (label !== attr) {
             this.isBox[attr] = true;
           }
+        }
+      },
+      changeLabelIssuesCount(label, value) {
+        if (label === 'todo') {
+          this.todoTotal += value;
+        }
+        else if (label === 'doing') {
+          this.doingTotal += value;
+        }
+        else if (label === 'done') {
+          this.doneTotal += value;
+        }
+      },
+      changeLabelIssuesWeight(label, value) {
+        if (label === 'todo') {
+          this.todoTotalWeight += value;
+        }
+        else if (label === 'doing') {
+          this.doingTotalWeight += value;
+        }
+        else if (label === 'done') {
+          this.doneTotalWeight += value;
         }
       }
     },

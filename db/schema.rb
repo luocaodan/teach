@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_083557) do
+ActiveRecord::Schema.define(version: 2019_03_31_122438) do
 
   create_table "auto_test_projects", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -39,6 +39,9 @@ ActiveRecord::Schema.define(version: 2019_03_27_083557) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "priority"
+    t.string "state"
+    t.integer "project_id"
+    t.integer "milestone_id"
   end
 
   create_table "select_classrooms", force: :cascade do |t|
