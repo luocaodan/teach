@@ -23,6 +23,9 @@ class IssuesService < BaseService
     dones = records.where(state: 'Closed')
     done_total = dones.count
     done_total_weight = dones.sum { |r| r.weight.to_i }
+    issue_list.each do |issue|
+      update_issue_time issue
+    end
     {
       issues: issue_list,
       total: gitlab_headers[:x_total].to_i,
@@ -45,6 +48,7 @@ class IssuesService < BaseService
       Issue.create id: issue['id'], weight: weight, priority: priority
     end
     add_external_field [issue]
+    update_issue_time issue
     issue
   end
 
@@ -80,6 +84,7 @@ class IssuesService < BaseService
       issue = put "projects/#{project_id}/issues/#{iid}", payload
     end
     add_external_field [issue]
+    update_issue_time issue
     issue
   end
 
@@ -125,5 +130,11 @@ class IssuesService < BaseService
 
   def project_service
     ProjectsService.new user
+  end
+
+  def update_issue_time(issue)
+    issue_record = Issue.find_by(id: issue['id'])
+    return unless issue_record
+    issue['updated_at'] = issue_record.updated_at
   end
 end
