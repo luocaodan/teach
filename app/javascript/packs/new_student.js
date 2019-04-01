@@ -49,6 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
             this.alert('添加失败');
           })
       },
+      pageChange(page) {
+        const path = window.location.pathname;
+        let location = `${path}?page=${page}`;
+        const groups = window.location.search.match(/[\?\&]type=([^\&]+)/i);
+        if (groups) {
+          const type = groups[1];
+          location += `&type=${type}`
+        }
+        window.location.href = location;
+      }
     }
   })
 })

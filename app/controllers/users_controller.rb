@@ -2,9 +2,14 @@ class UsersController < ApplicationController
   def new
     classroom = Classroom.find params[:classroom_id]
     @type = params[:type]
+    render_404 unless @type
+    @page = params[:page]
+    @page ||= 1
     # type: student 添加一个学生到班级
     # type: teacher 添加一个老师或助教
-    @students = users_service.all.find_all{ |u| u['id'] != current_user.id && u['id'] != 1}
+    @students, gitlab_headers = users_service.all page: @page
+    @page_count = gitlab_headers[:x_total_pages]
+    render_404 if @page > @page_count
     @students.each do |s|
       s['added'] = !classroom.users.find_by(gitlab_id: s['id']).nil?
     end
