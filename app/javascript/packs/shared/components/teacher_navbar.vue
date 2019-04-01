@@ -10,6 +10,9 @@
         班级
       </el-menu-item>
       <el-menu-item index="2">
+        博客
+      </el-menu-item>
+      <el-menu-item index="2">
         GitLab
         <i class="iconfont icon-link"></i>
       </el-menu-item>
@@ -29,9 +32,12 @@
     methods: {
       handleSelect(key) {
         if (key === '1') {
-          window.location.href = '/classrooms'
+          window.location.href = '/classrooms';
         }
         else if (key === '2') {
+          window.location.href = '/blogs';
+        }
+        else if (key === '3') {
           window.location.href = this.gitlabHost;
         }
       }
