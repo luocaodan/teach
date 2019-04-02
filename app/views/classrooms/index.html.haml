@@ -9,17 +9,36 @@
     - if teacher?
       .page-title-controls
         %a.el-button{href: new_classroom_path} 新建班级
-  .content-list
-    - @classrooms.each do |classroom|
-      %el-card
-        .card-title.clearFloat
-          %span
-            %a{href: classroom_path(classroom['id'])}= classroom['name']
-          - if teacher?
-            .floatRight
-              %a.el-button{href: "#{classroom['web_url']}/-/edit"} 编辑
-              = link_to '删除', classroom_path(classroom['id']), method: :delete, data: {confirm: '确定删除？'}, class: 'el-button el-button--danger'
+  %el-tabs
+    %el-tab-pane{label: '我的班级'}
+      .content-list
+        - @classrooms.each do |classroom|
+          %el-card
+            .card-title.clearFloat
+              %span
+                %a{href: classroom_path(classroom['id'])}= classroom['name']
+              - if teacher?
+                .floatRight
+                  %a.el-button{href: "#{classroom['web_url']}/-/edit"} 编辑
+                  = link_to '删除', classroom_path(classroom['id']), method: :delete, data: {confirm: '确定删除？'}, class: 'el-button el-button--danger'
 
-        .card-info
-          = classroom['description']
+            .card-info
+              = classroom['description']
+    %el-tab-pane{label: '所有班级'}
+      .content-list
+        - @all_classrooms.each do |classroom|
+          %el-card
+            .card-title.clearFloat
+              %span
+                %a{href: classroom_path(classroom['id'])}= classroom['name']
+                .floatRight
+                  - unless classroom['own']
+                    %a.el-button{href: join_classroom_path(classroom['id'])} 加入班级
+                  - if teacher? && classroom['own']
+                    %a.el-button{href: "#{classroom['web_url']}/-/edit"} 编辑
+                    = link_to '删除', classroom_path(classroom['id']), method: :delete, data: {confirm: '确定删除？'}, class: 'el-button el-button--danger'
+                  - if student? && classroom['own']
+                    %el-button{':disabled': 'true'} 已加入
 
+            .card-info
+              = classroom['description']

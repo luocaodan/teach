@@ -46,7 +46,7 @@
       </el-menu-item>
 
       <el-menu-item index="5">
-        我的班级
+        班级
       </el-menu-item>
 
       <el-menu-item index="6">

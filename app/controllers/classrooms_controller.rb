@@ -3,11 +3,22 @@
 class ClassroomsController < ApplicationController
   def index
     @classrooms = []
+    @all_classrooms = []
     user = User.find_by(gitlab_id: current_user.id)
     user.classrooms.all.each do |classroom|
       klass = groups_service.get_group(classroom.gitlab_group_id)
       klass['id'] = classroom.id
+      klass['own'] = true
       @classrooms << klass
+      @all_classrooms << klass
+    end
+
+    Classroom.all.each do |classroom|
+      next if @classrooms.find {|c| c['id'] == classroom.id}
+      klass = groups_service.get_group(classroom.gitlab_group_id)
+      klass['id'] = classroom.id
+      klass['own'] = false
+      @all_classrooms << klass
     end
   end
 
@@ -80,6 +91,22 @@ class ClassroomsController < ApplicationController
     end
   end
 
+  # current user join classroom
+  def join
+    classroom_id = params[:id]
+    classroom = Classroom.find(classroom_id)
+    group_id = classroom.gitlab_group_id
+    user = User.find_by(gitlab_id: current_user.id)
+    access = user.role == 'teacher'? 50: 20
+    member = {
+      user_id: current_user.id,
+      access_level: access
+    }
+    add_group_member group_id, member
+    classroom.users << User.find_by(gitlab_id: current_user.id)
+    redirect_to classrooms_path
+  end
+
   private
 
   def new_team_project_dir(parent_id)
@@ -117,5 +144,9 @@ class ClassroomsController < ApplicationController
 
   def groups_service
     ::GroupsService.new current_user
+  end
+
+  def add_group_member(group_id, member)
+    admin_api_post "groups/#{group_id}/members", member
   end
 end
