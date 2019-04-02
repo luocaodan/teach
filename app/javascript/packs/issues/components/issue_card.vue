@@ -56,8 +56,23 @@
     },
     filters: {
       shorten(value) {
-        if (value.length > 10) {
-          value = value.substr(0, 10) + '...'
+        let len = 0;
+        let end;
+        const MAX = 18;
+        for (end = 0;end < value.length;end++) {
+          if (len > MAX) {
+            break;
+          }
+          const unicode = value.charCodeAt(end);
+          if (unicode > 255) {
+            len += 2;
+          }
+          else {
+            len += 1;
+          }
+        }
+        if (len > MAX) {
+          value = value.substr(0, end) + '...'
         }
         return value;
       }
