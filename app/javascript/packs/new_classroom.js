@@ -10,11 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     el: '#new-classroom-app',
     data() {
       return {
-        classroom: {
-          name: '',
-          path: '',
-          description: ''
-        },
+        classroom: {},
         rules: {
           name: [
             {required: true, message: '请输入班级名称', trigger: 'blur'}

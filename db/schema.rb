@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_31_122438) do
+ActiveRecord::Schema.define(version: 2019_04_02_064022) do
 
   create_table "auto_test_projects", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -21,17 +21,12 @@ ActiveRecord::Schema.define(version: 2019_03_31_122438) do
   end
 
   create_table "classrooms", force: :cascade do |t|
-    t.string "name"
-    t.string "path"
-    t.string "description"
     t.integer "gitlab_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "team_project_subgroup_id"
     t.integer "personal_project_subgroup_id"
     t.integer "pair_project_subgroup_id"
-    t.index ["name"], name: "index_classrooms_on_name", unique: true
-    t.index ["path"], name: "index_classrooms_on_path", unique: true
   end
 
   create_table "issues", force: :cascade do |t|

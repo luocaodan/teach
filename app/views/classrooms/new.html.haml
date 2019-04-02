@@ -6,7 +6,7 @@
 #new-classroom-app.small-container{data: {classroom: @classroom.to_json}}
   .page-title-holder
     .page-title 创建班级
-  %el-form{':model': "classroom", ref: 'classroom', ':rules': 'rules', 'label-width': '80px', action: classrooms_path, method: 'post'}
+  %el-form{':model': "classroom", ref: 'classroom', ':rules': 'rules', 'label-width': '100px', action: classrooms_path, method: 'post'}
     - @errors.each do |error|
       %el-alert.error-item{type: 'error', 'title': error}
     %csrf
@@ -18,5 +18,9 @@
           = gitlab_host+'/'
     %el-form-item{label: '班级描述', prop: 'description'}
       %el-input{'v-model': 'classroom.description', name: 'classroom[description]', type: 'textarea', ':autosize': '{minRows: 4, maxRows: 8}'}
+    %el-form-item{label: '初始化设置'}
+      %el-switch{'v-model': 'classroom.personal', name: 'classroom[personal]', 'active-text': '个人项目'}
+      %el-switch{'v-model': 'classroom.pair', name: 'classroom[pair]', 'active-text': '结对项目'}
+      %el-switch{'v-model': 'classroom.team', name: 'classroom[team]', 'active-text': '团队项目'}
     %el-form-item.clearFloat
       %el-button.floatRight{'@click': 'submitForm', type: 'primary'} 创建

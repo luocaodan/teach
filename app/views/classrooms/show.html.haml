@@ -43,55 +43,58 @@
               %el-tag{'v-if': 'scope.row.is_me', type: 'success'} It's you
               %el-button{'v-else': 'scope.row.is_me', type: 'danger', '@click': 'deleteTeacher(scope.$index, scope.row.id)', ':loading': 'btnTeacherLoadings[scope.$index]', size: 'mini'}
                 移出班级
-    %el-tab-pane{label: '个人项目'}
-      .page-title-holder-small
-        .page-title 个人项目列表
-        - if teacher?
-          .page-title-controls
-            %a.el-button.el-button--mini{href: "#{gitlab_host}/projects/new?namespace_id=#{@classroom_record.personal_project_subgroup_id}"}
-              创建个人项目
-      .content-list
-        - @personal_projects.each do |project|
-          %el-card
-            .card-title.clearFloat
-              %a{href: project['web_url']}= project['name']
-              .floatRight
-                - if teacher?
+    -if @personal_projects
+      %el-tab-pane{label: '个人项目'}
+        .page-title-holder-small
+          .page-title 个人项目列表
+          - if teacher?
+            .page-title-controls
+              %a.el-button.el-button--mini{href: "#{gitlab_host}/projects/new?namespace_id=#{@classroom_record.personal_project_subgroup_id}"}
+                创建个人项目
+        .content-list
+          - @personal_projects.each do |project|
+            %el-card
+              .card-title.clearFloat
+                %a{href: project['web_url']}= project['name']
+                .floatRight
+                  - if teacher?
+                    %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+                  %a.el-button.el-button-mini{href: auto_test_path(project)} 自动测试
+              .card-info= project['description']
+    -if @pair_projects
+      %el-tab-pane{label: '结对项目'}
+        .page-title-holder-small
+          .page-title 结对项目列表
+          - if teacher?
+            .page-title-controls
+              %a.el-button.el-button--mini{href: "#{gitlab_host}/projects/new?namespace_id=#{@classroom_record.pair_project_subgroup_id}"}
+                创建结对项目
+        .content-list
+          - @pair_projects.each do |project|
+            %el-card
+              .card-title.clearFloat
+                %a{href: project['web_url']}= project['name']
+                .floatRight
+                  -if teacher?
+                    %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+                  %a.el-button.el-button-mini{href: auto_test_path(project)} 自动测试
+              .card-info= project['description']
+    -if @team_projects
+      %el-tab-pane{label: '团队项目'}
+        .page-title-holder-small
+          .page-title 团队项目列表
+          - if student?
+            .page-title-controls
+              %a.el-button.el-button--mini{href: new_classroom_team_project_path(classroom_id: params[:id])}
+                创建团队项目
+        .content-list
+          - @team_projects.each do |project|
+            %el-card
+              .card-title.clearFloat
+                %a{href: project['web_url']}= project['name']
+                .floatRight
                   %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
-                %a.el-button.el-button-mini{href: auto_test_path(project)} 自动测试
-            .card-info= project['description']
-    %el-tab-pane{label: '结对项目'}
-      .page-title-holder-small
-        .page-title 结对项目列表
-        - if teacher?
-          .page-title-controls
-            %a.el-button.el-button--mini{href: "#{gitlab_host}/projects/new?namespace_id=#{@classroom_record.pair_project_subgroup_id}"}
-              创建结对项目
-      .content-list
-        - @pair_projects.each do |project|
-          %el-card
-            .card-title.clearFloat
-              %a{href: project['web_url']}= project['name']
-              .floatRight
-                -if teacher?
-                  %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
-                %a.el-button.el-button-mini{href: auto_test_path(project)} 自动测试
-            .card-info= project['description']
-    %el-tab-pane{label: '团队项目'}
-      .page-title-holder-small
-        .page-title 团队项目列表
-        - if student?
-          .page-title-controls
-            %a.el-button.el-button--mini{href: new_classroom_team_project_path(classroom_id: params[:id])}
-              创建团队项目
-      .content-list
-        - @team_projects.each do |project|
-          %el-card
-            .card-title.clearFloat
-              %a{href: project['web_url']}= project['name']
-              .floatRight
-                %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
-                %a.el-button.el-button-mini{href: team_panel_path(project)} 团队面板
-            .card-info= project['description']
+                  %a.el-button.el-button-mini{href: team_panel_path(project)} 团队面板
+              .card-info= project['description']
 
 

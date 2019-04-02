@@ -30,37 +30,40 @@ class ClassroomsController < ApplicationController
   def create
     owner = User.find_by(gitlab_id: current_user.id)
     @classroom = params[:classroom]
-    classroom = owner.classrooms.new params.require(:classroom).permit(:name, :path, :description)
+    classroom = owner.classrooms.new
+    personal = !!@classroom.delete(:personal)
+    pair = !!@classroom.delete(:pair)
+    team = !!@classroom.delete(:team)
     @classroom['visibility'] = 'public'
     @classroom['request_access_enabled'] = true
-    unless classroom.valid?
-      @errors = get_record_errors classroom
-      render 'new'
-      return
-    end
     group = groups_service.new_group @classroom
     classroom.gitlab_group_id = group['id']
-    # 团队项目 subgroup
-    team_project_dir = new_team_project_dir(group['id'])
-    team_project_group = groups_service.new_group(team_project_dir)
-    classroom.team_project_subgroup_id = team_project_group['id']
-    # 个人项目 subgroup
-    personal_project_dir = new_personal_project_dir(group['id'])
-    personal_project_group = groups_service.new_group(personal_project_dir)
-    classroom.personal_project_subgroup_id = personal_project_group['id']
-    # 结对项目 subgroup
-    pair_project_dir = new_pair_project_dir(group['id'])
-    pair_project_group = groups_service.new_group(pair_project_dir)
-    classroom.pair_project_subgroup_id = pair_project_group['id']
+    if team
+      # 团队项目 subgroup
+      team_project_dir = new_team_project_dir(group['id'])
+      team_project_group = groups_service.new_group(team_project_dir)
+      classroom.team_project_subgroup_id = team_project_group['id']
+    end
+    if personal
+      # 个人项目 subgroup
+      personal_project_dir = new_personal_project_dir(group['id'])
+      personal_project_group = groups_service.new_group(personal_project_dir)
+      classroom.personal_project_subgroup_id = personal_project_group['id']
+    end
+    if pair
+      # 结对项目 subgroup
+      pair_project_dir = new_pair_project_dir(group['id'])
+      pair_project_group = groups_service.new_group(pair_project_dir)
+      classroom.pair_project_subgroup_id = pair_project_group['id']
+    end
     classroom.save
     classroom.users << owner
     redirect_to classrooms_path
   rescue RestClient::BadRequest => e
-    @errors = if classroom.errors.any?
-                get_record_errors classroom
-              else
-                ['名称或地址包含非法字符']
-              end
+    @classroom['personal'] = personal
+    @classroom['pair'] = pair
+    @classroom['team'] = team
+    @errors = ['名称或地址包含非法字符或已被占用']
     render 'new'
   end
 
@@ -79,9 +82,15 @@ class ClassroomsController < ApplicationController
       return
     end
     @classroom = groups_service.get_group @classroom_record.gitlab_group_id
-    @personal_projects = groups_service.get_projects @classroom_record.personal_project_subgroup_id
-    @pair_projects = groups_service.get_projects @classroom_record.pair_project_subgroup_id
-    @team_projects = groups_service.get_projects @classroom_record.team_project_subgroup_id
+    if @classroom_record.personal_project_subgroup_id
+      @personal_projects = groups_service.get_projects @classroom_record.personal_project_subgroup_id
+    end
+    if @classroom_record.pair_project_subgroup_id
+      @pair_projects = groups_service.get_projects @classroom_record.pair_project_subgroup_id
+    end
+    if @classroom_record.team_project_subgroup_id
+      @team_projects = groups_service.get_projects @classroom_record.team_project_subgroup_id
+    end
     users = groups_service.get_members @classroom_record.gitlab_group_id
     # 所有 student
     @students = users.find_all do |s|
