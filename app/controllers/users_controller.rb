@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     # type: student 添加一个学生到班级
     # type: teacher 添加一个老师或助教
     @students, gitlab_headers = users_service.all page: @page
-    @page_count = gitlab_headers[:x_total_pages]
+    @page_count = gitlab_headers[:x_total_pages].to_i
     render_404 if @page > @page_count
     @students.each do |s|
       s['added'] = !classroom.users.find_by(gitlab_id: s['id']).nil?

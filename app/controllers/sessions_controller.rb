@@ -30,11 +30,6 @@ class SessionsController < ApplicationController
     redirect_to root_url if logged_in?
   end
   
-  def render_403
-    template_path = File.join(Rails.root, 'public/403.html')
-    render file: template_path, status: 403, layout: false
-  end
-  
   def create_user
     gitlab_user_id = session[:user_id]
     type = session[:type]

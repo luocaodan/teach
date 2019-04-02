@@ -8,4 +8,10 @@ module ClassroomsHelper
     team_project = TeamProject.find_by(gitlab_id: project['id'])
     classroom_team_project_path(classroom_id: params[:id], id: team_project.id)
   end
+
+  def my_class?(classroom_id)
+    user = User.find_by(gitlab_id: current_user.id)
+    classroom = Classroom.find(classroom_id)
+    classroom.users.include? user
+  end
 end

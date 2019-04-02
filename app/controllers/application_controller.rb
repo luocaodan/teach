@@ -17,6 +17,11 @@ class ApplicationController < ActionController::Base
     render file: "#{Rails.root}/public/404.html", status: 404
   end
 
+  def render_403
+    template_path = File.join(Rails.root, 'public/403.html')
+    render file: template_path, status: 403, layout: false
+  end
+
   def require_login
     redirect_to login_url unless logged_in?
   end

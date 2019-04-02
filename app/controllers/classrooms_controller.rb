@@ -14,7 +14,7 @@ class ClassroomsController < ApplicationController
     end
 
     Classroom.all.each do |classroom|
-      next if @classrooms.find {|c| c['id'] == classroom.id}
+      next if @classrooms.find { |c| c['id'] == classroom.id }
       klass = groups_service.get_group(classroom.gitlab_group_id)
       klass['id'] = classroom.id
       klass['own'] = false
@@ -72,7 +72,12 @@ class ClassroomsController < ApplicationController
   end
 
   def show
+    user = User.find_by(gitlab_id: current_user.id)
     @classroom_record = Classroom.find(params[:id])
+    unless @classroom_record.users.include? user
+      render_403
+      return
+    end
     @classroom = groups_service.get_group @classroom_record.gitlab_group_id
     @personal_projects = groups_service.get_projects @classroom_record.personal_project_subgroup_id
     @pair_projects = groups_service.get_projects @classroom_record.pair_project_subgroup_id
@@ -97,13 +102,35 @@ class ClassroomsController < ApplicationController
     classroom = Classroom.find(classroom_id)
     group_id = classroom.gitlab_group_id
     user = User.find_by(gitlab_id: current_user.id)
-    access = user.role == 'teacher'? 50: 20
+    access = user.role == 'teacher' ? 50 : 20
     member = {
       user_id: current_user.id,
       access_level: access
     }
     add_group_member group_id, member
     classroom.users << User.find_by(gitlab_id: current_user.id)
+    redirect_to classrooms_path
+  end
+
+  # current user exit classroom
+  def exit
+    classroom_id = params[:id]
+    classroom = Classroom.find(classroom_id)
+    user = User.find_by(gitlab_id: current_user.id)
+    sc = SelectClassroom.find_by(user_id: user.id, classroom_id: classroom_id)
+    sc.destroy
+
+    group_id = classroom.gitlab_group_id
+    if user.role == 'teacher'
+      teachers = classroom.users.where(role: 'teacher')
+      if teachers.count.zero?
+        groups_service.delete_group group_id
+        classroom.destroy
+        redirect_to classrooms_path
+        return
+      end
+    end
+    remove_group_member group_id, current_user.id
     redirect_to classrooms_path
   end
 
@@ -148,5 +175,9 @@ class ClassroomsController < ApplicationController
 
   def add_group_member(group_id, member)
     admin_api_post "groups/#{group_id}/members", member
+  end
+
+  def remove_group_member(group_id, user_id)
+    admin_api_delete "groups/#{group_id}/members/#{user_id}"
   end
 end

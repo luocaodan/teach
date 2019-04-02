@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     resources :team_projects, only: %i[show new create]
     member do
       get 'join', to: 'classrooms#join'
+      get 'exit', to: 'classrooms#exit'
     end
   end
 end
