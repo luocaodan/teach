@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .all(params)
           .then(res => res.data)
           .then(data => {
-            this.issues = data;
+            this.issues = data.issues;
             this.updateEchartsOption();
             this.loading = false;
           })

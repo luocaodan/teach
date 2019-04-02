@@ -21,9 +21,9 @@ export default {
       // 默认为任务数燃尽图
       const burnData = this.getBurnData(this.issues, this.isWeight);
       const guideData = this.getGuideData(burnData);
-      const start = Date.parse(this.milestone.start_date + ' GMT +8') / 1000;
-      const end = Date.parse(this.milestone.due_date + ' GMT +8') / 1000;
       const day = 3600 * 24;
+      const start = Date.parse(this.milestone.start_date + ' GMT +8') / 1000;
+      const end = Date.parse(this.milestone.due_date + ' GMT +8') / 1000 + day;
       const tmp = Math.max(end, this.roundDate(burnData[burnData.length-1][0])) - start;
       const xAxisInterval = Math.ceil(tmp / day / 10) * day;
 
@@ -235,8 +235,9 @@ export default {
       return res;
     },
     getGuideData(burnData) {
+      const DAY = 24 * 3600;
       const start = Date.parse(this.milestone.start_date + 'GMT +8') / 1000;
-      const end = Date.parse(this.milestone.due_date + 'GMT +8') / 1000;
+      const end = Date.parse(this.milestone.due_date + 'GMT +8') / 1000 + DAY;
 
       const total = burnData.length > 0 ? burnData[0][1] : 0;
       const diff = total / ((end - start) / 3600 / 24);
@@ -276,12 +277,6 @@ export default {
     roundDate(second) {
       const day = 3600 * 24;
       return second - second % day + day
-    },
-    getMockData() {
-      const d = 3600 * 24;
-      const start = Date.parse(this.milestone.start_date + 'GMT +8') / 1000;
-      const end = Date.parse(this.milestone.due_date + 'GMT +8') / 1000;
-      return [[start, 100], [start + d, 94], [start + 1.5 * d, 85]];
     },
   }
 }
