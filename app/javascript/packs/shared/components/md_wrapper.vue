@@ -38,19 +38,22 @@
         return 'edit';
       },
       styleObj() {
+        const base = {
+          minWidth: '250px'
+        };
         if (this.preview) {
-          return {
+          return Object.assign(base, {
             height: 'auto',
             minHeight: 'unset'
-          }
+          })
         }
         else if (this.minHeight) {
-          return {
+          return Object.assign(base, {
             minHeight: `${this.minHeight}px`
-          }
+          })
         }
         else {
-          return {};
+          return Object.assign(base, {});
         }
       }
     },
