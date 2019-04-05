@@ -1,7 +1,12 @@
 export default class TestRecord {
   static valueOf(obj) {
     const res = new TestRecord();
+    res.id = obj.id;
+    res.project_id = obj.project_id;
+    res.project_url = obj.project_url;
     res.student = obj.student;
+    res.feedback = obj.feedback === null? '' : obj.feedback;
+    res.editable = obj.editable;
     const units = JSON.parse(obj.unittest);
     if (!units) {
       res.unitTestsSummary = '无';

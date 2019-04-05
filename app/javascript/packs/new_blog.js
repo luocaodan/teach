@@ -11,7 +11,6 @@ import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import mdWrapper from './shared/components/md_wrapper.vue'
 import CommonMixin from './shared/components/mixins/common_mixin'
-import MarkdownMixin from './shared/components/mixins/markdown_support'
 import EchartsOption from './shared/components/mixins/burnEchartsOption'
 import Blog from './blogs/models/blog'
 import BlogsService from "./blogs/services/blogs_service";

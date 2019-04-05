@@ -23,9 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const $app = this.getContainer();
       const blog = JSON.parse($app.dataset.blog);
       const pathname = window.location.pathname;
-      let list = pathname.split('/');
       blog.code = '';
-      blog.project_id = parseInt(list[2]);
       this.blog = blog;
       this.blogsService = new BlogsService({
         blogsEndpoint: $app.dataset.blogsEndpoint

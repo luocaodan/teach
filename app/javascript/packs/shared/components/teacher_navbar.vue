@@ -12,7 +12,7 @@
       <el-menu-item index="2">
         博客
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item index="3">
         GitLab
         <i class="iconfont icon-link"></i>
       </el-menu-item>

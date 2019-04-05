@@ -11,18 +11,13 @@
         <el-input v-model="issue.title"></el-input>
       </el-form-item>
       <el-form-item label="问题描述" prop="description">
-        <!--<el-input v-model="issue.description" type="textarea" :autosize="{ minRows: 4 }"></el-input>-->
-        <mavon-editor
-          ref="mdEditor"
-          :style="{maxHeight: maxHeight + 'px'}"
-          v-model="issue.description"
-          :subfield="false"
-          :toolbars="toolbars"
-          @fullScreen="resizeMarkdown"
-          @imgAdd="$imgAdd"
-          @imgDel="$imgDel"
-          placeholder="输入问题描述">
-        </mavon-editor>
+        <md-wrapper v-model="issue.description"
+                    :min-height="200" :border="false"
+                    :box-shadow="false"
+                    :project-id="issue.projectId"
+                    func="mini"
+                    :cant-save="true">
+        </md-wrapper>
       </el-form-item>
 
       <div v-if="canEdit">
@@ -114,10 +109,9 @@
 
 <script>
   import EditMixin from './mixins/edit_issue'
-  import MarkdownMixin from './mixins/markdown_support'
 
   export default {
-    mixins: [EditMixin, MarkdownMixin],
+    mixins: [EditMixin],
     data() {
       let validateWeight = (rule, value, callback) => {
         if (value === null || value === '') {

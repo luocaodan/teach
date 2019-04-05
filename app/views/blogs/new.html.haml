@@ -12,7 +12,7 @@
     %el-form-item{label: '标题', 'prop': 'title'}
       %el-input{'v-model': 'blog.title'}
     %el-form-item{label: '内容', 'prop': 'code'}
-      %md-wrapper.md-editor{'v-model': 'blog.code', ':editable': "containerId !== null", ':placeholder': 'mdPlaceholder', ':project': 'blog.project_id', ':cant-save': 'true'}
+      %md-wrapper.md-editor{'v-model': 'blog.code', ':editable': "containerId !== null", ':placeholder': 'mdPlaceholder', ':project-id': 'blog.project_id', ':cant-save': 'true'}
     %el-form-item.clearFloat
       %a.el-button{href: '/blogs'} 取消
       %el-button-group.floatRight

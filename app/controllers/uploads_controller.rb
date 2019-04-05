@@ -20,6 +20,16 @@ class UploadsController < ApplicationController
     end
   end
 
+  def upload_url
+    project_id = params[:project_id]
+    project = admin_api_get "projects/#{project_id}"
+    respond_to do |format|
+      format.json do
+        render json: {web_url: project['web_url']}
+      end
+    end
+  end
+
   private
 
   def uploads_service

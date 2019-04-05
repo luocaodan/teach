@@ -1,5 +1,6 @@
 import {mavonEditor} from 'mavon-editor'
 import UploadService from '../../services/upload_service'
+import axios from 'axios'
 
 export default {
   data() {
@@ -87,18 +88,12 @@ export default {
         if (srcIndex >= 0) {
           let link = tokens[idx].attrs[srcIndex][1];
           if (link.startsWith('/uploads/')) {
-            let projectUrl = this.getProjectUrl(this.getProjectId());
-            tokens[idx].attrs[srcIndex][1] = projectUrl + link;
+            tokens[idx].attrs[srcIndex][1] = this.getProjectUrl() + link;
           }
         }
         return defaultImgRender(tokens, idx, options, env, self);
       };
       this.enabled = true;
-    },
-    getProjectUrl(projectId) {
-      const $navbar = document.getElementById('navbar');
-      const projects = JSON.parse($navbar.dataset.projects);
-      return projects.find((p) => p.id === projectId).web_url;
     },
     $imgAdd(pos, $file) {
       let formData = new FormData();
@@ -117,8 +112,11 @@ export default {
     $imgDel(filename) {
       // todo
     },
-    getPorjectId() {
-      alert('未实现');
+    getProjectId() {
+      this.$message.error('project id 未实现')
+    },
+    getProjectUrl() {
+      this.$message.error('project url 未实现')
     }
   }
 }

@@ -71,7 +71,6 @@
         default: true
       },
       placeholder: String,
-      project: Number,
       preview: {
         type: Boolean,
         default: false
@@ -93,7 +92,9 @@
         // full | middle | mini
         type: String,
         default: 'middle'
-      }
+      },
+      projectId: Number,
+      projectUrl: String
     },
     mounted() {
       this.toolbars.save = !this.cantSave;
@@ -111,7 +112,16 @@
         this.$emit('save');
       },
       getProjectId() {
-        return this.project;
+        return this.projectId;
+      },
+      getProjectUrl() {
+        if (this.projectUrl) {
+          return this.projectUrl;
+        }
+        const $navbar = document.getElementById('navbar');
+        const projects = JSON.parse($navbar.dataset.projects);
+        const projectUrl = projects.find((p) => p.id === this.getProjectId()).web_url;
+        return projectUrl;
       }
     }
   }

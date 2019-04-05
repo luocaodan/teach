@@ -1,6 +1,7 @@
 // mixin
 import Issue from '../../../issues/models/issue'
 import DateMixin from './date_support'
+import mdWrapper from '../md_wrapper.vue'
 
 export default {
   mixins: [DateMixin],
@@ -12,6 +13,9 @@ export default {
       members: {},
       milestones: {},
     }
+  },
+  components: {
+    mdWrapper
   },
   props: {
     issue: Issue,
@@ -45,9 +49,6 @@ export default {
     },
     memberList(issue) {
       return this.members[issue.projectId];
-    },
-    getProjectId() {
-      return this.issue.projectId;
     }
   },
   computed: {

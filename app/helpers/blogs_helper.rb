@@ -20,6 +20,9 @@ module BlogsHelper
     blog.delete 'visibility'
     blog.delete 'web_url'
     blog['can_edit'] = blog['author']['id'] == current_user.id
+    project = admin_api_get "projects/#{project_id}"
+    blog['project_id'] = project_id.to_i
+    blog['project_url'] = project['web_url']
     blog.to_json
   end
 

@@ -63,6 +63,26 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
+            <el-tab-pane>
+              <span slot="label">
+                教师反馈
+                <i class="el-icon-edit icon-button"
+                   v-if="props.row.editable"
+                   @click="editFeedback(props.$index)"></i>
+              </span>
+              <p v-if="isPreview(props.$index) && !props.row.feedback">
+                暂无反馈
+              </p>
+              <md-wrapper v-model="props.row.feedback"
+                          :min-height="200" :border="false"
+                          :box-shadow="false"
+                          :project-id="props.row.project_id"
+                          :project-url="props.row.project_url"
+                          func="mini"
+                          @save="saveFeedback(props.row.id, props.row.feedback)"
+                          :preview="!props.row.editable || isPreview(props.$index)">
+              </md-wrapper>
+            </el-tab-pane>
           </el-tabs>
         </template>
       </el-table-column>
@@ -104,12 +124,21 @@
 </template>
 <script>
   import TestRecord from "../models/test_record";
+  import mdWrapper from '../../shared/components/md_wrapper.vue'
+  import AlertMixin from '../../shared/components/mixins/alert'
+  import axios from 'axios'
 
   export default {
     data() {
       return {
-        records: []
+        records: [],
+        currentRecordIndex: null,
+        loading: false
       }
+    },
+    mixins: [AlertMixin],
+    components: {
+      mdWrapper
     },
     mounted() {
       const $recordApp = document.getElementById('test-records')
@@ -158,6 +187,28 @@
           return row.cost;
         }
         return Math.round(row.cost * 1000) / 1000;
+      },
+      isPreview(index) {
+        return this.currentRecordIndex !== index;
+      },
+      editFeedback(index) {
+        this.currentRecordIndex = index;
+      },
+      saveFeedback(testRecordId, feedback) {
+        const endpoint = this.$el.dataset.endpoint;
+        this.loading = true;
+        axios.post(`${endpoint}/feedback.json`, {
+          test_record_id: testRecordId,
+          feedback: feedback
+        })
+          .then(res => res.data)
+          .then(data => {
+            this.currentRecordIndex = null;
+            this.loading = false;
+          })
+          .catch(e => {
+            this.alert('保存反馈失败');
+          })
       }
     }
   }

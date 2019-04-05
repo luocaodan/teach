@@ -222,27 +222,20 @@
           <i class="el-icon-edit description-edit" @click="openPolicy('description')"></i>
         </div>
         <div class="info-list clearFloat">
-          <mavon-editor
-            v-if="policy.description"
-            id="issue-description"
-            ref="mdEditor"
-            :style="{maxHeight: maxHeight + 'px', margin: '0px'}"
-            v-model="issue.description"
-            :subfield="false"
-            :toolbars="toolbars"
-            @fullScreen="resizeMarkdown"
-            @imgAdd="$imgAdd"
-            @imgDel="$imgDel"
-            @save="update('description')"
-            placeholder="输入问题描述">
-          </mavon-editor>
-          <div v-else>
-            <div class="issue-html-container markdown-body" v-if="issue.description" v-html="renderedDescription ">
-            </div>
-            <div v-else>
-              无问题描述
-            </div>
-          </div>
+
+          <md-wrapper id="issue-description"
+                      v-if="policy.description || issue.description"
+                      v-model="issue.description"
+                      :min-height="200" :border="false"
+                      :box-shadow="false"
+                      :project-id="issue.projectId"
+                      func="mini" :style="{width: '100%'}"
+                      @save="update('description')"
+                      :preview="!policy.description">
+          </md-wrapper>
+          <p v-else>
+            无问题描述
+          </p>
         </div>
       </div>
 
@@ -294,8 +287,6 @@
           </div>
         </div>
       </div>
-
-
     </div>
 
   </div>
@@ -307,11 +298,9 @@
   import Transform from '../../tools/transform'
   import EditMixin from './mixins/edit_issue'
   import AlertMixin from './mixins/alert'
-  import MarkdownMixin from './mixins/markdown_support'
-  import 'github-markdown-css'
 
   export default {
-    mixins: [EditMixin, AlertMixin, MarkdownMixin],
+    mixins: [EditMixin, AlertMixin],
     data() {
       return {
         policy: {
@@ -331,18 +320,8 @@
         },
       }
     },
-    computed: {
-      renderedDescription() {
-        let md = this.getMarkdownIt();
-        return md.render(this.issue.description);
-      }
-    },
-    components: {},
     props: {
       issueDup: Issue,
-    },
-    mounted() {
-      // this.toolbars.save = true;
     },
     updated() {
       if (!this.issue) {
@@ -527,10 +506,6 @@
     width: 100%;
   }
 
-  .description-info > .info-list > div {
-    width: auto;
-  }
-
   .user-info {
     max-width: 250px;
   }
@@ -590,13 +565,4 @@
     cursor: pointer;
   }
 
-</style>
-<style>
-  .detail-issue .markdown-body {
-    padding: 15px;
-  }
-
-  .issue-html-container img {
-    max-width: 100%;
-  }
 </style>

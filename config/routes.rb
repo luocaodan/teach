@@ -34,6 +34,8 @@ Rails.application.routes.draw do
 
         resources :comments, only: %i[index create update destroy], constraints: ->(req) {req.format == :json}
       end
+
+      get 'web_url', to: 'uploads#upload_url'
     end
   end
 
@@ -49,7 +51,11 @@ Rails.application.routes.draw do
   # teachers
   resources :classrooms do
     resources :users, only: %i[new create destroy]
-    resources :auto_test_projects, only: %i[show]
+    resources :auto_test_projects, only: %i[show] do
+      member do
+        post 'feedback', to: 'auto_test_projects#feedback'
+      end
+    end
     resources :team_projects, only: %i[show new create]
     member do
       get 'join', to: 'classrooms#join'

@@ -5,7 +5,7 @@ class Issue {
     this.id = '';
     this.iid = '';
     this.access = '';
-    this.projectId = '';
+    this.projectId = null;
 
     this.title = '';
     this.projectName = '';

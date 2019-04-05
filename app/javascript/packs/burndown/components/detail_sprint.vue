@@ -25,27 +25,18 @@
         <i class="el-icon-edit title-icon" @click="openPolicy('description')"></i>
       </div>
       <div class="block-value">
-        <mavon-editor
-          v-if="policy.description"
-          id="issue-description"
-          ref="mdEditor"
-          :style="{maxHeight: maxHeight + 'px', margin: '0px'}"
-          v-model="sprint.description"
-          :subfield="false"
-          :toolbars="toolbars"
-          @fullScreen="resizeMarkdown"
-          @imgAdd="$imgAdd"
-          @imgDel="$imgDel"
-          @save="update('description')"
-          placeholder="输入冲刺描述">
-        </mavon-editor>
-        <div v-else>
-          <div class="sprint-html-container markdown-body" v-if="sprint.description" v-html="renderedDescription">
-          </div>
-          <div v-else>
-            无冲刺描述
-          </div>
-        </div>
+        <md-wrapper v-if="policy.description || sprint.description"
+                    v-model="sprint.description"
+                    :min-height="200" :border="false"
+                    :box-shadow="false"
+                    :project-id="sprint.projectId"
+                    func="mini"
+                    @save="update('description')"
+                    :preview="!policy.description">
+        </md-wrapper>
+        <p v-else>
+          无冲刺描述
+        </p>
       </div>
     </div>
     <div class="sprint-date">
@@ -94,11 +85,10 @@
 </template>
 
 <script>
-  import MarkdownMixin from '../../shared/components/mixins/markdown_support';
   import DateMixin from '../../shared/components/mixins/date_support'
   import eventhub from '../../issues/eventhub'
-  import 'github-markdown-css'
   import Sprint from '../../burndown/models/sprint'
+  import mdWrapper from '../../shared/components/md_wrapper.vue'
 
   export default {
     updated() {
@@ -107,19 +97,16 @@
         this.sprint.isCome = false;
       }
     },
-    mixins: [MarkdownMixin, DateMixin],
+    mixins: [DateMixin],
+    components: {
+      mdWrapper
+    },
     data() {
       return {
         policy: {
           title: false,
           description: false,
         }
-      }
-    },
-    computed: {
-      renderedDescription() {
-        let md = this.getMarkdownIt();
-        return md.render(this.sprint.description);
       }
     },
     props: {
@@ -149,9 +136,6 @@
         eventhub.$emit('updateSprint', update);
         this.policy[attr] = false;
       },
-      getProjectId() {
-        return this.sprint.projectId;
-      }
     }
   }
 </script>
@@ -178,14 +162,5 @@
 
   .block-value {
     margin: 1em 0;
-  }
-</style>
-<style>
-  .sprint-html-container {
-    padding: 15px;
-  }
-
-  .sprint-html-container img {
-    max-width: 100%;
   }
 </style>

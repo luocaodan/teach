@@ -22,16 +22,22 @@ module AutoTestProjectsHelper
     end
     records = []
     exist_records.each do |sr|
+      student = sr.user
+      next if student? && student.gitlab_id != current_user.id
+      project_id = sr.project_id
+      project_url = get_project(project_id)['web_url']
       records << {
         id: sr.id,
-        student: User.find(sr.user_id).username,
+        student: student.username,
         score: sr.score,
-        unittest: sr.unittest
+        unittest: sr.unittest,
+        feedback: sr.feedback,
+        project_id: sr.project_id,
+        project_url: project_url,
+        editable: teacher?
       }
     end
-    {
-      records: records.to_json
-    }
+    records.to_json
   end
 
   private
