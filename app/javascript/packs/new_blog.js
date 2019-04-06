@@ -109,6 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       },
       createBlogWithBurndown() {
+        if (!this.isValid()) {
+          return;
+        }
         if (!this.milestone.start_date || !this.milestone.due_date) {
           this.alert('冲刺未设置开始日期或截止日期，无法生成燃尽图');
           return;

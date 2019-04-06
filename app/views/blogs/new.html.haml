@@ -17,7 +17,7 @@
       %input{':value': 'blog.file_name', name: 'blog[file_name]', style: 'display: none'}
       %textarea{':value': 'blog.code', name: 'blog[code]', style: 'display: none'}
     %el-form-item.clearFloat
-      %a.el-button{href: '/blogs'} 取消
+      %a.el-button{href: classroom_blogs_path} 取消
       %el-button-group.floatRight
         %el-button{type: 'primary', '@click': 'createBlog'} 创建
         %el-button{type: 'success', 'v-if': "type === 'daily_scrum'", '@click': 'createBlogWithBurndown', ':loading': 'isChartButtonLoading'} 生成当前燃尽图并创建
