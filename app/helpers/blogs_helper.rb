@@ -3,7 +3,7 @@ require 'json'
 module BlogsHelper
   def blogs_data
     {
-      endpoint: blogs_url(format: :json),
+      endpoint: classroom_blogs_url(format: :json),
     }
   end
 
@@ -12,15 +12,11 @@ module BlogsHelper
   end
 
   def current_blog
-    project_id = params[:project_id]
-    blog_id = params[:id]
-    blog = blogs_service.get_blog project_id, blog_id
-    blog.delete 'file_name'
-    blog.delete 'description'
-    blog.delete 'visibility'
-    blog.delete 'web_url'
-    blog['can_edit'] = blog['author']['id'] == current_user.id
+    blog_record = Blog.find(params[:id])
+    project_id = blog_record.project_id
+    blog = blogs_service.get_blog project_id, blog_record.gitlab_id
     project = admin_api_get "projects/#{project_id}"
+    blog['id'] = blog_record.id
     blog['project_id'] = project_id.to_i
     blog['project_url'] = project['web_url']
     blog.to_json

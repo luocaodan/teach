@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Endpoint from "../../tools/endpoint";
 
 export default class IssuesService {
   constructor({issuesEndpoint}) {
@@ -18,8 +19,7 @@ export default class IssuesService {
   }
 
   updateIssue(update) {
-    let index = this.issuesEndpoint.lastIndexOf('.json');
-    let prefix = this.issuesEndpoint.substr(0, index);
+    let prefix = Endpoint.getPrefix(this.issuesEndpoint);
     return axios.put(`${prefix}/${update.iid}.json`, {
       update_issue: update
     });

@@ -19,23 +19,13 @@ Rails.application.routes.draw do
 
   resources :sprints
 
-  resources :blogs, only: %i[index new create]
-
   resources :projects, only: [], param: :project_id do
     member do
       # project board
       get 'kanban', to: 'boards#index'
       # file upload
       post 'uploads', to: 'uploads#index'
-      resources :blogs, only: %i[show create update destroy] do
-        member do
-          get 'raw', to: 'blogs#show_raw'
-        end
 
-        resources :comments, only: %i[index create update destroy], constraints: ->(req) {req.format == :json}
-      end
-
-      get 'web_url', to: 'uploads#upload_url'
     end
   end
 
@@ -57,9 +47,19 @@ Rails.application.routes.draw do
       end
     end
     resources :team_projects, only: %i[show new create]
+    resources :blogs do
+      member do
+        get 'raw', to: 'blogs#show_raw'
+      end
+    end
+
     member do
       get 'join', to: 'classrooms#join'
       get 'exit', to: 'classrooms#exit'
     end
+  end
+
+  resources :blogs, only: [] do
+    resources :comments, only: %i[index create update destroy], constraints: ->(req) {req.format == :json}
   end
 end

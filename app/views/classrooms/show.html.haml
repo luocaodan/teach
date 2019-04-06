@@ -7,9 +7,12 @@
   .page-title-holder
     .page-title= @classroom['name']
     .page-title-controls
+      - if my_class? params[:id]
+        %a.el-button{href: classroom_blogs_path(classroom_id: params[:id])}
+          班级博客
       %a.el-button{href: @classroom['web_url']}
         转到 GitLab
-        %i.iconfont.icon-link
+        %i.iconfont.icon-link{style: "font-size: 13px"}
   %p= @classroom['description']
   %el-tabs
     %el-tab-pane{label: '学生'}
@@ -53,7 +56,7 @@
                 创建个人项目
         .content-list
           - @personal_projects.each do |project|
-            %el-card
+            %el-card{shadow: 'never'}
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
                 .floatRight
@@ -71,7 +74,7 @@
                 创建结对项目
         .content-list
           - @pair_projects.each do |project|
-            %el-card
+            %el-card{shadow: 'never'}
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
                 .floatRight
@@ -89,7 +92,7 @@
                 创建团队项目
         .content-list
           - @team_projects.each do |project|
-            %el-card
+            %el-card{shadow: 'never'}
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
                 .floatRight

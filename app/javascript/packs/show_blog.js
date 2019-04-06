@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
       getBlogCode() {
         this.codeLoading = true;
         this.blogsService
-          .getBlogCode(this.blog.project_id, this.blog.id)
+          .getBlogCode(this.blog.id)
           .then(res => res.data)
           .then(data => {
             this.blog.code = data;
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         update[attr] = this.blog[attr];
         this.loading = true;
         this.blogsService
-          .updateBlog(this.blog.project_id, this.blog.id, update)
+          .updateBlog(this.blog.id, update)
           .then(res => res.data)
           .then(data => {
             const code = this.blog.code;
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.blogsService.deleteBlog(this.blog.project_id, this.blog.id)
+          this.blogsService.deleteBlog(this.blog.id)
             .then(res => res.data)
             .then(data => {
               if (data === 'success') {

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Endpoint from "../../tools/endpoint";
 
 export default class IssuesService {
   constructor({sprintsEndpoint}) {
@@ -12,8 +13,7 @@ export default class IssuesService {
   }
 
   getSprint(id, projectId) {
-    let index = this.sprintsEndpoint.lastIndexOf('.json');
-    let prefix = this.sprintsEndpoint.substr(0, index);
+    let prefix = Endpoint.getPrefix(this.sprintsEndpoint);
     return axios.get(`${prefix}/${id}.json`, {
       params: {
         project_id: projectId,
@@ -23,8 +23,7 @@ export default class IssuesService {
   }
 
   updateSprint(id, projectId, update) {
-    let index = this.sprintsEndpoint.lastIndexOf('.json');
-    let prefix = this.sprintsEndpoint.substr(0, index);
+    const prefix = Endpoint.getPrefix(this.sprintsEndpoint);
     return axios.put(`${prefix}/${id}.json`, {update: update}, {
       params: {
         project_id: projectId,

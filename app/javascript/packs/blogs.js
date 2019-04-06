@@ -20,15 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
         searchParams: {
           type: 'all',
           scope: 'all',
-          project: 'all'
         }
       }
     },
     computed: {
-      projectText() {
-        const projectId = this.searchParams.project;
-        return this.getProjectName(projectId);
-      },
       blogsHeight() {
         const $filter = document.getElementById('blog-filter');
         return this.height - $filter.offsetHeight - 2 - 10;
@@ -48,14 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         blogsEndpoint: $app.dataset.blogsEndpoint
       });
 
-      const $navbar = document.getElementById('navbar');
-      let projects = JSON.parse($navbar.dataset.projects);
-      projects.forEach((p) => {
-        this.projects.push({
-          id: p.id,
-          name: p.name
-        });
-      });
       this.updateBlogs(this.searchParams);
     },
     methods: {
@@ -68,15 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.blogs = data;
             this.loading = false;
           })
-      },
-      chooseProject(projectId) {
-        this.searchParams.project = projectId;
-      },
-      getProjectName(projectId) {
-        if (projectId === 'all') {
-          return '所有';
-        }
-        return this.projects.find(p => p.id === projectId).name;
       },
       blogTagType(blogType) {
         if (blogType === 'Blog') {

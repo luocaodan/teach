@@ -51,21 +51,6 @@ export default {
           show: false
         },
         tooltip: {
-          // trigger: 'axis',
-          // axisPointer: {
-          //   type: 'cross',
-          //   label: {
-          //     backgroundColor: '#6a7985',
-          //     formatter: function (params) {
-          //       const time = params.value;
-          //       if (time < start) {
-          //         return Math.round(time * 10) / 10;
-          //       } else {
-          //         return that.dateFmt(time * 1000, true);
-          //       }
-          //     }
-          //   }
-          // },
           formatter: function (params) {
             const data = params.data;
             const day = 24 * 3600;
@@ -88,6 +73,7 @@ export default {
             saveAsImage: {
               title: '下载'
             },
+            dataView: {}
           },
         },
         legend: {
@@ -113,7 +99,6 @@ export default {
             name: '实际',
             data: burnData,
             type: 'line',
-            smooth: true,
             markLine: markline
           },
           {
@@ -275,8 +260,10 @@ export default {
       this.updateEchartsOption();
     },
     roundDate(second) {
+      const d = new Date(second * 1000);
+      d.setHours(0, 0, 0, 0);
       const day = 3600 * 24;
-      return second - second % day + day
+      return d.getTime()/1000 + day;
     },
   }
 }

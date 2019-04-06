@@ -42,22 +42,18 @@
       </el-menu-item>
 
       <el-menu-item index="4">
-        博客
-      </el-menu-item>
-
-      <el-menu-item index="5">
         班级
       </el-menu-item>
 
-      <el-menu-item index="6">
+      <el-menu-item index="5">
         GitLab
         <i class="iconfont icon-link"></i>
       </el-menu-item>
 
 
-      <el-submenu index="7" style="float: right">
+      <el-submenu index="6" style="float: right">
         <template slot="title">新建问题</template>
-        <el-menu-item v-for="(project, index) in projects" :key="index" :index="'7-' + project.id">
+        <el-menu-item v-for="(project, index) in projects" :key="index" :index="'6-' + project.id">
           {{ project.name }}
         </el-menu-item>
       </el-submenu>
@@ -166,12 +162,10 @@
         } else if (key === '3') {
           window.location.href = '/issues';
         } else if (key === '4') {
-          window.location.href = '/blogs'
-        } else if (key === '5') {
           window.location.href = "/classrooms";
-        } else if (key === '6') {
+        } else if (key === '5') {
           window.location.href = this.gitlabHost;
-        } else if (key.startsWith('7-')) {
+        } else if (key.startsWith('6-')) {
           this.newIssue.projectId = parseInt(key.substr(2));
           this.dialogVisible = true;
         }

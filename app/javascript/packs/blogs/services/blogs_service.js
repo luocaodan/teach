@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Endpoint from "../../tools/endpoint";
 
 export default class BlogsService {
   constructor({blogsEndpoint}) {
@@ -17,18 +18,21 @@ export default class BlogsService {
     });
   }
 
-  getBlogCode(projectId, blogId) {
-    return axios.get(`/projects/${projectId}/blogs/${blogId}/raw`);
+  getBlogCode(blogId) {
+    const prefix = Endpoint.getPrefix(this.blogsEndpoint);
+    return axios.get(`${prefix}/${blogId}/raw`);
   }
 
-  updateBlog(projectId, blogId, update) {
-    return axios.put(`/projects/${projectId}/blogs/${blogId}.json`, {
+  updateBlog(blogId, update) {
+    const prefix = Endpoint.getPrefix(this.blogsEndpoint);
+    return axios.put(`${prefix}/${blogId}.json`, {
         update: update
       }
     );
   }
 
-  deleteBlog(projectId, blogId) {
-    return axios.delete(`/projects/${projectId}/blogs/${blogId}.json`);
+  deleteBlog(blogId) {
+    const prefix = this.blogsEndpoint.substr(0, index);
+    return axios.delete(`${prefix}/${blogId}.json`);
   }
 }

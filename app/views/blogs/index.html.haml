@@ -17,42 +17,33 @@
         我的
       %el-radio-button{'label': 'all'}
         所有
-    %el-dropdown.choose-project{'@command': 'chooseProject'}
-      %span.el-dropdown-link
-        {{ projectText }}
-        %i.el-icon-arrow-down.el-icon--right
-      %el-dropdown-menu{slot: 'dropdown'}
-        %el-dropdown-item{command: 'all'}
-          所有
-        %el-dropdown-item{'v-for': "(project, index) in projects", ':key': 'index', ':command': 'project.id'}
-          {{ project.name }}
     %el-button-group.floatRight
-      %a.el-button.el-button--mini{href: '/blogs/new?type=blog'}
+      %a.el-button.el-button--mini{href: new_classroom_blog_path(type: 'blog')}
         新建博客
-      %a.el-button.el-button--mini{href: '/blogs/new?type=daily_scrum'}
+      %a.el-button.el-button--mini{href: new_classroom_blog_path(type: 'daily_scrum')}
         新建 Daily Scrum
   .blogs{':style': "{height: blogsHeight + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
     %el-scrollbar{style: "height: 100%"}
-      %el-card{shadow: 'always', 'v-for': "(blog, index) in blogs", ':key': 'index', class: 'blog-card', ':body-style': "{ padding: '10px' }"}
+      %el-card{shadow: 'never', 'v-for': "(blog, index) in blogs", ':key': 'index', class: 'blog-card', ':body-style': "{ padding: '10px' }"}
         .blog-info
           .blog-title
-            %a{':href': "'/projects/' + blog.project_id + '/blogs/' + blog.id"}
+            %a{':href': "'#{classroom_path(id: params[:classroom_id])}' + '/blogs/' + blog.id"}
               {{ blog.title }}
             %el-tag{style: "{margin: 4px}", ':type': 'blogTagType(blog.type)', size: 'mini'}
               {{ blog.type }}
             %el-badge.floatRight{':value': 'blog.comments_count', 'type': 'primary'}
-              %a.el-button.el-button--mini{':href': "'/projects/' + blog.project_id + '/blogs/' + blog.id + '#comments'"}
+              %a.el-button.el-button--mini{':href': "'#{classroom_path(id: params[:classroom_id])}' + '/blogs/' + blog.id + '#comments'"}
                 %i{class: 'iconfont icon-comments'}
           .blog-attrs.clearFloat
             %i{class: "iconfont icon-xiangmu"}
             %span{title: "项目"}
-              {{ getProjectName(blog.project_id) }}
+              {{ blog.project_name }}
             %i{class: 'el-icon-date'}
             %span{title: '创建时间'}
               {{ dateStr(blog.created_at) }}
             %span.author
               %img{':title': "'作者: ' + blog.author.username", ':src': "blog.author.avatar_url"}
-              %a{href: 'blog.author.web_url'}
+              %a{':href': 'blog.author.web_url'}
                 {{ blog.author.name }}
 
 :css
@@ -65,21 +56,8 @@
     margin: 0 10px;
   }
 
-  .choose-project {
-    line-height: 2;
-  }
-
-  .el-dropdown-link {
-    cursor: pointer;
-    color: #409EFF;
-  }
-  .el-icon-arrow-down {
-    font-size: 15px;
-  }
-
   #blogs-app > .blogs {
     border: 1px solid #e5e5e5;
-    background-color: #fafafa;
     margin-top: 10px;
   }
 

@@ -15,6 +15,7 @@ import EchartsOption from './shared/components/mixins/burnEchartsOption'
 import Blog from './blogs/models/blog'
 import BlogsService from "./blogs/services/blogs_service";
 import UploadService from "./shared/services/upload_service";
+import csrf from './shared/components/csrf.vue'
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
@@ -25,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     el: '#new-blog-app',
     mixins: [CommonMixin, EchartsOption],
     components: {
-      mdWrapper
+      mdWrapper,
+      csrf
     },
     data() {
       return {
@@ -100,28 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     methods: {
       createBlog() {
-        if (!this.isValid()) {
-          return;
-        }
-        this.loading = true;
-        this.blogsService
-          .newBlog(this.blog)
-          .then(res => res.data)
-          .then(data => {
-            this.loading = false;
-            this.success('创建成功');
-            setTimeout(() => {
-              window.location.href = `/projects/${this.blog.project_id}/blogs/${data.id}`;
-            }, 1000);
-          })
-          .catch(e => {
-            this.alert('创建失败');
-          });
+        this.$refs.newBlogForm.validate((valid) => {
+          if (valid) {
+            this.$refs.newBlogForm.$el.submit();
+          }
+        })
       },
       createBlogWithBurndown() {
-        if (!this.isValid()) {
-          return;
-        }
         if (!this.milestone.start_date || !this.milestone.due_date) {
           this.alert('冲刺未设置开始日期或截止日期，无法生成燃尽图');
           return;
@@ -136,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .all(params)
           .then(res => res.data)
           .then(data => {
-            this.issues = data;
+            this.issues = data.issues;
             this.updateEchartsOption();
             this.burnOption.toolbox = {};
             this.chartVisible = true;
@@ -162,7 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => res.data)
           .then((data) => {
             this.blog.code += `\n# 燃尽图\n![燃尽图](${data.url})`;
-            this.createBlog();
+            this.$nextTick(() => {
+              this.createBlog();
+            })
           })
           .catch((e) => {
             this.$message.error('上传失败');

@@ -13,7 +13,7 @@
     %el-tab-pane{label: '我的班级'}
       .content-list
         - @classrooms.each do |classroom|
-          %el-card
+          %el-card{shadow: 'never'}
             .card-title.clearFloat
               %span
                 %a{href: classroom_path(classroom['id'])}= classroom['name']
@@ -30,7 +30,7 @@
     %el-tab-pane{label: '所有班级'}
       .content-list
         - @all_classrooms.each do |classroom|
-          %el-card
+          %el-card{shadow: 'never'}
             .card-title.clearFloat
               %span
                 %a{href: my_class?(classroom['id']) ? classroom_path(classroom['id']) : '#'}= classroom['name']

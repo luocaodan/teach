@@ -4,15 +4,18 @@
   = stylesheet_pack_tag 'new_blog'
 
 #new-blog-app.small-container{data: {issues: issues_data, blogs: new_blog_data}, 'v-loading': 'loading', 'element-loading-text': '加载中', ':style': "{height: height + 'px'}"}
-  %el-form{ref: 'newBlogForm', 'v-if': 'blog', ':model': 'blog', ':rules': 'rules', 'label-width': '80px'}
+  %el-form{ref: 'newBlogForm', 'v-if': 'blog', ':model': 'blog', ':rules': 'rules', 'label-width': '80px', action: classroom_blogs_path, method: 'post'}
     -# 项目 | 冲刺
     %el-form-item{':label': 'blogContainerName', 'prop': 'project_id'}
       %el-select{'v-model': 'containerId', '@change': 'chooseContainer', ':placeholder': 'blogContainerPlaceholder'}
         %el-option{'v-for': '(container, index) in containers', ':label': 'container.name', ':value': 'container.id', ':key': 'index'}
+      %input{':value': 'blog.project_id', name: 'blog[project_id]', style: 'display: none'}
     %el-form-item{label: '标题', 'prop': 'title'}
-      %el-input{'v-model': 'blog.title'}
+      %el-input{'v-model': 'blog.title', name: 'blog[title]'}
     %el-form-item{label: '内容', 'prop': 'code'}
       %md-wrapper.md-editor{'v-model': 'blog.code', ':editable': "containerId !== null", ':placeholder': 'mdPlaceholder', ':project-id': 'blog.project_id', ':cant-save': 'true'}
+      %input{':value': 'blog.file_name', name: 'blog[file_name]', style: 'display: none'}
+      %textarea{':value': 'blog.code', name: 'blog[code]', style: 'display: none'}
     %el-form-item.clearFloat
       %a.el-button{href: '/blogs'} 取消
       %el-button-group.floatRight
@@ -37,10 +40,6 @@
   #new-blog-app > * {
     margin: 20px auto;
     min-width: 500px;
-  }
-
-  #new-blog-app .md-editor {
-    min-height: 350px;
   }
 
   .burnchart {

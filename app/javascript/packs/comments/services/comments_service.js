@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Endpoint from "../../tools/endpoint";
 
 export default class CommentsService {
   constructor({commentsEndpoint}) {
@@ -16,16 +17,14 @@ export default class CommentsService {
   }
 
   updateComment(commentId, update) {
-    const index = this.commentsEndpoint.lastIndexOf('.json');
-    const prefix = this.commentsEndpoint.substr(0, index);
+    const prefix = Endpoint.getPrefix(this.commentsEndpoint);
     return axios.put(`${prefix}/${commentId}.json`, {
       update
     });
   }
 
   deleteComment(commentId) {
-    const index = this.commentsEndpoint.lastIndexOf('.json');
-    const prefix = this.commentsEndpoint.substr(0, index);
+    const prefix = Endpoint.getPrefix(this.commentsEndpoint);
     return axios.delete(`${prefix}/${commentId}.json`);
   }
 }

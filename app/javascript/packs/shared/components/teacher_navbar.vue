@@ -10,9 +10,6 @@
         班级
       </el-menu-item>
       <el-menu-item index="2">
-        博客
-      </el-menu-item>
-      <el-menu-item index="3">
         GitLab
         <i class="iconfont icon-link"></i>
       </el-menu-item>
@@ -35,9 +32,6 @@
           window.location.href = '/classrooms';
         }
         else if (key === '2') {
-          window.location.href = '/blogs';
-        }
-        else if (key === '3') {
           window.location.href = this.gitlabHost;
         }
       }
