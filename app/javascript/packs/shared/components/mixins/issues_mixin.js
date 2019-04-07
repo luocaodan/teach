@@ -183,9 +183,7 @@ export default {
           this.doingTotalWeight = data['doing_total_weight'];
           this.doneTotal = data['done_total'];
           this.doneTotalWeight = data['done_total_weight'];
-          if (isMore) {
-            this.nextPage = data['next'];
-          }
+          this.nextPage = data['next'];
           if (this.issues.length === 0) {
             this.warn('没有结果');
           }
@@ -199,6 +197,7 @@ export default {
         })
     },
     moreIssues() {
+      console.log(this.nextPage)
       if (!this.nextPage) {
         return;
       }
