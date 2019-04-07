@@ -6,6 +6,7 @@ export default class TestRecord {
     res.project_url = obj.project_url;
     res.student = obj.student;
     res.feedback = obj.feedback === null? '' : obj.feedback;
+    res.status = obj.status;
     res.editable = obj.editable;
     const units = JSON.parse(obj.unittest);
     if (!units) {

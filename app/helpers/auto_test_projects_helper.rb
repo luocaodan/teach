@@ -26,6 +26,13 @@ module AutoTestProjectsHelper
       next if student? && student.gitlab_id != current_user.id
       project_id = sr.project_id
       project_url = get_project(project_id)['web_url']
+      pipeline_status = 'stop'
+      if sr.pipeline_id
+        pipeline = get_pipeline project_id, sr.pipeline_id
+        pipeline_status = if %w[running pending].include? pipeline['status']
+                            'running'
+                          end
+      end
       records << {
         id: sr.id,
         student: student.username,
@@ -34,7 +41,8 @@ module AutoTestProjectsHelper
         feedback: sr.feedback,
         project_id: sr.project_id,
         project_url: project_url,
-        editable: teacher?
+        editable: teacher?,
+        status: pipeline_status
       }
     end
     records.to_json
@@ -48,5 +56,9 @@ module AutoTestProjectsHelper
 
   def get_project(project_id)
     admin_api_get "projects/#{project_id}"
+  end
+
+  def get_pipeline(project_id, pipeline_id)
+    admin_api_get "projects/#{project_id}/pipelines/#{pipeline_id}"
   end
 end

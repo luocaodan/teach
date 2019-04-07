@@ -119,6 +119,22 @@
         prop="rank"
         align="center">
       </el-table-column>
+      <el-table-column>
+        <template slot-scope="scope">
+          <div v-if="scope.row.editable">
+          <span v-if="scope.row.status === 'running'">
+            <el-button type="danger" size="mini"
+                       @click="triggerCI(scope.$index, scope.row.id, 'cancel')">
+              Cancel CI
+            </el-button>
+          </span>
+            <el-button v-else type="primary" size="mini"
+                       @click="triggerCI(scope.$index, scope.row.id, 'start')">
+              Start CI
+            </el-button>
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -141,9 +157,8 @@
       mdWrapper
     },
     mounted() {
-      const $recordApp = document.getElementById('test-records')
-      const records = JSON.parse($recordApp.dataset.records)
-      const testRecords = []
+      const records = JSON.parse(this.$el.dataset.records);
+      const testRecords = [];
       for (let record of records) {
         const tr = TestRecord.valueOf(record);
         testRecords.push(tr);
@@ -208,6 +223,23 @@
           })
           .catch(e => {
             this.alert('保存反馈失败');
+          })
+      },
+      triggerCI(recordIndex, testRecordId, action) {
+        const endpoint = this.$el.dataset.endpoint;
+        const tmp = this.records[recordIndex].status;
+        if (action === 'start') {
+          this.records[recordIndex].status = 'running';
+        } else {
+          this.records[recordIndex].status = 'stop';
+        }
+        axios.post(`${endpoint}/trigger.json`, {
+          test_record_id: testRecordId,
+          trigger: action
+        })
+          .catch(e => {
+            this.records[recordIndex].status = tmp;
+            this.alert('Trigger Fail!')
           })
       }
     }

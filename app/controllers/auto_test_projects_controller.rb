@@ -5,13 +5,51 @@ class AutoTestProjectsController < ApplicationController
   def feedback
     respond_to do |format|
       format.json do
-        test_record_id = params[:test_record_id]
         feedback = params[:feedback]
-        test_record = StudentTestRecord.find(test_record_id)
+        test_record = get_test_record
         test_record.feedback = feedback
         test_record.save
-        render json: {statue: 'success'}
+        render json: {status: 'success'}
       end
     end
+  end
+
+  def trigger
+    respond_to do |format|
+      format.json do
+        test_record = get_test_record
+        unless test_record.pipeline_id
+          pipeline = create_pipeline test_record.project_id
+          test_record.pipeline_id = pipeline['id']
+          test_record.save
+        end
+        action = params[:trigger]
+        if action == 'start'
+          trigger_pipeline test_record.project_id, test_record.pipeline_id
+        elsif action == 'cancel'
+          cancel_pipeline test_record.project_id, test_record.pipeline_id
+        end
+        render json: {status: 'success'}
+      end
+    end
+  end
+
+  private
+
+  def create_pipeline(project_id)
+    admin_api_post "projects/#{project_id}/pipeline", ref: 'master'
+  end
+
+  def trigger_pipeline(project_id, pipeline_id)
+    admin_api_post "projects/#{project_id}/pipelines/#{pipeline_id}/retry", {}
+  end
+
+  def cancel_pipeline(project_id, pipeline_id)
+    admin_api_post "projects/#{project_id}/pipelines/#{pipeline_id}/cancel", {}
+  end
+
+  def get_test_record
+    auto_test_project = AutoTestProject.find(params[:id])
+    auto_test_project.student_test_records.find(params[:test_record_id])
   end
 end

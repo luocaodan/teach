@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_06_014822) do
+ActiveRecord::Schema.define(version: 2019_04_07_024835) do
 
   create_table "auto_test_projects", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 2019_04_06_014822) do
     t.integer "auto_test_project_id"
     t.integer "user_id"
     t.string "feedback"
+    t.integer "pipeline_id"
     t.index ["auto_test_project_id"], name: "index_student_test_records_on_auto_test_project_id"
     t.index ["user_id"], name: "index_student_test_records_on_user_id"
   end

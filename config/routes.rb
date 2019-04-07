@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     resources :auto_test_projects, only: %i[show] do
       member do
         post 'feedback', to: 'auto_test_projects#feedback'
+        post 'trigger', to: 'auto_test_projects#trigger'
       end
     end
     resources :team_projects, only: %i[show new create]
