@@ -19,7 +19,8 @@ class AutoTestProjectsController < ApplicationController
       format.json do
         test_record = get_test_record
         unless test_record.pipeline_id
-          pipeline = create_pipeline test_record.project_id
+          gitlab_username = test_record.user.username
+          pipeline = create_pipeline test_record.project_id, gitlab_username
           test_record.pipeline_id = pipeline['id']
           test_record.save
         end
@@ -36,8 +37,18 @@ class AutoTestProjectsController < ApplicationController
 
   private
 
-  def create_pipeline(project_id)
-    admin_api_post "projects/#{project_id}/pipeline", ref: 'master'
+  def create_pipeline(project_id, gitlab_username)
+    pipeline = {
+      ref: 'master',
+      variables: [
+        {
+          # predefined CI 变量改为该项目 owner
+          key: 'GITLAB_USER_LOGIN',
+          value: gitlab_username
+        }
+      ]
+    }
+    admin_api_post "projects/#{project_id}/pipeline", pipeline
   end
 
   def trigger_pipeline(project_id, pipeline_id)
