@@ -31,3 +31,7 @@ cd ${project}
 ssh deploy@10.2.28.170 "bash -s" < remote.sh ${project}
 
 echo "部署成功"
+
+echo "恢复本地环境"
+yarn install
+echo "恢复完成"
