@@ -98,15 +98,18 @@ export default {
     $imgAdd(pos, $file) {
       let formData = new FormData();
       formData.append('image', $file);
+      this.loading = true;
       UploadService.upload(this.getProjectId(), formData)
         .then(res => res.data)
         .then((data) => {
           const mdEditor = this.$refs.mdEditor;
           mdEditor.$img2Url(pos, data.url);
+          this.loading = false;
         })
         .catch((e) => {
-          // this.$refs.mdEditor.$refs.toolbar_left.$imgDel(pos);
+          this.$refs.mdEditor.$refs.toolbar_left.$imgDel(pos);
           this.$message.error('上传失败');
+          this.loading = false;
         });
     },
     $imgDel(filename) {

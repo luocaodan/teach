@@ -1,5 +1,5 @@
 <template>
-  <div class="md-wrapper">
+  <div class="md-wrapper" v-loading="loading" element-loading-text="上传中">
     <mavon-editor
       ref="mdEditor"
       v-model="d_value"
@@ -27,7 +27,8 @@
     mixins: [MarkdownMixin],
     data() {
       return {
-        d_value: ''
+        d_value: '',
+        loading: false
       }
     },
     computed: {

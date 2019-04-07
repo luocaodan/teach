@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'test_records'
 
-#test-records{':style': "{height: height + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
+#test-records{':style': "{height: height + 'px'}"}
   %test-records{data: {records: student_test_records, endpoint: classroom_auto_test_project_path}}
 
 
