@@ -15,7 +15,12 @@ Rails.application.routes.draw do
   get '/login', to: 'sessions#login'
   get '/oauth/callback', to: 'sessions#login'
 
-  resources :issues
+  resources :issues do
+    collection do
+      # 全量 issues
+      get 'all', to: 'issues#all_issues', constraints: ->(req) {req.format == :json}
+    end
+  end
 
   resources :sprints
 

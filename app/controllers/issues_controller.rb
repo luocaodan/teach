@@ -9,6 +9,15 @@ class IssuesController < ApplicationController
     end
   end
 
+  def all_issues
+    respond_to do |format|
+      format.json do
+        issues_info = issues_service.all_issues filter_params.to_h
+        render json: issues_info
+      end
+    end
+  end
+
   def create
     respond_to do |format|
       format.json do

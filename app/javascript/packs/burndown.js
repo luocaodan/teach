@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.isShow = true;
         this.loading = true;
         this.issuesService
-          .all(params)
+          .all(params, true)
           .then(res => res.data)
           .then(data => {
             this.issues = data.issues;

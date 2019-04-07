@@ -13,19 +13,17 @@ class IssuesService < BaseService
               else
                 Issue.where(project_id: project_id)
               end
-    total_weight = records.sum { |r| r.weight.to_i }
+    total_weight = records.sum {|r| r.weight.to_i}
     todos = records.where(state: 'To Do')
     todo_total = todos.count
-    todo_total_weight = todos.sum { |r| r.weight.to_i }
+    todo_total_weight = todos.sum {|r| r.weight.to_i}
     doings = records.where(state: 'Doing')
     doing_total = doings.count
-    doing_total_weight = doings.sum { |r| r.weight.to_i }
+    doing_total_weight = doings.sum {|r| r.weight.to_i}
     dones = records.where(state: 'Closed')
     done_total = dones.count
-    done_total_weight = dones.sum { |r| r.weight.to_i }
-    issue_list.each do |issue|
-      update_issue_time issue
-    end
+    done_total_weight = dones.sum {|r| r.weight.to_i}
+    issue_list.each(&method(:update_issue_time))
     {
       issues: issue_list,
       total: gitlab_headers[:x_total].to_i,
@@ -37,6 +35,25 @@ class IssuesService < BaseService
       done_total: done_total,
       done_total_weight: done_total_weight,
       next: gitlab_headers[:x_next_page].to_i
+    }
+  end
+
+  def all_issues(params = {})
+    params[:scope] = 'all'
+    project_id = params.delete 'project'
+    params.delete 'milestone_id'
+    issues = []
+    page = 1
+    while page != 0
+      params[:page] = page
+      issue_list, gitlab_headers = get_with_headers "projects/#{project_id}/issues", params
+      issues.concat issue_list
+      page = gitlab_headers[:x_next_page].to_i
+    end
+    add_external_field issues
+    issues.each(&method(:update_issue_time))
+    {
+      issues: issues
     }
   end
 

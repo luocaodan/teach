@@ -6,10 +6,19 @@ export default class IssuesService {
     this.issuesEndpoint = issuesEndpoint;
   }
 
-  all(filterParams = {}) {
-    return axios.get(this.issuesEndpoint, {
-      params: filterParams
-    });
+  all(filterParams = {}, isFull = false) {
+    if (isFull) {
+      // 不分页 返回全量数据
+      const prefix = Endpoint.getPrefix(this.issuesEndpoint);
+      return axios.get(`${prefix}/all.json`, {
+        params: filterParams
+      })
+    }
+    else {
+      return axios.get(this.issuesEndpoint, {
+        params: filterParams
+      });
+    }
   }
 
   newIssue(issue) {
