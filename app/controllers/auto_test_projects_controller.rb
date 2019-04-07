@@ -18,17 +18,16 @@ class AutoTestProjectsController < ApplicationController
     respond_to do |format|
       format.json do
         test_record = get_test_record
-        unless test_record.pipeline_id
+        action = params[:trigger]
+        if action == 'start'
           gitlab_username = test_record.user.username
           pipeline = create_pipeline test_record.project_id, gitlab_username
           test_record.pipeline_id = pipeline['id']
           test_record.save
-        end
-        action = params[:trigger]
-        if action == 'start'
-          trigger_pipeline test_record.project_id, test_record.pipeline_id
         elsif action == 'cancel'
           cancel_pipeline test_record.project_id, test_record.pipeline_id
+          test_record.pipeline_id = nil
+          test_record.save
         end
         render json: {status: 'success'}
       end
@@ -51,12 +50,11 @@ class AutoTestProjectsController < ApplicationController
     admin_api_post "projects/#{project_id}/pipeline", pipeline
   end
 
-  def trigger_pipeline(project_id, pipeline_id)
-    admin_api_post "projects/#{project_id}/pipelines/#{pipeline_id}/retry", {}
-  end
-
   def cancel_pipeline(project_id, pipeline_id)
-    admin_api_post "projects/#{project_id}/pipelines/#{pipeline_id}/cancel", {}
+    if pipeline_id
+      admin_api_post "projects/#{project_id}/pipelines/#{pipeline_id}/cancel", {}
+      admin_api_delete "projects/#{project_id}/pipelines/#{pipeline_id}"
+    end
   end
 
   def get_test_record
