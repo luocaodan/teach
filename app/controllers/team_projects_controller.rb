@@ -1,7 +1,12 @@
 class TeamProjectsController < ApplicationController
   def new
     @errors = []
-    @team_project = TeamProject.new
+    @team_project = {
+      name: '',
+      path: '',
+      description: '',
+      initialize_with_readme: false
+    }
   end
 
   def create
@@ -19,7 +24,7 @@ class TeamProjectsController < ApplicationController
     owner = classroom.users.where(role: 'teacher').first
     @team_project = create_project_as_owner team_project, owner.gitlab_id
     # 当前用户添加为 Maintainer
-    add_project_master @team_project['id'], current_user.id
+    add_project_master_as_owner @team_project['id'], current_user.id, owner.gitlab_id
     redirect_to @team_project['web_url']
   rescue RestClient::BadRequest => e
     @errors = ['名称或地址包含非法字符']
@@ -32,12 +37,12 @@ class TeamProjectsController < ApplicationController
     admin_api_post "projects?sudo=#{owner_id}", project
   end
 
-  def add_project_master(project_id, user_id)
+  def add_project_master_as_owner(project_id, user_id, owner_id)
     maintainer = 40
     user = {
       user_id: user_id,
       access_level: maintainer
     }
-    admin_api_post "projects/#{project_id}/members", user
+    admin_api_post "projects/#{project_id}/members?sudo=#{owner_id}", user
   end
 end

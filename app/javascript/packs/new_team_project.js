@@ -10,12 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     el: '#new-project-app',
     data() {
       return {
-        project: {
-          name: '',
-          path: '',
-          description: '',
-          initialize_with_readme: false
-        },
+        project: {},
         rules: {
           name: [
             {required: true, message: '请输入团队项目名称', trigger: 'blur'}
