@@ -4,7 +4,6 @@ module DevelopmentConstant
   WebhookUrl = "#{TeachHost}/webhook".freeze
 
   # admin token
-  # PRIVATE_TOKEN = 'tQZ3aDCXkzxRy6V23CPk'.freeze
   PRIVATE_TOKEN = 'oMP6bjQhpw1nG4BYTm3t'.freeze
 
   # oauth application config

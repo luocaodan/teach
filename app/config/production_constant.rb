@@ -4,8 +4,7 @@ module ProductionConstant
   WebhookUrl = "#{TeachHost}/webhook".freeze
 
   # admin token
-  # PRIVATE_TOKEN = 'tQZ3aDCXkzxRy6V23CPk'.freeze
-  PRIVATE_TOKEN = 'R2GQVs298zRVyW4ZTzAe'.freeze
+  PRIVATE_TOKEN = 'HyGsfxiJaza27DBkazVu'.freeze
 
   # oauth application config
   APP_ID = '448f1a1cecb3312b4099d76b3b9f3ad65172ba51ded099a33f0a3e6e914f98db'.freeze
