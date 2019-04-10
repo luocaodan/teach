@@ -44,17 +44,22 @@ sudo EXTERNAL_URL="http://gitlab.ce" apt-get install gitlab-ce
 ### GitLab配置
 #### 配置 System Hook
 * 以管理员账户登录GitLab，进入Admin Area
+
   ![](.md-imgs/admin-area.png)
 * 配置System Hook， 填写本服务Url，添加即可
+
   ![](.md-imgs/systemhook.png)
 #### 配置管理员 Access Token
-进入root用户设置页，添加Access Token，务必勾选api
+进入root用户设置页，添加Access Token，务必勾选api和sudo
+
 ![](.md-imgs/access-token.png)
 #### 允许添加 localhost webhook
 进入Admin Area 设置页面，勾选 Allow requests to the local network from hooks and services
+
 ![](.md-imgs/allow-localhost.png)
 #### 添加 OAuth 应用
 进入 Admin Area Applications 页面，添加应用，务必勾选api
+
 ![](.md-imgs/application.png)
 
 
@@ -87,11 +92,11 @@ sudo apt-get install gitlab-runner
 参考 https://docs.gitlab.com/runner/register/index.html
 
 ### 数据库
-默认使用 Sqlite
-数据库初始化: rails db:migrate
++ 开发环境 Sqlite
++ 生产环境 PostgreSQL
 
 ### 部署
-todo
+参考 [Rails + Webpacker + Puma + Nginx 部署](https://luocaodan.github.io/2019/01/01/Rails+Webpacker+Puma+Nginx_deploy/)
 
 # issue 状态说明
 状态有四种：
