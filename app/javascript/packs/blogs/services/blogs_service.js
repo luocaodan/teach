@@ -32,7 +32,7 @@ export default class BlogsService {
   }
 
   deleteBlog(blogId) {
-    const prefix = this.blogsEndpoint.substr(0, index);
+    const prefix = Endpoint.getPrefix(this.blogsEndpoint);
     return axios.delete(`${prefix}/${blogId}.json`);
   }
 }

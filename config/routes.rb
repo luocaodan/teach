@@ -52,7 +52,15 @@ Rails.application.routes.draw do
         post 'trigger', to: 'auto_test_projects#trigger'
       end
     end
-    resources :team_projects, only: %i[show new create]
+
+    resources :team_projects, only: %i[show new create] do
+      resources :blogs do
+        member do
+          get 'raw', to: 'blogs#show_raw'
+        end
+      end
+    end
+
     resources :blogs do
       member do
         get 'raw', to: 'blogs#show_raw'

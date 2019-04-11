@@ -8,6 +8,7 @@ import mdWrapper from './shared/components/md_wrapper.vue'
 import BlogsService from "./blogs/services/blogs_service";
 import Blog from "./blogs/models/blog";
 import CommentsService from "./comments/services/comments_service";
+import Endpoint from "./tools/endpoint";
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loading: false,
         codeLoading: false,
         commentsLoading: false,
+        deleteLoading: false,
         blog: null,
         comments: [],
         policy: {
@@ -135,18 +137,23 @@ document.addEventListener('DOMContentLoaded', () => {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.deleteLoading = true;
           this.blogsService.deleteBlog(this.blog.id)
             .then(res => res.data)
             .then(data => {
               if (data === 'success') {
                 this.success('删除成功');
-                setTimeout(() => {
-                  window.location.href = '/blogs';
-                }, 1000);
+                const $app = this.getContainer();
+                window.location.href = Endpoint.getPrefix($app.dataset.blogsEndpoint);
               }
               else {
                 this.alert('删除失败');
               }
+              this.deleteLoading = false;
+            })
+            .catch(e => {
+              this.alert('删除失败');
+              this.deleteLoading = false;
             })
         }).catch(() => {
 

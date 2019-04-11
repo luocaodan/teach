@@ -6,9 +6,20 @@ module TeamProjectsHelper
     "#{gitlab_host}/#{team_project_group['full_path']}/"
   end
 
+  def my_team?(project)
+    member = get_project_member project['id'], current_user.id
+    true
+  rescue RestClient::NotFound
+    false
+  end
+
   private
 
   def groups_service
     ::GroupsService.new current_user
+  end
+
+  def get_project_member(project_id, user_id)
+    admin_api_get "projects/#{project_id}/members/#{user_id}"
   end
 end

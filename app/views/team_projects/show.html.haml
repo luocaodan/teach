@@ -1,0 +1,14 @@
+- content_for :scripts do
+  = javascript_pack_tag 'show_team_project'
+- content_for :styles do
+  = stylesheet_pack_tag 'show_team_project'
+
+#show-team-app.small-container{}
+  .page-title-holder
+    .page-title= @team['name']
+    .page-title-controls
+      %a.el-button{href: classroom_team_project_blogs_path(team_project_id: params[:id])}
+        团队博客
+      %a.el-button{href: @team['web_url']}
+        转到 GitLab
+        %i.iconfont.icon-link{style: "font-size: 13px"}

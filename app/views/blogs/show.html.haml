@@ -12,7 +12,7 @@
           %label.big-label{'v-else': 'policy.title', '@click': "openPolicy('title')"}
             {{ blog.title }}
         %el-col{':span': 6}
-          %el-button.floatRight{'v-if': 'blog.can_edit', type: 'danger', '@click': 'deleteBlog'}
+          %el-button.floatRight{'v-if': 'blog.can_edit', type: 'danger', '@click': 'deleteBlog', ':loading': 'deleteLoading'}
             删除
     .block-title.clearFloat
       %span.author

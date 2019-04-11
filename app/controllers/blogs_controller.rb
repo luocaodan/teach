@@ -10,11 +10,16 @@ class BlogsController < ApplicationController
                      else
                        search_params[:type]
                      end
+        records = classroom.blogs
+        if params[:team_project_id]
+          team_project = TeamProject.find(params[:team_project_id])
+          records = records.where(project_id: team_project.gitlab_id)
+        end
         if search_params[:scope] == 'my'
           user = User.find_by(gitlab_id: current_user.id)
-          blog_records = classroom.blogs.where(user_id: user.id, blog_type: type_query)
+          blog_records = records.where(user_id: user.id, blog_type: type_query)
         else
-          blog_records = classroom.blogs.where(blog_type: type_query)
+          blog_records = records.where(blog_type: type_query)
         end
         blogs = []
         blog_records.each do |br|

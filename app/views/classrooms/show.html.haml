@@ -95,9 +95,10 @@
             %el-card{shadow: 'never'}
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
-                .floatRight
-                  %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
-                  %a.el-button.el-button-mini{href: team_panel_path(project)} 团队面板
+                -if teacher? || my_team?(project)
+                  .floatRight
+                    %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
+                    %a.el-button.el-button-mini{href: team_panel_path(project)} 团队面板
               .card-info= project['description']
 
 

@@ -31,6 +31,12 @@ class TeamProjectsController < ApplicationController
     render 'new'
   end
 
+  def show
+    team_project = TeamProject.find(params[:id])
+    @team = get_project team_project.gitlab_id
+    @members = get_project_members team_project.gitlab_id
+  end
+
   private
 
   def create_project_as_owner(project, owner_id)
@@ -44,5 +50,13 @@ class TeamProjectsController < ApplicationController
       access_level: maintainer
     }
     admin_api_post "projects/#{project_id}/members?sudo=#{owner_id}", user
+  end
+
+  def get_project(project_id)
+    admin_api_get "projects/#{project_id}"
+  end
+
+  def get_project_members(project_id)
+    admin_api_get "projects/#{project_id}/members"
   end
 end
