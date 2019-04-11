@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
           })
           .catch(e => {
             this.alert('服务器错误');
+            this.loading = false;
           })
       },
       updateBurnInfo() {
@@ -84,18 +85,21 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         this.isShow = true;
-        this.loading = true;
-        this.issuesService
-          .all(params, true)
-          .then(res => res.data)
-          .then(data => {
-            this.issues = data.issues;
-            this.updateEchartsOption();
-            this.loading = false;
-          })
-          .catch(e => {
-            this.alert('服务器错误');
-          });
+        this.$nextTick(() => {
+          const chart = this.$refs['burnChart'];
+          chart.showLoading();
+          this.issuesService
+            .all(params, true)
+            .then(res => res.data)
+            .then(data => {
+              this.issues = data.issues;
+              this.updateEchartsOption();
+              chart.hideLoading();
+            })
+            .catch(e => {
+              this.alert('服务器错误');
+            });
+        })
       },
 
       getParams() {
