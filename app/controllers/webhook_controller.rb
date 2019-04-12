@@ -44,7 +44,7 @@ class WebhookController < ApplicationController
     return unless team_project
 
     gitlab_user_id = event['user_id']
-    user = user.find_by(gitlab_id: gitlab_user_id)
+    user = User.find_by(gitlab_id: gitlab_user_id)
     unless user
       gitlab_user = get_user gitlab_user_id
       user ||= User.create(

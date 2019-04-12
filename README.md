@@ -5,36 +5,36 @@
 ## 依赖
 ### sshd
 sshd 用于 git
-```shell
+```bash
 sudo apt install openssh-server
 ```
 ### GitLab
 安装GitLab
 #### 安装依赖
-```shell
+```bash
 sudo apt-get install -y curl ca-certificates
 ```
 #### 添加GitLab仓库并安装
 ##### 官方源安装
 添加仓库
-```shell
+```bash
 curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
 ```
 安装，EXTERNAL_URL设置为GitLab实例Url
-```shell
+```bash
 sudo EXTERNAL_URL="http://gitlab.ce" apt-get install gitlab-ce
 ```
 ##### 清华源安装
 信任 GitLab 的 GPG 公钥:
-```shell
+```bash
 curl https://packages.gitlab.com/gpg.key 2> /dev/null | sudo apt-key add - &>/dev/null
 ```
 写入软件源， 编辑/etc/apt/sources.list.d/gitlab-ce.list，添加：
-```shell
+```bash
 deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/ubuntu trusty main
 ```
 更新软件源并安装
-```shell
+```bash
 sudo apt update
 sudo EXTERNAL_URL="http://gitlab.ce" apt-get install gitlab-ce
 ```
@@ -84,7 +84,7 @@ REDIRECT_URI = "#{TeachHost}/oauth/callback".freeze
 
 ### GitLab Runners 配置
 #### 安装 GitLab Runner
-```shell
+```bash
 curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
 sudo apt-get install gitlab-runner
 ```
@@ -98,13 +98,72 @@ sudo apt-get install gitlab-runner
 ### 部署
 参考 [Rails + Webpacker + Puma + Nginx 部署](https://luocaodan.github.io/2019/01/01/Rails+Webpacker+Puma+Nginx_deploy/)
 
+# GitLab 源码修改
+## 导航栏
+效果：
+
+![](.md_images/navbar.png)
+
+进入 GitLab 安装目录
+```bash
+cd /opt/gitlab/embedded/service/gitlab-rails/app/views/layouts/nav
+```
+添加文件 `_setp_link.html.haml`
+```bash
+sudo vi _setp_link.html.haml
+```
+粘贴下面代码
+```haml
+%li
+  %a{title: 'Software Engineering Teach Platform', 'data-toggle': 'tooltip', href: 'http://10.2.28.170:3000', target: '_blank'} 软工平台
+```
+编辑该目录下的 `_dashboard.html.haml`，查找 
+`= render_if_exists 'dashboard/operations/nav_link'`<br/>
+在该行的上一行添加 `= render_if_exists 'layouts/nav/setp_link'`
+示例：
+```haml
+...
+
+= render_if_exists 'layouts/nav/setp_link'
+
+= render_if_exists 'dashboard/operations/nav_link'
+...
+```
+## WebHook
+由于 GitLab WebHook 的限制，通过 WebHook 收集到的 Commit 信息每次 Push 不能超过 20 条，
+导致可能收集不到全部的 Commit 信息，所以需要修改源码解除这一限制
+编辑 `/opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/data_builder/push.rb`
+```bash
+sudo vi /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/data_builder/push.rb
+```
+找到 `commits_limited = commits.last(20)`，注释该行，
+添加 `commits_limited = commits`
+示例：
+```ruby
+commits = Array(commits)
+
+# Total commits count
+commits_count ||= commits.size
+ 
+# Get latest 20 commits ASC 
+# commits_limited = commits.last(20)
+commits_limited = commits
+```
+编辑 `/opt/gitlab/embedded/service/gitlab-rails/app/services/git_push_service.rb`
+```bash
+sudo vi /opt/gitlab/embedded/service/gitlab-rails/app/services/git_push_service.rb
+```
+找到 `PROCESS_COMMIT_LIMIT = 100`，修改为
+```ruby
+PROCESS_COMMIT_LIMIT = 2**31 -1
+```
 # issue 状态说明
 状态有四种：
-- Open
-- To Do
-- Doing
-- Closed
+- `Open`
+- `To Do`
+- `Doing`
+- `Closed`
 
-其中Open代表To Do或Doing
+其中 Open 包括To Do 和 Doing
 所有新建Issue和重新打开的Issue状态初始为To Do
 Issue 状态可在To Do, Doing, Closed 之间任意跳转
