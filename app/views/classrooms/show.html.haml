@@ -56,7 +56,7 @@
                 创建个人项目
         .content-list
           - @personal_projects.each do |project|
-            %el-card{shadow: 'never'}
+            .card
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
                 .floatRight
@@ -74,7 +74,7 @@
                 创建结对项目
         .content-list
           - @pair_projects.each do |project|
-            %el-card{shadow: 'never'}
+            .card
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
                 .floatRight
@@ -92,7 +92,7 @@
                 创建团队项目
         .content-list
           - @team_projects.each do |project|
-            %el-card{shadow: 'never'}
+            .card
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
                 -if teacher? || my_team?(project)

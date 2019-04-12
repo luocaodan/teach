@@ -12,3 +12,7 @@
       %a.el-button{href: @team['web_url']}
         转到 GitLab
         %i.iconfont.icon-link{style: "font-size: 13px"}
+  %p= @team['description']
+  %el-tabs
+    %el-tab-pane{label: '团队成员'}
+    %el-tab-pane{label: '统计图'}
