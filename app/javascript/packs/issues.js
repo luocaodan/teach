@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return null;
         }
         return {
+          state: 'opened',
           project: projects[0].id
         }
       },

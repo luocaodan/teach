@@ -7,7 +7,8 @@
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item v-for="(project, index) in projects" :key="index" :command="project.id+','+project.name">
+        <el-dropdown-item v-for="(project, index) in projects"
+                          :key="index" :command="index">
           {{ project.name }}
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -16,12 +17,13 @@
     <span>
       <el-dropdown size="small" @command="selectLabel">
         <span>
-          标签： {{ text(currentL) }}
+          标签： {{ currentLN }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="all">所有</el-dropdown-item>
-          <el-dropdown-item v-for="(label, index) in labels" :key="index" :command="label.name">
+          <el-dropdown-item v-for="(label, index) in labels"
+                            :key="index" :command="index">
             {{ label.name }}
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -30,12 +32,13 @@
     <span>
       <el-dropdown size="small" @command="selectState">
         <span>
-          状态： {{ text(currentS) }}
+          状态： {{ currentSN }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="all">所有</el-dropdown-item>
-          <el-dropdown-item v-for="(state, index) in states" :key="index" :command="state">
+          <el-dropdown-item v-for="(state, index) in states"
+                            :key="index" :command="state">
             {{ state }}
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -49,7 +52,8 @@
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="all">所有</el-dropdown-item>
-          <el-dropdown-item v-for="(assignee, index) in members" :key="index" :command="assignee.id+','+assignee.name">
+          <el-dropdown-item v-for="(assignee, index) in members"
+                            :key="index" :command="index">
             {{ assignee.name }}
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -65,46 +69,71 @@
     data: function () {
       return {
         projects: [],
-        labels: [],
-        members: [],
         states: [
           'Open',
           'To Do',
           'Doing',
           'Closed'
         ],
+        // projects 数组索引
         currentP: null,
-        currentPN: null,
+        // labels 数组索引
         currentL: 'all',
+        // members 数组索引
         currentM: 'all',
-        currentMN: '所有',
+        // issues 状态
         currentS: 'Open'
       }
     },
     computed: {
+      labels() {
+        if (this.currentP === null) {
+          return [];
+        }
+        const labels = this.projects[this.currentP].labels;
+        return labels.filter((l) => !['To Do', 'Doing'].includes(l.name));
+      },
+      members() {
+        if (this.currentP === null) {
+          return [];
+        }
+        return this.projects[this.currentP].members;
+      },
+      currentPN() {
+        if (this.currentP === null) {
+          return '暂无项目';
+        }
+        return this.projects[this.currentP].name;
+      },
+      currentLN() {
+        if (this.currentL === 'all') {
+          return '所有'
+        }
+        return this.labels[this.currentL].name;
+      },
+      currentMN() {
+        if (this.currentM === 'all') {
+          return '所有'
+        }
+        return this.members[this.currentM].name;
+      },
+      currentSN() {
+        if (this.currentS === 'all') {
+          return '所有'
+        }
+        return this.currentS;
+      },
       filterParams() {
         const params = {};
-        const labels = [];
-        if (this.currentP !== 'all') {
-          params['project'] = this.currentP;
-        }
+        params['project'] = this.projects[this.currentP].id;
         if (this.currentL !== 'all') {
-           labels.push(this.currentL);
+          params['labels'] = this.labels[this.currentL].name;
         }
         if (this.currentM !== 'all') {
-          params['assignee_id'] = this.currentM;
+          params['assignee_id'] = this.members[this.currentM].id;
         }
         if (this.currentS !== 'all') {
-          if (['Open', 'Closed'].includes(this.currentS)) {
-            params['state'] = this.currentS === 'Open' ? 'opened' : 'closed';
-          }
-          else {
-            labels.push(this.currentS);
-            params['state'] = 'opened';
-          }
-        }
-        if (labels.length) {
-          params['labels'] = labels.join(',');
+          params['state'] = this.currentS;
         }
         return params;
       }
@@ -112,65 +141,31 @@
     mounted() {
       const $navbar = document.getElementById('navbar');
       // projects which current user is a member
-      let projects = JSON.parse($navbar.dataset.projects);
-      if (!projects.length) {
-        this.currentPN = '暂无项目'
+      this.projects = JSON.parse($navbar.dataset.projects);
+      // 默认选择第一个项目
+      if (!this.projects.length) {
         this.currentP = null;
       }
       else {
-        this.currentPN = projects[0].name;
-        this.currentP = projects[0].id;
-      }
-      const labelsMap = new Map();
-      const membersMap = new Map();
-      for (let project of projects) {
-        this.projects.push({
-          id: project.id,
-          name: project.name,
-          access: project.access
-        });
-        let members = project.members;
-        for (let member of members) {
-          if (!membersMap.get(member.id)) {
-            membersMap.set(member.id, true);
-            this.members.push(member);
-          }
-        }
-        let labels = project.labels;
-        for (let label of labels) {
-          if (['To Do', 'Doing'].includes(label.name)) {
-            continue;
-          }
-          if (!labelsMap.get(label.name)) {
-            labelsMap.set(label.name, true);
-            this.labels.push(label);
-          }
-        }
+        this.currentP = 0;
       }
     },
     methods: {
-      text(str) {
-        if (str === 'all') {
-          return '所有';
-        }
-        return str;
-      },
-      selectProject(str) {
-        let list = str.split(',');
-        let project_id = list[0];
-        let project_name = list[1];
-        if (project_id === this.currentP) {
+      selectProject(projectIndex) {
+        if (projectIndex === this.currentP) {
           return;
         }
-        this.currentP = project_id;
-        this.currentPN = project_name;
+        this.currentP = projectIndex;
+        this.currentL = 'all';
+        this.currentM = 'all';
+        this.currentS = 'Open';
         this.update();
       },
-      selectLabel(label_name) {
-        if (label_name === this.currentL) {
+      selectLabel(labelIndex) {
+        if (labelIndex === this.currentL) {
           return;
         }
-        this.currentL = label_name;
+        this.currentL = labelIndex;
         this.update();
       },
       selectState(state) {
@@ -180,18 +175,11 @@
         this.currentS = state;
         this.update();
       },
-      selectAssignee(str) {
-        let list = str.split(',');
-        let user_id = list[0];
-        let user_name = list[1];
-        if (user_id === this.currentM) {
+      selectAssignee(memberIndex) {
+        if (memberIndex === this.currentM) {
           return;
         }
-        this.currentM = user_id;
-        this.currentMN = user_name;
-        if (str === 'all') {
-            this.currentMN = '所有';
-        }
+        this.currentM = memberIndex;
         this.update();
       },
       update() {

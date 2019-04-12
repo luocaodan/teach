@@ -6,6 +6,9 @@ class IssuesService < BaseService
     params[:scope] = 'all'
     project_id = params.delete 'project'
     milestone_id = params.delete 'milestone_id'
+    # 改为 gitlab 格式的查询参数
+    state = params[:state]
+    preprocess params
     issue_list, gitlab_headers = get_with_headers "projects/#{project_id}/issues", params
     add_external_field issue_list
     records = if milestone_id
@@ -13,35 +16,22 @@ class IssuesService < BaseService
               else
                 Issue.where(project_id: project_id)
               end
-    total_weight = records.sum {|r| r.weight.to_i}
-    todos = records.where(state: 'To Do')
-    todo_total = todos.count
-    todo_total_weight = todos.sum {|r| r.weight.to_i}
-    doings = records.where(state: 'Doing')
-    doing_total = doings.count
-    doing_total_weight = doings.sum {|r| r.weight.to_i}
-    dones = records.where(state: 'Closed')
-    done_total = dones.count
-    done_total_weight = dones.sum {|r| r.weight.to_i}
+    # 计算 issues 数量和权重
+    issues_cnts = get_issues_cnts records, state
+
     issue_list.each(&method(:update_issue_time))
     {
       issues: issue_list,
       total: gitlab_headers[:x_total].to_i,
-      total_weight: total_weight,
-      todo_total: todo_total,
-      todo_total_weight: todo_total_weight,
-      doing_total: doing_total,
-      doing_total_weight: doing_total_weight,
-      done_total: done_total,
-      done_total_weight: done_total_weight,
       next: gitlab_headers[:x_next_page].to_i
-    }
+    }.merge!(issues_cnts)
   end
 
   def all_issues(params = {})
     params[:scope] = 'all'
     project_id = params.delete 'project'
     params.delete 'milestone_id'
+    preprocess params
     issues = []
     page = 1
     while page != 0
@@ -153,5 +143,49 @@ class IssuesService < BaseService
     issue_record = Issue.find_by(id: issue['id'])
     return unless issue_record
     issue['updated_at'] = issue_record.updated_at
+  end
+
+  def get_issues_cnts(records, state)
+    # records: issues records
+    # state: current issues state
+    todos = records.where(state: 'To Do')
+    doings = records.where(state: 'Doing')
+    dones = records.where(state: 'Closed')
+
+    total_weight = if !state
+                     records.sum {|r| r.weight.to_i}
+                   elsif state == 'Open'
+                     records.where(
+                       state: ['Open', 'To Do', 'Doing']
+                     ).sum {|r| r.weight.to_i}
+                   else
+                     records.where(state: state).sum {|r| r.weight.to_i}
+                   end
+    {
+      total_weight: total_weight,
+      todo_total: todos.count,
+      todo_total_weight: todos.sum {|r| r.weight.to_i},
+      doing_total: doings.count,
+      doing_total_weight: doings.sum {|r| r.weight.to_i},
+      done_total: dones.count,
+      done_total_weight: dones.sum {|r| r.weight.to_i},
+    }
+  end
+
+  def preprocess(params)
+    # state 处理
+    state = params[:state]
+    return unless state
+    if state == 'Open'
+      params[:state] = 'opened'
+    elsif state == 'Closed'
+      params[:state] = 'closed'
+    else
+      params[:state] = 'opened'
+      labels = params[:labels] || ''
+      label_list = labels.split ','
+      label_list << state
+      params[:labels] = label_list.join ','
+    end
   end
 end

@@ -13,7 +13,7 @@ class ProjectsService < BaseService
 
   def all_members(project_id)
     members = []
-    list = get("projects/#{project_id}/members/all")
+    list = get("projects/#{project_id}/members")
     list.each do |member|
       members << {
         id: member['id'],

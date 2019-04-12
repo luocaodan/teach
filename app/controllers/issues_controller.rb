@@ -60,7 +60,10 @@ class IssuesController < ApplicationController
   private
 
   def filter_params
-    params.permit :project, :labels, :state, :scope, :assignee_id, :milestone, :milestone_id, :page, :per_page
+    params.permit(
+      :project, :labels, :state, :assignee_id,
+            :milestone, :milestone_id, :page, :per_page
+    )
   end
 
   def issues_service

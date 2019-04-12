@@ -197,7 +197,6 @@ export default {
         })
     },
     moreIssues() {
-      console.log(this.nextPage)
       if (!this.nextPage) {
         return;
       }
