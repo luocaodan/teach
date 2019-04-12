@@ -14,5 +14,47 @@
         %i.iconfont.icon-link{style: "font-size: 13px"}
   %p= @team['description']
   %el-tabs
-    %el-tab-pane{label: '团队成员'}
+    %el-tab-pane.members-table{label: '团队成员'}
+      .content-list
+        %el-row
+          %el-col{':span': 8} 成员
+          %el-col{':span': 8} commit
+          %el-col{':span': 8} 完成 issues
+        - @members.each do |member|
+          %el-row
+            %el-col{':span': 8}
+              .member
+                .avatar
+                  %a{href: member['web_url']}
+                    %img{src: member['avatar_url']}
+                %div
+                  %div
+                    %a{href: member['web_url']}= member['name']
+                  %div= "@#{member['username']}"
+
     %el-tab-pane{label: '统计图'}
+
+
+:css
+  .member img {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  .member {
+    display: table-row;
+    font-size: 16px;
+  }
+
+  .member > * {
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  .members-table {
+      color: #606266;
+  }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_07_024835) do
+ActiveRecord::Schema.define(version: 2019_04_12_074420) do
 
   create_table "auto_test_projects", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -39,6 +39,29 @@ ActiveRecord::Schema.define(version: 2019_04_07_024835) do
     t.integer "team_project_subgroup_id"
     t.integer "personal_project_subgroup_id"
     t.integer "pair_project_subgroup_id"
+  end
+
+  create_table "contribution_commits", force: :cascade do |t|
+    t.string "gitlab_id"
+    t.integer "team_project_id"
+    t.datetime "committed_at"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_project_id"], name: "index_contribution_commits_on_team_project_id"
+    t.index ["user_id"], name: "index_contribution_commits_on_user_id"
+  end
+
+  create_table "contribution_issues", force: :cascade do |t|
+    t.integer "issue_id"
+    t.integer "team_project_id"
+    t.datetime "closed_at"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["issue_id"], name: "index_contribution_issues_on_issue_id"
+    t.index ["team_project_id"], name: "index_contribution_issues_on_team_project_id"
+    t.index ["user_id"], name: "index_contribution_issues_on_user_id"
   end
 
   create_table "issues", force: :cascade do |t|

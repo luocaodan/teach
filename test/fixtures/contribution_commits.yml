@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  gitlab_id: 1
+  team_project: one
+  commit_at: 2019-04-12 15:40:23
+  user: one
+
+two:
+  gitlab_id: 1
+  team_project: two
+  commit_at: 2019-04-12 15:40:23
+  user: two
