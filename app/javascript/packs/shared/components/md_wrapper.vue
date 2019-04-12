@@ -64,12 +64,12 @@
       },
       value(val, oldVal) {
         if (val !== this.d_value) {
-          this.d_value = val;
+          this.d_value = val.toString();
         }
       }
     },
     props: {
-      value: String,
+      value: [String, Number],
       editable: {
         type: Boolean,
         default: true
