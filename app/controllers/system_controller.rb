@@ -40,6 +40,8 @@ class SystemController < ApplicationController
   def project_destroy_handler(event)
     return unless event[:event_name] == 'project_destroy'
     remove_project_record event[:project_id]
+    # 删除项目自动删除 issues 记录
+    remove_issues_record event[:project_id]
   end
 
   def add_team_project_member_handler(event)
@@ -126,5 +128,10 @@ class SystemController < ApplicationController
     auto_test_project&.destroy
     team_project = TeamProject.find_by(gitlab_id: project_id)
     team_project&.destroy
+  end
+
+  def remove_issues_record(project_id)
+    issues = Issue.where project_id: project_id
+    issues.destroy_all
   end
 end
