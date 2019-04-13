@@ -4,24 +4,59 @@ class SystemController < ApplicationController
   skip_before_action :require_login, only: [:index]
   # gitlab system hook
   def index
+    event = params[:system]
+
     # 自动测试项目和团队项目标记
-    if %w[project_transfer project_create].include? params['event_name']
-      mark_auto_test_project params['project_id']
-      mark_team_project params['project_id']
-    end
+    mark_project_handler event
+
     # 添加 webhook 和 默认label
-    if params['event_name'] == 'project_create'
-      add_webhook params['project_id']
-      add_default_labels params['project_id']
-    end
+    project_init_handler event
+
     # 删除项目自动删除 active record
-    if params['event_name'] == 'project_destroy'
-      remove_project_record params['project_id']
-    end
+    project_destroy_handler event
+
+    # 团队项目添加成员自动创建用户
+    add_team_project_member_handler params
+
     render json: {status: 'success'}
   end
 
   private
+
+  # handlers
+
+  def mark_project_handler(event)
+    return unless %w[project_transfer project_create].include? event[:event_name]
+    mark_auto_test_project event[:project_id]
+    mark_team_project event[:project_id]
+  end
+
+  def project_init_handler(event)
+    return unless event[:event_name] == 'project_create'
+    add_webhook event[:project_id]
+    add_default_labels event[:project_id]
+  end
+
+  def project_destroy_handler(event)
+    return unless event[:event_name] == 'project_destroy'
+    remove_project_record event[:project_id]
+  end
+
+  def add_team_project_member_handler(event)
+    return unless event[:event_name] == 'user_add_to_team'
+    team_project = TeamProject.find_by(gitlab_id: event[:project_id])
+    return unless team_project
+    classroom = team_project.classroom
+    user = User.find_by(gitlab_id: event[:user_id])
+    user ||= User.create(
+      gitlab_id: event[:user_id], role: 'student', username: event[:user_username]
+    )
+    unless classroom.users.find_by(gitlab_id: user.gitlab_id)
+      classroom.users << user
+    end
+  end
+
+  # helpers
 
   def add_webhook(project_id)
     url = "projects/#{project_id}/hooks"

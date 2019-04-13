@@ -43,6 +43,8 @@ class WebhookController < ApplicationController
     team_project = TeamProject.find_by(gitlab_id: project_id)
     return unless team_project
 
+    # GitLab 通过 commit 的邮件信息标识用户，如果邮件填写错误可能会
+    # 识别为另一用户，如果发生这种情况，该用户也会被添加到班级
     gitlab_user_id = event['user_id']
     user = User.find_by(gitlab_id: gitlab_user_id)
     unless user
