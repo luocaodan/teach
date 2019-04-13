@@ -8,7 +8,23 @@ document.addEventListener('DOMContentLoaded', () => {
   new Vue({
     el: '#show-team-app',
     data() {
-      return {}
+      return {
+        members: []
+      }
+    },
+    mounted() {
+      this.members = JSON.parse(this.$el.dataset.members);
+    },
+    methods: {
+      roleTagType(role) {
+        const tagMap = {
+          'Guest': 'info',
+          'Reporter': 'warning',
+          'Developer': 'success',
+          'Maintainer': 'primary'
+        }
+        return tagMap[role];
+      }
     }
   })
 })

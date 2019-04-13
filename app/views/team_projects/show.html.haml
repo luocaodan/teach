@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'show_team_project'
 
-#show-team-app.small-container{}
+#show-team-app.small-container{data: {members: @members.to_json}}
   .page-title-holder
     .page-title= @team['name']
     .page-title-controls
@@ -12,27 +12,44 @@
       %a.el-button{href: @team['web_url']}
         转到 GitLab
         %i.iconfont.icon-link{style: "font-size: 13px"}
-  %p= @team['description']
+  %p.info= @team['description']
   %el-tabs
     %el-tab-pane.members-table{label: '团队成员'}
-      .content-list
-        %el-row
-          %el-col{':span': 8} 成员
-          %el-col{':span': 8} commit
-          %el-col{':span': 8} 完成 issues
-        - @members.each do |member|
-          %el-row
-            %el-col{':span': 8}
-              .member
-                .avatar
-                  %a{href: member['web_url']}
-                    %img{src: member['avatar_url']}
+      %el-row.info.progress
+        %el-col{':span': 10}
+          %svg.icon{'aria-hidden': true}
+            %use{'xlink:href': '#icon-Issue'}
+          ="任务: 共 #{@total}，已完成 #{@done}，剩余 #{@total - @done}"
+          %el-progress{':percentage': @percent}
+        %el-col{':span': 12, ':offset': 2}
+          %svg.icon{'aria-hidden': true}
+            %use{'xlink:href': '#icon-weight'}
+          ="时长: 共 #{@total_weight} h，已完成 #{@done_weight} h，剩余 #{@total_weight - @done_weight} h"
+          %el-progress{':percentage': @percent_weight}
+      %el-table{':data': 'members'}
+        %el-table-column{label: '成员', prop: 'username', sortable: true}
+          %template{'slot-scope': 'scope'}
+            .member
+              .avatar
+                %a{':href': 'scope.row.web_url'}
+                  %img{':src': 'scope.row.avatar_url'}
+              %div
                 %div
-                  %div
-                    %a{href: member['web_url']}= member['name']
-                  %div= "@#{member['username']}"
-
-    %el-tab-pane{label: '统计图'}
+                  %a{':href': 'scope.row.web_url'} {{ scope.row.name }}
+                %div @{{ scope.row.username }}
+        %el-table-column{label: '角色', prop: 'role', sortable: true}
+          %template{'slot-scope': 'scope'}
+            %el-tag{':type': 'roleTagType(scope.row.role)'} {{ scope.row.role }}
+        %el-table-column{label: 'Commit', prop: 'commits_count', sortable: true}
+        %el-table-column{label: '完成 Issues', prop: 'issues_count', sortable: true}
+          %template{'slot-scope': 'scope'}
+            %svg.icon{'aria-hidden': true}
+              %use{'xlink:href': '#icon-Issue'}
+            %span {{ scope.row.issues_count }}
+            %svg.icon{'aria-hidden': true}
+              %use{'xlink:href': '#icon-weight'}
+            %span {{ scope.row.issues_weight }}
+    %el-tab-pane{label: '贡献统计图'}
 
 
 :css
@@ -55,6 +72,8 @@
     vertical-align: top;
   }
 
-  .members-table {
-      color: #606266;
+  .progress {
+    font-size: 14px;
+    font-style: italic;
+    margin-bottom: 10px;
   }

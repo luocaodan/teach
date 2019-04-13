@@ -6,6 +6,7 @@ class WebhookController < ApplicationController
     issue_state_handler(event)
     commit_handler(event)
     issue_finish_handler(event)
+    issue_reopen_handler(event)
     render json: {status: 'success'}
   end
 
@@ -75,7 +76,7 @@ class WebhookController < ApplicationController
     return unless team_project
 
     username = event['user']['username']
-    user = user.find_by(username: username)
+    user = User.find_by(username: username)
     unless user
       gitlab_user = get_user_by_username username
       user ||= User.create(
@@ -88,9 +89,22 @@ class WebhookController < ApplicationController
     issue = event['object_attributes']
     return unless issue['state'] == 'closed'
     issue_record = Issue.find(issue['id'])
-    team_project.contribution_issues.create(
-      issue_id: issue_record.id, user_id: user.id, closed_at: issue['updated_at']
-    )
+    # 防止重复 close issue
+    unless issue_record.contribution_issue
+      issue_record.contribution_issue = team_project.contribution_issues.create(
+        user_id: user.id, closed_at: issue['updated_at']
+      )
+      issue_record.save
+    end
+  end
+
+  def issue_reopen_handler(event)
+    # issue reopen 删除贡献记录
+    return unless is_kind?(event, :issue)
+    issue = event['object_attributes']
+    return unless issue['state'] == 'opened'
+    issue_record = Issue.find(issue['id'])
+    issue_record.contribution_issue&.destroy
   end
 
   def is_kind?(event, *kinds)

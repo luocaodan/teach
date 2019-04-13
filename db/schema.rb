@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_12_074420) do
+ActiveRecord::Schema.define(version: 2019_04_13_085900) do
 
   create_table "auto_test_projects", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -53,13 +53,11 @@ ActiveRecord::Schema.define(version: 2019_04_12_074420) do
   end
 
   create_table "contribution_issues", force: :cascade do |t|
-    t.integer "issue_id"
     t.integer "team_project_id"
     t.datetime "closed_at"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["issue_id"], name: "index_contribution_issues_on_issue_id"
     t.index ["team_project_id"], name: "index_contribution_issues_on_team_project_id"
     t.index ["user_id"], name: "index_contribution_issues_on_user_id"
   end
@@ -72,6 +70,8 @@ ActiveRecord::Schema.define(version: 2019_04_12_074420) do
     t.string "state"
     t.integer "project_id"
     t.integer "milestone_id"
+    t.integer "contribution_issue_id"
+    t.index ["contribution_issue_id"], name: "index_issues_on_contribution_issue_id"
   end
 
   create_table "select_classrooms", force: :cascade do |t|
