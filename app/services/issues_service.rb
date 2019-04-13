@@ -52,7 +52,9 @@ class IssuesService < BaseService
     priority = params.delete :priority
     issue = post "projects/#{project_id}/issues", params
     if weight || priority
-      Issue.create id: issue['id'], weight: weight, priority: priority
+      issue_record = Issue.find_by(id: issue['id'])
+      issue_record ||= Issue.create id: issue['id']
+      issue_record.update weight: weight, priority: priority
     end
     add_external_field [issue]
     update_issue_time issue
@@ -180,7 +182,7 @@ class IssuesService < BaseService
       params[:state] = 'opened'
     elsif state == 'Closed'
       params[:state] = 'closed'
-    else
+    elsif ['To Do', 'Doing'].include? state
       params[:state] = 'opened'
       labels = params[:labels] || ''
       label_list = labels.split ','
