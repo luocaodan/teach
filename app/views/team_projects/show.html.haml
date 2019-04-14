@@ -50,13 +50,17 @@
               %use{'xlink:href': '#icon-weight'}
             %span {{ scope.row.issues_weight }}
     %el-tab-pane{label: '贡献统计图'}
+      %el-radio-group{'v-model': 'option', size: 'mini'}
+        %el-radio-button{label: 'Commit'}
+        %el-radio-button{label: 'Issues'}
+        %el-radio-button{label: 'Weight'}
+      %v-chart{':options': 'contributionOption', 'ref': 'contributionChart'}
 
 
 :css
   .member img {
     width: 40px;
     height: 40px;
-    margin-right: 15px;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -70,6 +74,7 @@
   .member > * {
     display: table-cell;
     vertical-align: top;
+    padding-right: 15px;
   }
 
   .progress {
