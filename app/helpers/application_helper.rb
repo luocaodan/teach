@@ -13,9 +13,8 @@ module ApplicationHelper
       info = {
         id: project['id'],
         name: project['name'],
-        web_url: project['web_url'],
-        # own 字段暂时废弃
-        # own: project['owner']['id'] == current_user.id
+        name_with_namespace: project['name_with_namespace'],
+        web_url: project['web_url']
       }
       members = project_service.all_members project['id']
       editable = members.any? do |member|

@@ -103,7 +103,7 @@
         if (this.currentP === null) {
           return '暂无项目';
         }
-        return this.projects[this.currentP].name;
+        return this.projects[this.currentP].name_with_namespace;
       },
       currentLN() {
         if (this.currentL === 'all') {
