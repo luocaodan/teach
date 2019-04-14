@@ -17,7 +17,7 @@ class WebhookController < ApplicationController
     return unless is_kind?(event, :issue)
     issue = event['object_attributes']
     issue_record = Issue.find_by(id: issue['id'])
-    issue_record ||= Issue.new id: issue['id']
+    issue_record ||= Issue.create id: issue['id']
     issue_record.project_id = event['project']['id']
     issue_record.milestone_id = issue['milestone_id']
     if issue['state'] == 'closed'
@@ -90,10 +90,10 @@ class WebhookController < ApplicationController
     return unless issue['state'] == 'closed'
     issue_record = Issue.find(issue['id'])
     # 防止重复 close issue
-    unless issue_record.contribution_issue
-      issue_record.contribution_issue = team_project.contribution_issues.create(
+    unless issue_record.contribution_issue_id
+      issue_record.contribution_issue_id = team_project.contribution_issues.create(
         user_id: user.id, closed_at: issue['updated_at']
-      )
+      ).id
       issue_record.save
     end
   end
@@ -103,8 +103,11 @@ class WebhookController < ApplicationController
     return unless is_kind?(event, :issue)
     issue = event['object_attributes']
     return unless issue['state'] == 'opened'
-    issue_record = Issue.find(issue['id'])
-    issue_record.contribution_issue&.destroy
+    issue_record = Issue.find_by(id: issue['id'])
+    tmp = issue_record&.contribution_issue_id
+    issue_record&.contribution_issue_id = nil
+    issue_record&.save
+    ContributionIssue.find(tmp).destroy if tmp
   end
 
   def is_kind?(event, *kinds)

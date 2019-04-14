@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 value: i.issues_count
               }
             });
+            contribution_data.push({name: 'To Do', value: this.todo});
             break;
           case 'Weight':
             contribution_data = this.members.map(i => {
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 value: i.issues_weight
               }
             });
+            contribution_data.push({name: 'To Do', value: this.todoWeight});
             break;
           default:
             contribution_data = this.members.map(i => {
@@ -87,6 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     mounted() {
       this.members = JSON.parse(this.$el.dataset.members);
+      this.todo = this.$el.dataset.todo;
+      this.todoWeight = this.$el.dataset.todoWeight;
     },
     methods: {
       roleTagType(role) {
@@ -100,6 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       memberFmt(params) {
         const membersIndex = params.dataIndex;
+        if (membersIndex >= this.members.length) {
+          return 'To Do';
+        }
         const member = this.members[membersIndex];
         const template = `
           <div class="member" style="color: #fff">
@@ -120,9 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       memberLabelFmt(params) {
         const membersIndex = params.dataIndex;
+        if (membersIndex >= this.members.length) {
+          return 'To Do';
+        }
         const member = this.members[membersIndex];
         return `${member.name}\n@${member.username}`
       }
     }
   })
-})
+});

@@ -41,8 +41,8 @@ class TeamProjectsController < ApplicationController
     @total_weight = Issue.where(project_id: team_project.gitlab_id).sum { |i| i.weight.to_i }
     @done = issues.count
     @done_weight = issues.select(:weight).joins(:issue).sum { |i| i.weight.to_i }
-    @percent = @total.zero? ? 100 : @done / @total
-    @percent_weight = @total_weight.zero? ? 100 : @done_weight / @total_weight
+    @percent = @total.zero? ? 100 : @done * 100 / @total
+    @percent_weight = @total_weight.zero? ? 100 : @done_weight * 100 / @total_weight
     @members.each do |member|
       member['role'] = team_role member.delete('access_level')
       user = User.find_by gitlab_id: member['id']

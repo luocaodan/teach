@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'show_team_project'
 
-#show-team-app.small-container{data: {members: @members.to_json}}
+#show-team-app.small-container{data: {members: @members.to_json, todo: @total-@done, 'todo-weight': @total_weight-@done_weight}}
   .page-title-holder
     .page-title= @team['name']
     .page-title-controls
