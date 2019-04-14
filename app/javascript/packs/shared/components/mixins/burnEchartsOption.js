@@ -72,8 +72,7 @@ export default {
             dataZoom: {},
             saveAsImage: {
               title: '下载'
-            },
-            dataView: {}
+            }
           },
         },
         legend: {
