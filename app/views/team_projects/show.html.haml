@@ -9,6 +9,8 @@
     .page-title-controls
       %a.el-button{href: classroom_team_project_blogs_path(team_project_id: params[:id])}
         团队博客
+      - if teacher?
+        %a.el-button{href: classroom_team_project_insight_path(team_project_id: params[:id])} 详细统计
       %a.el-button{href: @team['web_url']}
         转到 GitLab
         %i.iconfont.icon-link{style: "font-size: 13px"}
@@ -73,7 +75,7 @@
 
   .member > * {
     display: table-cell;
-    vertical-align: top;
+    vertical-align: middle;
     padding-right: 15px;
   }
 

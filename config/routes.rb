@@ -59,6 +59,7 @@ Rails.application.routes.draw do
           get 'raw', to: 'blogs#show_raw'
         end
       end
+      get 'insight', to: 'insight#show'
     end
 
     resources :blogs do
