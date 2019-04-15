@@ -10,6 +10,7 @@
     "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.7.2",
     "mavon-editor": "^2.6.17",
+    "moment": "^2.24.0",
     "rails-ujs": "^5.2.2-1",
     "vue": "^2.5.21",
     "vue-echarts": "^4.0.0",

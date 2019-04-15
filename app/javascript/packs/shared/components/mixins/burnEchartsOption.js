@@ -1,4 +1,5 @@
 import 'echarts/lib/component/markLine'
+import moment from 'moment'
 
 export default {
   data() {
@@ -22,8 +23,8 @@ export default {
       const burnData = this.getBurnData(this.issues, this.isWeight);
       const guideData = this.getGuideData(burnData);
       const day = 3600 * 24;
-      const start = Date.parse(this.milestone.start_date + ' GMT +8') / 1000;
-      const end = Date.parse(this.milestone.due_date + ' GMT +8') / 1000 + day;
+      const start = toX(localDateToTimestamp(this.milestone.start_date));
+      const end = toX(localDateToTimestamp(this.milestone.due_date));
       const tmp = Math.max(end, this.roundDate(burnData[burnData.length-1][0])) - start;
       const xAxisInterval = Math.ceil(tmp / day / 10) * day;
 
@@ -54,15 +55,8 @@ export default {
           formatter: function (params) {
             const data = params.data;
             const day = 24 * 3600;
-            // 判断整天
-            let time = null;
-            let date = new Date(data[0] * 1000).toLocaleDateString();
-            if (data[0] % day === 57600) {
-              time = date;
-            }
-            else {
-              time = `${date} ${new Date(data[0] * 1000).toLocaleTimeString()}`;
-            }
+            let m = moment(data[0] * 1000);
+            const time = m.format('YYYY-MM-DD HH:mm:ss');
             return `${time} 剩余 ${Math.round(data[1] * 10) / 10}`
           }
         },
@@ -109,14 +103,11 @@ export default {
       };
     },
     getBurnData(data, isWeight) {
-      // X 坐标转换函数
-      const toX = (timestamp) => {
-        return Math.round(timestamp / 1000);
-      };
+
       const start = this.milestone.start_date;
       // 判断是否为开始日之前
       const isBeforeFirstDay = (timestamp) => {
-        const startTime = Date.parse(start + 'GMT +8') + 3600 * 24 * 1000;
+        const startTime = localDateToTimestamp(start) + 3600 * 24 * 1000;
         return timestamp < startTime;
       };
       // weight 默认 0
@@ -135,7 +126,7 @@ export default {
 
       const res = [];
       // 起始值
-      const startX = toX(Date.parse(start + 'GMT +8'));
+      const startX = toX(localDateToTimestamp(start));
       if (isWeight) {
         res.push([startX, totalWeight]);
       } else {
@@ -220,8 +211,8 @@ export default {
     },
     getGuideData(burnData) {
       const DAY = 24 * 3600;
-      const start = Date.parse(this.milestone.start_date + 'GMT +8') / 1000;
-      const end = Date.parse(this.milestone.due_date + 'GMT +8') / 1000 + DAY;
+      const start = toX(localDateToTimestamp(this.milestone.start_date));
+      const end = toX(localDateToTimestamp(this.milestone.due_date)) + DAY;
 
       const total = burnData.length > 0 ? burnData[0][1] : 0;
       const diff = total / ((end - start) / 3600 / 24);
@@ -236,13 +227,6 @@ export default {
         }
       }
       return res;
-    },
-    dateStr(str, isUtc = false) {
-      // str 为UTC时间
-      if (isUtc) {
-        return new Date(Date.parse(str)).toDateString();
-      }
-      return new Date(Date.parse(str)).toLocaleDateString();
     },
     dateFmt(timestamp, isFull = false) {
       const d = new Date(timestamp);
@@ -266,3 +250,13 @@ export default {
     },
   }
 }
+
+// X 坐标转换函数
+const toX = (timestamp) => {
+  return Math.round(timestamp / 1000);
+};
+
+const localDateToTimestamp = (dateStr) => {
+  // dateStr like '2012/1/1'
+  return moment(dateStr).toDate().getTime();
+};

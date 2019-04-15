@@ -2,8 +2,8 @@ import Vue from 'vue/dist/vue.esm'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import CommonMixin from './shared/components/mixins/common_mixin'
-import eventhub from './issues/eventhub'
 import BlogsService from "./blogs/services/blogs_service";
+import Moment from "./tools/moment";
 
 Vue.use(ElementUI);
 
@@ -63,9 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'primary'
       },
       dateStr(utcStr) {
-        return new Date(Date.parse(utcStr))
-          .toLocaleDateString()
-          .replace(/\//g, '-');
+        return Moment.dateStr(utcStr);
       }
     }
   })

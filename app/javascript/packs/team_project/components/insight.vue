@@ -51,6 +51,7 @@
 </template>
 <script>
   import axios from 'axios'
+  import moment from 'moment'
 
   export default {
     data() {
@@ -219,8 +220,8 @@
           return res.toLocaleDateString();
         };
         const isDateEqual = (strA, strB) => {
-          const a = new Date(Date.parse(strA + ' GMT +8'));
-          const b = new Date(Date.parse(strB + ' GMT +8'));
+          const a = moment(strA).toDate();
+          const b = moment(strB).toDate();
           return a.getTime() === b.getTime();
         };
         // 填充贡献为 0 的日期

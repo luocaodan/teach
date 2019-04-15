@@ -298,6 +298,7 @@
   import Transform from '../../tools/transform'
   import EditMixin from './mixins/edit_issue'
   import AlertMixin from './mixins/alert'
+  import Moment from "../../tools/moment";
 
   export default {
     mixins: [EditMixin, AlertMixin],
@@ -437,9 +438,7 @@
         return list[priority - 1];
       },
       dateText(utcStr) {
-        const timestamp = Date.parse(utcStr);
-        const date = new Date(timestamp);
-        return date.toLocaleDateString().replace(/\//g, '-');
+        return Moment.dateStr(utcStr);
       },
       unchange(attr) {
         if (attr === 'labels') {

@@ -6,9 +6,9 @@ import 'mavon-editor/dist/css/index.css'
 import CommonMixin from './shared/components/mixins/common_mixin'
 import mdWrapper from './shared/components/md_wrapper.vue'
 import BlogsService from "./blogs/services/blogs_service";
-import Blog from "./blogs/models/blog";
 import CommentsService from "./comments/services/comments_service";
 import Endpoint from "./tools/endpoint";
+import Moment from "./tools/moment";
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
@@ -230,14 +230,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       },
       dateStr(utcStr) {
-        return new Date(Date.parse(utcStr))
-          .toLocaleDateString()
-          .replace(/\//g, '-');
+        return Moment.dateStr(utcStr);
       },
       timeStr(utcStr) {
-        return new Date(Date.parse(utcStr))
-          .toLocaleString()
-          .replace(/\//g, '-');
+        return Moment.timeStr(utcStr);
       }
     }
   });
