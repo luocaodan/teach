@@ -10,7 +10,7 @@
       <el-submenu index="1">
         <template slot="title">项目看板</template>
         <el-menu-item v-for="(project, index) in projects" :key="index" :index="'1-' + project.id">
-          {{ project.name }}
+          {{ project.name_with_namespace }}
         </el-menu-item>
       </el-submenu>
 
@@ -65,36 +65,21 @@
       top="50px"
       :visible.sync="dialogVisible"
       width="80%">
-      <!--:before-close="handleClose">-->
       <new-issue ref="newIssue" :issue="newIssue"></new-issue>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addIssue('newIssueForm')">确 定</el-button>
       </span>
     </el-dialog>
-
-    <!--<el-dialog-->
-    <!--title="新建冲刺"-->
-    <!--top="50px"-->
-    <!--:visible.sync="milestoneDialogVisible"-->
-    <!--width="80%">-->
-    <!--<new-milestone ref="newMilestone" :milestone="newMilestone" :milestones="milestones"></new-milestone>-->
-    <!--<span slot="footer" class="dialog-footer">-->
-    <!--<el-button @click="milestoneDialogVisible = false">取 消</el-button>-->
-    <!--<el-button type="primary" @click="addMilestone('newMilestoneForm')">确 定</el-button>-->
-    <!--</span>-->
-    <!--</el-dialog>-->
   </div>
 </template>
 <script>
   import NewIssue from './new_issue.vue'
-  import NewMilestone from './new_milestone.vue'
   import Issue from '../../issues/models/issue'
 
   export default {
     components: {
       NewIssue,
-      NewMilestone
     },
     data() {
       return {
@@ -106,18 +91,15 @@
         gitlabHost: '',
         dialogVisible: false,
         newIssue: new Issue(),
-        // newMilestone: {},
       };
     },
     mounted() {
       const navbar = document.getElementById('navbar');
       this.gitlabHost = navbar.dataset.gitlabhost;
       const projects = JSON.parse(navbar.dataset.projects);
-      // const milestonesMap = new Map();
       for (let project of projects) {
         let milestones = project.milestones;
         for (let milestone of milestones) {
-          // milestonesMap.set(project.id, true);
           this.milestones.push(milestone);
         }
         this.projects.push({
