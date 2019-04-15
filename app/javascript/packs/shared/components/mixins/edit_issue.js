@@ -8,7 +8,6 @@ export default {
   data() {
     return {
       projects: [],
-      accessMap: {},
       labels: {},
       members: {},
       milestones: {},
@@ -23,11 +22,6 @@ export default {
   mounted() {
     const $navbar = document.getElementById('navbar');
     const projects = JSON.parse($navbar.dataset.projects);
-    const accessMap = {};
-    for (let project of projects) {
-      accessMap[project.id] = project.access;
-    }
-    this.accessMap = accessMap;
 
     for (let project of projects) {
       this.labels[project.id] = project.labels.filter((l) => !['To Do', 'Doing'].includes(l.name));
@@ -36,7 +30,7 @@ export default {
       this.projects.push({
         id: project.id,
         name: project.name,
-        access: project.access
+        name_with_namespace: project.name_with_namespace,
       });
     }
   },
@@ -53,11 +47,7 @@ export default {
   },
   computed: {
     canEdit() {
-      if (!this.issue.projectId) {
-        return false;
-      }
-      let projectId = this.issue.projectId;
-      return this.accessMap[projectId] === 'edit';
+      return true;
     }
   },
 }

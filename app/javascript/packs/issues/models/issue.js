@@ -4,7 +4,6 @@ class Issue {
   constructor() {
     this.id = '';
     this.iid = '';
-    this.access = '';
     this.projectId = null;
 
     this.title = '';

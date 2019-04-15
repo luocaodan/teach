@@ -9,7 +9,7 @@
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item v-for="(project, index) in projects"
                           :key="index" :command="index">
-          {{ project.name }}
+          {{ project.name_with_namespace }}
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>

@@ -17,15 +17,6 @@ module ApplicationHelper
         web_url: project['web_url']
       }
       members = project_service.all_members project['id']
-      editable = members.any? do |member|
-        member[:id] == current_user.id && member.delete(:access) == 'edit'
-      end
-      info[:is_member] = editable
-      info[:access] = if editable
-                        'edit'
-                      else
-                        'new'
-                      end
       info[:members] = members
       info[:labels] = project_service.all_labels project['id']
       info[:milestones] = project_service.all_milestones project['id']

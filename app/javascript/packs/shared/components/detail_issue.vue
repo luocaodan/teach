@@ -327,12 +327,6 @@
       if (!this.issue) {
         return;
       }
-      if (this.accessMap[this.issue.projectId]) {
-        this.issue.access = this.accessMap[this.issue.projectId];
-      } else {
-        this.issue.access = 'new';
-      }
-
       let members = this.members[this.issue.projectId];
       if (members) {
         let exist = members.some((member) => member.id === this.issue.assignee.id);

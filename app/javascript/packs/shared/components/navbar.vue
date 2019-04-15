@@ -54,7 +54,7 @@
       <el-submenu index="6" style="float: right">
         <template slot="title">新建问题</template>
         <el-menu-item v-for="(project, index) in projects" :key="index" :index="'6-' + project.id">
-          {{ project.name }}
+          {{ project.name_with_namespace }}
         </el-menu-item>
       </el-submenu>
 
@@ -115,9 +115,6 @@
       const projects = JSON.parse(navbar.dataset.projects);
       // const milestonesMap = new Map();
       for (let project of projects) {
-        if (!project.is_member) {
-          continue;
-        }
         let milestones = project.milestones;
         for (let milestone of milestones) {
           // milestonesMap.set(project.id, true);
@@ -126,8 +123,8 @@
         this.projects.push({
           id: project.id,
           name: project.name,
-          webUrl: project.web_url,
-          access: project.access
+          name_with_namespace: project.name_with_namespace,
+          webUrl: project.web_url
         });
       }
     },

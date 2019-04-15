@@ -81,9 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const $navbar = document.getElementById('navbar');
       let projects = JSON.parse($navbar.dataset.projects);
       for (let project of projects) {
-        if (!project.is_member) {
-          continue;
-        }
         if (this.type === 'blog') {
           this.containers.push({
             id: project.id,
