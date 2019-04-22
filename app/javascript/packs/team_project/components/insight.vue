@@ -215,13 +215,14 @@
       },
       fillDays(data) {
         const addOneDay = (dateStr) => {
-          const res = new Date(dateStr);
-          res.setDate(res.getDate() + 1);
-          return res.toLocaleDateString();
+          const res = moment(dateStr, 'YYYY-MM-DD');
+          res.add(1, 'd');
+          return res.format('YYYY-MM-DD');
         };
         const isDateEqual = (strA, strB) => {
-          const a = moment(strA).toDate();
-          const b = moment(strB).toDate();
+          const a = moment(strA, 'YYYY-MM-DD').toDate();
+          const b = moment(strB, 'YYYY-MM-DD').toDate();
+          console.log(a, b)
           return a.getTime() === b.getTime();
         };
         // 填充贡献为 0 的日期
