@@ -28,7 +28,8 @@
         #navbar{data: projects_data}
           %navbar
       #content
-        = yield
+        .content-wrapper
+          = yield
 
     :css
       #navbar {
@@ -50,6 +51,17 @@
       #content {
         flex: 1;
         overflow: auto;
+        /* 兼容 Safari*/
+        position: relative;
+      }
+
+      .content-wrapper {
+        /* 兼容 Safari*/
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
       }
 
       body {
@@ -87,13 +99,13 @@
       .clearFloat:before {
         content: "";
         clear: both;
-        display: block;;
+        display: block;
       }
 
       .clearFloat:after {
         content: "";
         clear: both;
-        display: block;;
+        display: block;
       }
 
       .page-title-holder {
