@@ -75,7 +75,7 @@ export default {
         const scrollHeight = this.getScrollHeight();
         let diff = filterHeight + scrollHeight;
         this.height = this.$el.clientHeight - diff;
-        this.totalWidth = this.$el.clientWidth;
+        this.totalWidth = document.documentElement.clientWidth;
       })
     };
     window.onresize();

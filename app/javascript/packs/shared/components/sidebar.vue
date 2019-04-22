@@ -76,12 +76,12 @@
   .sidebar {
     overflow: auto;
     border-bottom: 1px solid #e5e5e5;
+    display: flex;
   }
   .divider {
-    position: absolute;
-    margin-top: 0em;
-    margin-bottom: 0em;
     width: 15px;
+    position: relative;
+    left: -10px;
     cursor: col-resize;
     background-color: #fff;
     -webkit-user-select: none;
@@ -94,5 +94,6 @@
 
   .detail {
     min-width: 300px;
+    flex: 1;
   }
 </style>
