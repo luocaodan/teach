@@ -25,4 +25,8 @@ module ApplicationHelper
     data['projects'] = infos.to_json
     data
   end
+
+  def ie_svg_meta_tag
+    tag('meta', 'http-equiv': 'X-UA-Compatible', content: 'IE=11').html_safe
+  end
 end

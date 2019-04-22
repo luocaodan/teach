@@ -7,9 +7,9 @@
 
 #login
   %img{src: '/logo/gitlab-icon-rgb.svg'}
-  %el-button{'@click': "redirectToGitlab('#{gitlab_auth_url('student')}')"}
+  %a.el-button{href: gitlab_auth_url('student')}
     学生登录
-  %el-button{'@click': "redirectToGitlab('#{gitlab_auth_url('teacher')}')"}
+  %a.el-button{href: gitlab_auth_url('teacher')}
     教师登录
 
 :css
@@ -17,6 +17,10 @@
     margin: auto;
     text-align: center;
     width: 400px;
+  }
+
+  #login > img {
+    width: 100%;
   }
 
   #login a {
