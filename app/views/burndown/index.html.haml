@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'burndown'
 
-#burndown-app{data: {issues: issues_data, sprints: sprints_data}, 'v-loading': 'loading', 'element-loading-text': '加载中', ':style': "{height: height + 'px'}"}
+#burndown-app{data: {issues: issues_data, sprints: sprints_data}, 'v-loading': 'loading', 'element-loading-text': '加载中'}
   %detail-sprint{':sprint': 'milestone'}
   .chart{'v-if': 'isShow'}
     .change-tab

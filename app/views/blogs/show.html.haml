@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'show_blog'
 
-#show-blog-app{data: {issues: issues_data, blog: current_blog, blogs: blogs_data, comments: comments_data}, ':style': "{height: height + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
+#show-blog-app{data: {issues: issues_data, blog: current_blog, blogs: blogs_data, comments: comments_data}, 'v-loading': 'loading', 'element-loading-text': '加载中'}
   .root.small-container{'v-if': 'blog'}
     .blog-title.clearFloat
       %el-row

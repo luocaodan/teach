@@ -136,6 +136,6 @@
 
   /*兼容IE*/
   .md-wrapper .v-note-panel {
-    min-height: 200px;
+    /*min-height: 200px;*/
   }
 </style>
