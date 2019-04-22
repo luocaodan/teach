@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       memberFmt(params) {
         const membersIndex = params.dataIndex;
         if (membersIndex >= this.members.length) {
-          return 'To Do';
+          return `To Do ${params.value}`;
         }
         const member = this.members[membersIndex];
         const template = `

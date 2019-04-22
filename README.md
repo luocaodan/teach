@@ -102,7 +102,7 @@ sudo apt-get install gitlab-runner
 ## 导航栏
 效果：
 
-![](.md_images/navbar.png)
+![](.md-imgs/navbar.png)
 
 进入 GitLab 安装目录
 ```bash

@@ -1,6 +1,6 @@
 module DevelopmentConstant
   GitLabHost = 'http://gitlab.ce'.freeze
-  TeachHost = 'http://127.0.0.1:3000'.freeze
+  TeachHost = 'http://teach.ce:3000'.freeze
   WebhookUrl = "#{TeachHost}/webhook".freeze
 
   # admin token
