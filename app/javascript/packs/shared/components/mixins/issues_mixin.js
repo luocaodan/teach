@@ -66,19 +66,17 @@ export default {
       issuesEndpoint: this.getIssuesEndpoint()
     });
     window.onresize = () => {
-      const $navbar = document.getElementById('navbar');
-      let navHeight = 0;
-      if ($navbar) {
-        navHeight = $navbar.clientHeight;
-      }
-      const $filter = document.getElementById('filter');
-      let filterHeight = 0;
-      if ($filter) {
-        filterHeight = $filter.clientHeight;
-      }
-      let diff = navHeight + filterHeight + this.getScrollHeight();
-      this.height = document.documentElement.clientHeight - diff;
-      this.totalWidth = document.documentElement.clientWidth;
+      this.$nextTick(() => {
+        const $filter = document.getElementById('filter');
+        let filterHeight = 0;
+        if ($filter) {
+          filterHeight = $filter.clientHeight;
+        }
+        const scrollHeight = this.getScrollHeight();
+        let diff = filterHeight + scrollHeight;
+        this.height = this.$el.clientHeight - diff;
+        this.totalWidth = this.$el.clientWidth;
+      })
     };
     window.onresize();
   },
@@ -274,7 +272,7 @@ export default {
       }
       document.body.appendChild(P);
       let scrollbarHeight = P.offsetHeight - P.clientHeight;
-      P.remove();
+      document.body.removeChild(P);
 
       return scrollbarHeight;
     },

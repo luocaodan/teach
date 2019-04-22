@@ -39,22 +39,20 @@
         return 'edit';
       },
       styleObj() {
+        const minHeight = 250;
         const base = {
           minWidth: '250px'
         };
         if (this.preview) {
           return Object.assign(base, {
-            height: 'auto',
+            // height: 'auto',
             minHeight: 'unset'
           })
         }
-        else if (this.minHeight) {
-          return Object.assign(base, {
-            minHeight: `${this.minHeight}px`
-          })
-        }
         else {
-          return Object.assign(base, {});
+          return Object.assign(base, {
+            minHeight: `${minHeight}px`
+          })
         }
       }
     },
@@ -83,10 +81,6 @@
       boxShadow: {
         type: Boolean,
         default: true
-      },
-      minHeight: {
-        type: Number,
-        default: 0
       },
       border: {
         type: Boolean,
@@ -138,5 +132,10 @@
   .no-border .v-show-content {
     background: #fff !important;
     padding: 0 !important;
+  }
+
+  /*兼容IE*/
+  .md-wrapper .v-note-panel {
+    min-height: 200px;
   }
 </style>

@@ -27,11 +27,9 @@
       <div class="block-value">
         <md-wrapper v-if="policy.description || sprint.description"
                     v-model="sprint.description"
-                    :min-height="200" :border="false"
-                    :box-shadow="false"
+                    :border="false" :box-shadow="false"
                     :project-id="sprint.projectId"
-                    func="mini"
-                    @save="update('description')"
+                    func="mini" @save="update('description')"
                     :preview="!policy.description">
         </md-wrapper>
         <p v-else>

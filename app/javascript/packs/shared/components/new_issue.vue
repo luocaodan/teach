@@ -13,8 +13,7 @@
       </el-form-item>
       <el-form-item label="问题描述" prop="description">
         <md-wrapper v-model="issue.description"
-                    :min-height="200" :border="false"
-                    :box-shadow="false"
+                    :border="false" :box-shadow="false"
                     :project-id="issue.projectId"
                     func="mini"
                     :cant-save="true">

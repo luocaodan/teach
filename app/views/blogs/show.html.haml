@@ -44,7 +44,7 @@
                 %i.el-icon-edit.icon-button{'@click': 'editComment(comment.id)'}
                 %i.el-icon-delete.icon-button.danger-icon{'@click': 'deleteComment(comment.id)'}
             .comment-content
-              %md-wrapper{'v-model': 'comment.body', ':cant-save': 'true', ':border': 'false', ':min-height': 200, ':project-id': 'blog.project_id', ':project-url': 'blog.project_url', ':preview': 'isPreview(comment.id)', ':box-shadow': 'false', 'func': 'mini'}
+              %md-wrapper{'v-model': 'comment.body', ':cant-save': 'true', ':border': 'false', ':project-id': 'blog.project_id', ':project-url': 'blog.project_url', ':preview': 'isPreview(comment.id)', ':box-shadow': 'false', 'func': 'mini'}
               .comment-buttons.clearFloat{'v-if': '!isPreview(comment.id)'}
                 %el-button{'@click': 'currentEditComment = null'}
                   取消
@@ -57,7 +57,7 @@
           %a{href: current_user.web_url}
             %img{src: current_user.avatar_url}
         .comment-body
-          %md-wrapper{'v-model': 'n_comment.body', ':cant-save': 'true', ':min-height': 200, ':project-id': 'blog.project_id', ':project-url': 'blog.project_url', 'func': 'mini'}
+          %md-wrapper{'v-model': 'n_comment.body', ':cant-save': 'true', ':project-id': 'blog.project_id', ':project-url': 'blog.project_url', 'func': 'mini'}
           .comment-buttons.clearFloat
             %el-button.floatRight{type: 'primary', '@click': 'newComment'}
               评论

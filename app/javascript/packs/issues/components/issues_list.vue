@@ -6,7 +6,7 @@
         <use :xlink:href="labelIcon()"></use>
       </svg>
     </div>
-    <div ref="sort" class="sort center clearFloat">
+    <div class="sort center clearFloat">
       <span @click="reverse()">
         Order by {{ fieldMap(sort_field) }}
         <i class="iconfont" :class="{ 'icon-icarrowup': asc, 'icon-icarrowdown': !asc }"></i>
@@ -54,6 +54,8 @@
   import IssueCard from './issue_card.vue'
   import eventhub from '../eventhub'
 
+  const sortHeight = 45;
+
   export default {
     components: {
       IssueCard
@@ -62,7 +64,6 @@
       return {
         sort_field: 'created_at',
         asc: false,
-        sortHeight: 10,
         headerHeight: 0,
         heightFlag: false,
       }
@@ -88,8 +89,8 @@
     },
     computed: {
       height() {
-        let diff = this.sortHeight + this.headerHeight;
-        return this.totalHeight - diff - 2;
+        let diff = sortHeight + this.headerHeight;
+        return this.totalHeight - diff;
       }
     },
     mounted() {
@@ -107,8 +108,6 @@
     },
     updated() {
       if (!this.heightFlag) {
-        const sort = this.$refs.sort;
-        this.sortHeight = sort.offsetHeight;
         const header = this.$refs.header;
         if (header) {
           this.headerHeight = header.offsetHeight;
@@ -306,6 +305,10 @@
   }
 
   .sort {
+    height: 45px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     padding: 10px 0;
     font-size: 16px;
     color: #707070;

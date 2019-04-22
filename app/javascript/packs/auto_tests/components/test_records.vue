@@ -74,8 +74,7 @@
                 暂无反馈
               </p>
               <md-wrapper v-model="props.row.feedback"
-                          :min-height="200" :border="false"
-                          :box-shadow="false"
+                          :border="false" :box-shadow="false"
                           :project-id="props.row.project_id"
                           :project-url="props.row.project_url"
                           func="mini"

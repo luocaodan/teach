@@ -88,6 +88,8 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    /*兼容 IE*/
+    border-bottom: 1px solid #e5e5e5;
   }
 
   .detail {
