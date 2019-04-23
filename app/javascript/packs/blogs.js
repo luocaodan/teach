@@ -24,9 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
     computed: {
-      blogsHeight() {
-        const $filter = document.getElementById('blog-filter');
-        return this.height - $filter.offsetHeight - 2 - 10;
+      loadingStyle() {
+        if (this.loading) {
+          return {
+            minHeight: '400px'
+          }
+        }
       }
     },
     watch: {

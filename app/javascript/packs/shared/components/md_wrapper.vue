@@ -32,21 +32,22 @@
       }
     },
     computed: {
-      defaultType() {
-        if (this.preview) {
-          return 'preview';
-        }
-        return 'edit';
-      },
       styleObj() {
-        const minHeight = 250;
+        let minHeight = 250;
         const base = {
           minWidth: '250px'
         };
         if (this.preview) {
+          minHeight = 'unset';
+          // 判断是否 IE 11
+          // https://stackoverflow.com/questions/21825157/internet-explorer-11-detection
+          const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+          if (isIE11) {
+            minHeight = '100%';
+          }
           return Object.assign(base, {
-            // height: 'auto',
-            minHeight: 'unset'
+            // 兼容 IE11
+            minHeight: minHeight
           })
         }
         else {
@@ -54,6 +55,12 @@
             minHeight: `${minHeight}px`
           })
         }
+      },
+      defaultType() {
+        if (this.preview) {
+          return 'preview';
+        }
+        return 'edit';
       }
     },
     watch: {
@@ -135,7 +142,20 @@
   }
 
   /*兼容IE*/
-  .md-wrapper .v-note-panel {
-    /*min-height: 200px;*/
+  .md-wrapper .v-note-wrapper .v-note-panel {
+    flex-basis: auto;
+  }
+
+  /*
+    兼容IE
+    IE 在 Flex Container 上设置 min-height 无效，
+    让 v-note-wrapper 也变成 flex item即可
+   */
+  .md-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .md-wrapper > .v-note-wrapper {
+    flex: auto;
   }
 </style>

@@ -22,29 +22,28 @@
         新建博客
       %a.el-button.el-button--mini{href: new_classroom_blog_path(type: 'daily_scrum')}
         新建 Daily Scrum
-  .blogs{':style': "{height: blogsHeight + 'px'}", 'v-loading': 'loading', 'element-loading-text': '加载中'}
-    %el-scrollbar{style: "height: 100%"}
-      %el-card{shadow: 'never', 'v-for': "(blog, index) in blogs", ':key': 'index', class: 'blog-card', ':body-style': "{ padding: '10px' }"}
-        .blog-info
-          .blog-title
-            %a{':href': "'#{classroom_path(id: params[:classroom_id])}' + '/blogs/' + blog.id"}
-              {{ blog.title }}
-            %el-tag{style: "{margin: 4px}", ':type': 'blogTagType(blog.type)', size: 'mini'}
-              {{ blog.type }}
-            %el-badge.floatRight{':value': 'blog.comments_count', 'type': 'primary'}
-              %a.el-button.el-button--mini{':href': "'#{classroom_path(id: params[:classroom_id])}' + '/blogs/' + blog.id + '#comments'"}
-                %i{class: 'iconfont icon-comments'}
-          .blog-attrs.clearFloat
-            %i{class: "iconfont icon-xiangmu"}
-            %span{title: "项目"}
-              {{ blog.project_name }}
-            %i{class: 'el-icon-date'}
-            %span{title: '创建时间'}
-              {{ dateStr(blog.created_at) }}
-            %span.author
-              %img{':title': "'作者: ' + blog.author.username", ':src': "blog.author.avatar_url"}
-              %a{':href': 'blog.author.web_url'}
-                {{ blog.author.name }}
+  .blogs{':style': 'loadingStyle', 'v-loading': 'loading', 'element-loading-text': '加载中'}
+    %el-card{shadow: 'never', 'v-for': "(blog, index) in blogs", ':key': 'index', class: 'blog-card', ':body-style': "{ padding: '10px' }"}
+      .blog-info
+        .blog-title
+          %a{':href': "'#{classroom_path(id: params[:classroom_id])}' + '/blogs/' + blog.id"}
+            {{ blog.title }}
+          %el-tag{style: "{margin: 4px}", ':type': 'blogTagType(blog.type)', size: 'mini'}
+            {{ blog.type }}
+          %el-badge.floatRight{':value': 'blog.comments_count', 'type': 'primary'}
+            %a.el-button.el-button--mini{':href': "'#{classroom_path(id: params[:classroom_id])}' + '/blogs/' + blog.id + '#comments'"}
+              %i{class: 'iconfont icon-comments'}
+        .blog-attrs.clearFloat
+          %i{class: "iconfont icon-xiangmu"}
+          %span{title: "项目"}
+            {{ blog.project_name }}
+          %i{class: 'el-icon-date'}
+          %span{title: '创建时间'}
+            {{ dateStr(blog.created_at) }}
+          %span.author
+            %img{':title': "'作者: ' + blog.author.username", ':src': "blog.author.avatar_url"}
+            %a{':href': 'blog.author.web_url'}
+              {{ blog.author.name }}
 
 :css
   #blog-filter {
@@ -57,7 +56,6 @@
   }
 
   #blogs-app > .blogs {
-    border: 1px solid #e5e5e5;
     margin-top: 10px;
   }
 
