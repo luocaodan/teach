@@ -7,7 +7,7 @@ import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/toolbox';
 import 'echarts/lib/component/dataZoom';
-import Insight from './team_project/components/insight.vue'
+import Insight from '../src/team_project/components/insight.vue'
 
 Vue.use(ElementUI);
 Vue.component('v-chart', ECharts);

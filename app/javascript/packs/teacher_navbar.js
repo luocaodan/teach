@@ -1,7 +1,7 @@
 import Vue from 'vue/dist/vue.esm'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import Navbar from './shared/components/teacher_navbar.vue'
+import Navbar from '../src/shared/components/teacher_navbar.vue'
 
 Vue.use(ElementUI);
 

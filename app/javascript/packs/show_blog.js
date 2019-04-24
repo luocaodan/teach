@@ -3,12 +3,12 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import CommonMixin from './shared/components/mixins/common_mixin'
-import mdWrapper from './shared/components/md_wrapper.vue'
-import BlogsService from "./blogs/services/blogs_service";
-import CommentsService from "./comments/services/comments_service";
-import Endpoint from "./tools/endpoint";
-import Moment from "./tools/moment";
+import CommonMixin from '../src/shared/components/mixins/common_mixin'
+import mdWrapper from '../src/shared/components/md_wrapper.vue'
+import BlogsService from "../src/blogs/services/blogs_service";
+import CommentsService from "../src/comments/services/comments_service";
+import Endpoint from "../src/tools/endpoint";
+import Moment from "../src/tools/moment";
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);

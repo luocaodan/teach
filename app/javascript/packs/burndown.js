@@ -9,12 +9,12 @@ import 'echarts/lib/component/toolbox';
 import 'echarts/lib/component/legend';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import SprintsService from './burndown/services/sprints_service';
-import CommonMixin from './shared/components/mixins/common_mixin'
-import EchartsOption from './shared/components/mixins/burnEchartsOption'
-import DetailSprint from './burndown/components/detail_sprint.vue'
-import eventhub from './issues/eventhub'
-import Sprint from './burndown/models/sprint'
+import SprintsService from '../src/burndown/services/sprints_service';
+import CommonMixin from '../src/shared/components/mixins/common_mixin'
+import EchartsOption from '../src/shared/components/mixins/burnEchartsOption'
+import DetailSprint from '../src/burndown/components/detail_sprint.vue'
+import eventhub from '../src/issues/eventhub'
+import Sprint from '../src/burndown/models/sprint'
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);

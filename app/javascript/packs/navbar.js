@@ -3,7 +3,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import Navbar from './shared/components/navbar.vue'
+import Navbar from '../src/shared/components/navbar.vue'
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);

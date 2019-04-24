@@ -1,8 +1,8 @@
 import Vue from 'vue/dist/vue.esm'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import ClassroomStudentService from "./classroom/services/classroom_student_service";
-import AlertMixin from './shared/components/mixins/alert'
+import ClassroomStudentService from "../src/classroom/services/classroom_student_service";
+import AlertMixin from '../src/shared/components/mixins/alert'
 
 Vue.use(ElementUI);
 

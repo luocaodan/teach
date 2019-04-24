@@ -1,7 +1,7 @@
 import Vue from 'vue/dist/vue.esm'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import CommonMixin from './shared/components/mixins/common_mixin'
+import CommonMixin from '../src/shared/components/mixins/common_mixin'
 
 Vue.use(ElementUI);
 

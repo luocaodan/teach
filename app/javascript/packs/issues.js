@@ -1,10 +1,10 @@
 import Vue from 'vue/dist/vue.esm'
-import IssuesFilter from './issues/components/issues_filter.vue'
+import IssuesFilter from '../src/issues/components/issues_filter.vue'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import IssuesMixin from './shared/components/mixins/issues_mixin'
+import IssuesMixin from '../src/shared/components/mixins/issues_mixin'
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);

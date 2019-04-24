@@ -28,8 +28,9 @@ module.exports = function(api) {
       (isProductionEnv || isDevelopmentEnv) && [
         require('@babel/preset-env').default,
         {
-          // 全部转换为 es5
-          forceAllTransforms: true,
+          // 全部转换为 es5 产生的文件过大
+          // forceAllTransforms: true,
+          // useBuiltIns: 'usage' 暂时处于实验阶段，目前不要使用
           useBuiltIns: 'entry',
           modules: false,
           exclude: ['transform-typeof-symbol']

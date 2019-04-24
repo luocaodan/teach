@@ -3,8 +3,8 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import IssuesMixin from './shared/components/mixins/issues_mixin'
-import Issue from './issues/models/issue'
+import IssuesMixin from '../src/shared/components/mixins/issues_mixin'
+import Issue from '../src/issues/models/issue'
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);

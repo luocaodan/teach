@@ -9,13 +9,13 @@ import 'echarts/lib/component/toolbox';
 import 'echarts/lib/component/legend';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import mdWrapper from './shared/components/md_wrapper.vue'
-import CommonMixin from './shared/components/mixins/common_mixin'
-import EchartsOption from './shared/components/mixins/burnEchartsOption'
-import Blog from './blogs/models/blog'
-import BlogsService from "./blogs/services/blogs_service";
-import UploadService from "./shared/services/upload_service";
-import csrf from './shared/components/csrf.vue'
+import mdWrapper from '../src/shared/components/md_wrapper.vue'
+import CommonMixin from '../src/shared/components/mixins/common_mixin'
+import EchartsOption from '../src/shared/components/mixins/burnEchartsOption'
+import Blog from '../src/blogs/models/blog'
+import BlogsService from "../src/blogs/services/blogs_service";
+import UploadService from "../src/shared/services/upload_service";
+import csrf from '../src/shared/components/csrf.vue'
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
