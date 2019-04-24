@@ -1,9 +1,13 @@
-const { environment } = require('@rails/webpacker')
-const vue =  require('./loaders/vue')
-
-environment.loaders.append('vue', vue)
+const {environment} = require('@rails/webpacker')
+const {VueLoaderPlugin} = require('vue-loader')
+const vue = require('./loaders/vue')
 
 // make babel transpile vue-echart
 const babelLoader = environment.loaders.get('babel')
-babelLoader.exclude = /node_modules\/(?!(vue-echarts|resize-detector)\/).*/
+babelLoader.exclude = []
+babelLoader.exclude.push(/node_modules\/(?!(vue-echarts)\/).*/)
+babelLoader.exclude.push(/node_modules\/(?!(resize-detector)\/).*/)
+
+environment.plugins.prepend('VueLoaderPlugin', new VueLoaderPlugin())
+environment.loaders.prepend('vue', vue)
 module.exports = environment
