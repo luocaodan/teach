@@ -3,7 +3,6 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import CommonMixin from '../src/shared/components/mixins/common_mixin'
 import mdWrapper from '../src/shared/components/md_wrapper.vue'
 import BlogsService from "../src/blogs/services/blogs_service";
 import CommentsService from "../src/comments/services/comments_service";
@@ -16,7 +15,6 @@ Vue.use(MavonEditor);
 document.addEventListener('DOMContentLoaded', () => {
   const showBlogApp = new Vue({
     el: '#show-blog-app',
-    mixins: [CommonMixin],
     components: {
       mdWrapper
     },

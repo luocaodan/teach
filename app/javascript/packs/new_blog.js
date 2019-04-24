@@ -10,7 +10,6 @@ import 'echarts/lib/component/legend';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import mdWrapper from '../src/shared/components/md_wrapper.vue'
-import CommonMixin from '../src/shared/components/mixins/common_mixin'
 import EchartsOption from '../src/shared/components/mixins/burnEchartsOption'
 import Blog from '../src/blogs/models/blog'
 import BlogsService from "../src/blogs/services/blogs_service";
@@ -24,7 +23,7 @@ Vue.component('v-chart', ECharts);
 document.addEventListener('DOMContentLoaded', () => {
   const newBlogApp = new Vue({
     el: '#new-blog-app',
-    mixins: [CommonMixin, EchartsOption],
+    mixins: [EchartsOption],
     components: {
       mdWrapper,
       csrf

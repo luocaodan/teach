@@ -10,11 +10,11 @@ import 'echarts/lib/component/legend';
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import SprintsService from '../src/burndown/services/sprints_service';
-import CommonMixin from '../src/shared/components/mixins/common_mixin'
 import EchartsOption from '../src/shared/components/mixins/burnEchartsOption'
 import DetailSprint from '../src/burndown/components/detail_sprint.vue'
 import eventhub from '../src/issues/eventhub'
 import Sprint from '../src/burndown/models/sprint'
+import IssuesService from "../src/issues/services/issues_service";
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     components: {
       DetailSprint
     },
-    mixins: [CommonMixin, EchartsOption],
+    mixins: [EchartsOption],
     data() {
       return {
         milestone: new Sprint(),
@@ -42,6 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       eventhub.$on('updateSprint', this.updateSprint);
+
+      const navbar = document.getElementById('navbar');
+      this.issuesService = new IssuesService({
+        issuesEndpoint: navbar.dataset.issuesEndpoint
+      });
 
       this.initSprint();
       this.updateBurnInfo();

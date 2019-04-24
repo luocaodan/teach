@@ -85,7 +85,8 @@ export default {
       this.alert('未实现');
     },
     getIssuesEndpoint() {
-      this.noImpl();
+      const navbar = document.getElementById('navbar');
+      return navbar.dataset.issuesEndpoint;
     },
     updateIssuesCallback() {
       this.noImpl();

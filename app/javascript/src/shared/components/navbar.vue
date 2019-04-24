@@ -64,6 +64,8 @@
       title="新建问题"
       top="50px"
       :visible.sync="dialogVisible"
+      v-loading="loading"
+      element-loading-text="创建中"
       width="80%">
       <new-issue ref="newIssue" :issue="newIssue"></new-issue>
       <span slot="footer" class="dialog-footer">
@@ -76,8 +78,11 @@
 <script>
   import NewIssue from './new_issue.vue'
   import Issue from '../../issues/models/issue'
+  import IssuesService from "../../issues/services/issues_service";
+  import AlertMixin from '../../shared/components/mixins/alert'
 
   export default {
+    mixins: [AlertMixin],
     components: {
       NewIssue,
     },
@@ -91,6 +96,8 @@
         gitlabHost: '',
         dialogVisible: false,
         newIssue: new Issue(),
+        // 创建 Issue 时的 loading
+        loading: false
       };
     },
     mounted() {
@@ -160,14 +167,42 @@
       addIssue(formName) {
         this.$refs['newIssue'].$refs[formName].validate((valid) => {
           if (valid) {
-            this.dialogVisible = false;
             this.newIssue.state = 'opened';
-            window.eventhub.$emit('addNewIssue', this.newIssue);
+            if (window.eventhub) {
+              // issues 和 boards 中创建
+              this.dialogVisible = false;
+              window.eventhub.$emit('addNewIssue', this.newIssue);
+            }
+            else {
+              // 其他页面通过导航栏创建
+              this.addNewIssue(this.newIssue);
+            }
             this.newIssue = new Issue();
           } else {
             return false;
           }
         })
+      },
+      addNewIssue(issue) {
+        this.loading = true;
+        const navbar = document.getElementById('navbar');
+        const issuesService = new IssuesService({
+          issuesEndpoint: navbar.dataset.issuesEndpoint
+        });
+        issuesService
+          .newIssue(issue.toObj())
+          .then(res => res.data)
+          .then((data) => {
+            let issue = Issue.valueOf(data);
+            this.success('创建成功');
+            this.loading = false;
+            this.dialogVisible = false;
+          })
+          .catch(e => {
+            this.alert('创建失败');
+            this.loading = false;
+            this.dialogVisible = false;
+          })
       }
     }
   }

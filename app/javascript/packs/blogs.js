@@ -1,7 +1,6 @@
 import Vue from 'vue/dist/vue.esm'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import CommonMixin from '../src/shared/components/mixins/common_mixin'
 import BlogsService from "../src/blogs/services/blogs_service";
 import Moment from "../src/tools/moment";
 
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const blogsApp = new Vue({
     el: '#blogs-app',
     components: {},
-    mixins: [CommonMixin],
     data() {
       return {
         projects: [],

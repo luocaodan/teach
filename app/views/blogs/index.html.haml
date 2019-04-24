@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'blogs'
 
-#blogs-app.small-container{data: {issues: issues_data, blogs: blogs_data}}
+#blogs-app.small-container{data: {blogs: blogs_data}}
   #blog-filter.clearFloat
     %el-radio-group.filter-item{'v-model': 'searchParams.type', size: 'mini'}
       %el-radio-button{'label': 'blog'}

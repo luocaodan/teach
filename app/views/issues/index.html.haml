@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'issues'
 
-#issues-app{data: issues_data, 'v-loading': 'loading', 'element-loading-text': '加载中'}
+#issues-app{'v-loading': 'loading', 'element-loading-text': '加载中'}
   #filter
     %issues-filter
   .box

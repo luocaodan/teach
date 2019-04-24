@@ -3,7 +3,7 @@
 - content_for :styles do
   = stylesheet_pack_tag 'new_blog'
 
-#new-blog-app.small-container{data: {issues: issues_data, blogs: new_blog_data}, 'v-loading': 'loading', 'element-loading-text': '加载中'}
+#new-blog-app.small-container{data: {blogs: new_blog_data}, 'v-loading': 'loading', 'element-loading-text': '加载中'}
   %el-form{ref: 'newBlogForm', 'v-if': 'blog', ':model': 'blog', ':rules': 'rules', 'label-width': '80px', action: classroom_blogs_path, method: 'post'}
     -# 项目 | 冲刺
     %el-form-item{':label': 'blogContainerName', 'prop': 'project_id'}

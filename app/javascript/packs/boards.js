@@ -92,10 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
       eventhub.$on('updateIssueState', this.updateIssueState);
     },
     methods: {
-      getIssuesEndpoint() {
-        const $boardsApp = document.getElementById('boards-app');
-        return $boardsApp.dataset.endpoint;
-      },
       updateIssuesCallback() {
         this.todoIssues = this.issues.filter((item) => item.state === 'To Do');
         this.doingIssues = this.issues.filter((item) => item.state === 'Doing');

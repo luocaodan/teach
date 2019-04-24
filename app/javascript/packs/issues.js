@@ -35,10 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
       this.asideWidth = 400;
     },
     methods: {
-      getIssuesEndpoint() {
-        const $issuesApp = document.getElementById('issues-app');
-        return $issuesApp.dataset.endpoint;
-      },
       updateIssuesCallback() {
         // do nothing
       },

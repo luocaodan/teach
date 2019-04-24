@@ -23,6 +23,7 @@ module ApplicationHelper
       infos << info
     end
     data['projects'] = infos.to_json
+    data['issues-endpoint'] = issues_url(format: :json)
     data
   end
 

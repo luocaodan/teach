@@ -1,7 +1,7 @@
 import axios from 'axios/index'
 import Endpoint from "../../tools/endpoint";
 
-export default class IssuesService {
+export default class SprintsService {
   constructor({sprintsEndpoint}) {
     this.sprintsEndpoint = sprintsEndpoint;
   }

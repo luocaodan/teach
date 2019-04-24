@@ -144,9 +144,6 @@
           priority: [],
         },
       }
-    },
-    mounted() {
-      this.editorMounted = true;
     }
   }
 </script>
