@@ -15,15 +15,18 @@ import Blog from '../src/blogs/models/blog'
 import BlogsService from "../src/blogs/services/blogs_service";
 import UploadService from "../src/shared/services/upload_service";
 import csrf from '../src/shared/components/csrf.vue'
+import AlertMixin from "../src/shared/components/mixins/alert";
+
 
 Vue.use(ElementUI);
+Vue.use(AlertPlugin)
 Vue.use(MavonEditor);
 Vue.component('v-chart', ECharts);
 
 document.addEventListener('DOMContentLoaded', () => {
   const newBlogApp = new Vue({
     el: '#new-blog-app',
-    mixins: [EchartsOption],
+    mixins: [EchartsOption, AlertMixin],
     components: {
       mdWrapper,
       csrf
@@ -153,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
           })
           .catch((e) => {
-            this.$message.error('上传失败');
+            this.alert('上传失败');
           });
       },
       isValid() {

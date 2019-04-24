@@ -1,6 +1,7 @@
 import {mavonEditor} from 'mavon-editor'
 import UploadService from '../../services/upload_service'
 import axios from 'axios/index'
+import AlertMixin from "./alert";
 
 export default {
   data() {
@@ -41,6 +42,7 @@ export default {
       markdownIt: null,
     }
   },
+  mixins: [AlertMixin],
   mounted() {
     this.enableGFM();
   },
@@ -108,7 +110,7 @@ export default {
         })
         .catch((e) => {
           this.$refs.mdEditor.$refs.toolbar_left.$imgDel(pos);
-          this.$message.error('上传失败');
+          this.alert('上传失败');
           this.loading = false;
         });
     },
@@ -116,10 +118,10 @@ export default {
       // todo
     },
     getProjectId() {
-      this.$message.error('project id 未实现')
+      this.alert('project id 未实现')
     },
     getProjectUrl() {
-      this.$message.error('project url 未实现')
+      this.alert('project url 未实现')
     }
   }
 }

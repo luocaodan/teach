@@ -52,6 +52,7 @@
 <script>
   import axios from 'axios/index'
   import moment from 'moment/moment'
+  import AlertMixin from "../../shared/components/mixins/alert";
 
   export default {
     data() {
@@ -93,6 +94,7 @@
         }
       }
     },
+    mixins: [AlertMixin],
     computed: {
       currentMN() {
         if (this.currentMemberIndex === 'all') {
@@ -196,7 +198,7 @@
             this.$refs.contributionChart.hideLoading();
           })
           .catch(e => {
-            this.$message.error('数据加载错误')
+            this.alert('数据加载错误')
           })
       },
       memberFmt(params) {

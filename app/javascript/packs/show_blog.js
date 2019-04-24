@@ -8,12 +8,14 @@ import BlogsService from "../src/blogs/services/blogs_service";
 import CommentsService from "../src/comments/services/comments_service";
 import Endpoint from "../src/tools/endpoint";
 import Moment from "../src/tools/moment";
+import AlertMixin from "../src/shared/components/mixins/alert";
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
 
 document.addEventListener('DOMContentLoaded', () => {
   const showBlogApp = new Vue({
+    mixins: [AlertMixin],
     el: '#show-blog-app',
     components: {
       mdWrapper

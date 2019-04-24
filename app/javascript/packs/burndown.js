@@ -15,6 +15,7 @@ import DetailSprint from '../src/burndown/components/detail_sprint.vue'
 import eventhub from '../src/issues/eventhub'
 import Sprint from '../src/burndown/models/sprint'
 import IssuesService from "../src/issues/services/issues_service";
+import AlertMixin from "../src/shared/components/mixins/alert";
 
 Vue.use(ElementUI);
 Vue.use(MavonEditor);
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     components: {
       DetailSprint
     },
-    mixins: [EchartsOption],
+    mixins: [EchartsOption, AlertMixin],
     data() {
       return {
         milestone: new Sprint(),

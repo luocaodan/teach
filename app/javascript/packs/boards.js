@@ -12,7 +12,6 @@ Vue.use(MavonEditor);
 document.addEventListener('DOMContentLoaded', () => {
   const boardsApp = new Vue({
     el: '#boards-app',
-    components: {},
     data() {
       return {
         detailVisible: false,
