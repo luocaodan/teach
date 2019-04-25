@@ -6,6 +6,9 @@ ruby '2.5.3'
 # http client
 gem 'rest-client', '~> 2.0', '>= 2.0.2'
 
+# V8 engine
+gem 'mini_racer'
+
 # uuid
 gem 'uuidtools'
 

@@ -224,7 +224,6 @@
         const isDateEqual = (strA, strB) => {
           const a = moment(strA, 'YYYY-MM-DD').toDate();
           const b = moment(strB, 'YYYY-MM-DD').toDate();
-          console.log(a, b)
           return a.getTime() === b.getTime();
         };
         // 填充贡献为 0 的日期
