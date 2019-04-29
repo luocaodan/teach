@@ -9,12 +9,15 @@
     "axios": "^0.18.0",
     "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.7.2",
+    "highlight.js": "^9.15.6",
     "mavon-editor": "^2.7.3",
     "moment": "^2.24.0",
+    "monaco-editor-webpack-plugin": "^1.7.0",
     "rails-ujs": "^5.2.2-1",
     "vue": "^2.6.10",
     "vue-echarts": "^4.0.0",
     "vue-loader": "^15.7.0",
+    "vue-monaco": "^0.3.1",
     "vue-template-compiler": "^2.6.10"
   },
   "devDependencies": {

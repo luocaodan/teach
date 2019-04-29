@@ -90,6 +90,10 @@
             .page-title-controls
               %a.el-button.el-button--mini{href: new_classroom_team_project_path(classroom_id: params[:id])}
                 创建团队项目
+          - if teacher?
+            .page-title-controls
+              %a.el-button.el-button--mini{href: classroom_team_events_path(classroom_id: params[:id])}
+                团队事件
         .content-list
           - @team_projects.each do |project|
             .card

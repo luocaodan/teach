@@ -1,0 +1,15 @@
+- content_for :scripts do
+  = javascript_pack_tag 'show_team_event'
+- content_for :styles do
+  = stylesheet_pack_tag 'show_team_event'
+
+#show-team-event-app.small-container
+  .page-title-holder
+    .page-title= @event.name
+    .page-title-controls
+      %a.el-button{href: edit_classroom_team_event_path}
+        编辑
+      = link_to '删除', classroom_team_event_path, method: :delete, data: {confirm: '确定删除？'}, class: 'el-button el-button--danger'
+  %p.info= @event.description
+  %pre.hljs.javascript
+    %code= @event.code

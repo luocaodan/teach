@@ -1,0 +1,31 @@
+- content_for :scripts do
+  = javascript_pack_tag 'new_team_event'
+- content_for :styles do
+  = stylesheet_pack_tag 'new_team_event'
+
+#new-team-event-app.small-container{data: {event: @event.to_json}}
+  .page-title-holder
+    .page-title 创建团队事件
+  %el-form{':model': "event", ref: 'event', ':rules': 'rules', 'label-width': '120px', action: classroom_team_events_path, method: 'post'}
+    - @errors.each do |error|
+      %el-alert.error-item{type: 'error', 'title': error}
+    %csrf
+    %el-form-item{label: '团队事件名称', prop: 'name'}
+      %el-input{'v-model': 'event.name', name: 'event[name]'}
+    %el-form-item{label: '团队事件描述', prop: 'description'}
+      %el-input{'v-model': 'event.description', name: 'event[description]', type: 'textarea', ':autosize': '{minRows: 4, maxRows: 8}'}
+    %el-form-item{label: '团队事件代码', prop: 'code'}
+      %span.info
+        %strong 创建事件前，请阅读
+        %a{':href': 'illustrateUrl'} 团队事件说明
+      %monaco-editor.editor{'v-model': 'event.code', language: 'javascript', ':options': 'vscodeOptions'}
+      %textarea{':value': 'event.code', name: 'event[code]', style: 'display: none'}
+    %el-form-item.clearFloat
+      %a.el-button{href: classroom_team_events_path} 取消
+      %el-button.floatRight{'@click': 'submitForm', type: 'primary'} 创建
+
+:css
+  .editor {
+    height: 400px;
+    border: 1px solid #eee;
+  }

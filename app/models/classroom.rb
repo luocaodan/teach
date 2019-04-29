@@ -5,6 +5,7 @@ class Classroom < ApplicationRecord
   has_many :auto_test_projects, dependent: :destroy
   has_many :team_projects, dependent: :destroy
   has_many :blogs, dependent: :destroy
+  has_many :team_events, dependent: :destroy
 
   def initialize(*args)
     super

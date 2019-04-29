@@ -10,4 +10,12 @@ babelLoader.exclude.push(/node_modules\/(?!(resize-detector)\/).*/)
 
 environment.plugins.prepend('VueLoaderPlugin', new VueLoaderPlugin())
 environment.loaders.prepend('vue', vue)
+
+// add monacoEditor webpack plugin
+const MonacoEditorPlugin = require('monaco-editor-webpack-plugin')
+environment.plugins.prepend('MonacoEditorPlugin', new MonacoEditorPlugin({
+  // 不要删除 typescript
+  // https://github.com/Microsoft/monaco-editor-webpack-plugin/issues/27
+  languages: ['javascript', 'typescript']
+}))
 module.exports = environment

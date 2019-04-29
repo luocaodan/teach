@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_13_085900) do
+ActiveRecord::Schema.define(version: 2019_04_26_025631) do
 
   create_table "auto_test_projects", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -97,11 +97,24 @@ ActiveRecord::Schema.define(version: 2019_04_13_085900) do
     t.index ["user_id"], name: "index_student_test_records_on_user_id"
   end
 
+  create_table "team_events", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "code"
+    t.integer "classroom_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "error"
+    t.index ["classroom_id"], name: "index_team_events_on_classroom_id"
+    t.index ["name"], name: "index_team_events_on_name", unique: true
+  end
+
   create_table "team_projects", force: :cascade do |t|
     t.integer "gitlab_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "classroom_id"
+    t.string "state"
     t.index ["classroom_id"], name: "index_team_projects_on_classroom_id"
   end
 

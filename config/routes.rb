@@ -60,6 +60,10 @@ Rails.application.routes.draw do
         end
       end
       get 'insight', to: 'insight#show'
+
+      collection do
+        resources :team_events
+      end
     end
 
     resources :blogs do
