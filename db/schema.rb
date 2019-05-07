@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_26_025631) do
+ActiveRecord::Schema.define(version: 2019_04_29_065208) do
 
   create_table "auto_test_projects", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -116,6 +116,17 @@ ActiveRecord::Schema.define(version: 2019_04_26_025631) do
     t.integer "classroom_id"
     t.string "state"
     t.index ["classroom_id"], name: "index_team_projects_on_classroom_id"
+  end
+
+  create_table "team_states", force: :cascade do |t|
+    t.string "state"
+    t.integer "team_event_id"
+    t.integer "team_project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_event_id", "team_project_id"], name: "index_team_states_on_team_event_id_and_team_project_id", unique: true
+    t.index ["team_event_id"], name: "index_team_states_on_team_event_id"
+    t.index ["team_project_id"], name: "index_team_states_on_team_project_id"
   end
 
   create_table "users", force: :cascade do |t|

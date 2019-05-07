@@ -6,6 +6,12 @@ ruby '2.5.3'
 # http client
 gem 'rest-client', '~> 2.0', '>= 2.0.2'
 
+# active job queue
+gem 'sidekiq'
+
+# whenever for cron job
+gem 'whenever', require: false
+
 # V8 engine
 gem 'mini_racer'
 

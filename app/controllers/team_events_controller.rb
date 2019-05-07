@@ -7,6 +7,7 @@ class TeamEventsController < ApplicationController
   def create
     @event = classroom.team_events.new event_params
     if @event.save
+      TeamEventsExecJob.perform_later classroom.team_project_ids, [@event]
       redirect_to classroom_team_events_path
     else
       @errors = get_record_errors @event
@@ -16,6 +17,7 @@ class TeamEventsController < ApplicationController
 
   def update
     if current_event.update event_params
+      TeamEventsExecJob.perform_later classroom.team_project_ids, [current_event]
       redirect_to classroom_team_event_path
     else
       @errors = get_record_errors @event

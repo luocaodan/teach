@@ -1,6 +1,6 @@
 class ContributionService
 
-  def initialize(team_project_id, member_gitlab_id, time_range)
+  def initialize(team_project_id, member_gitlab_id = nil, time_range = nil)
     @team = TeamProject.find(team_project_id)
     @member = User.find_by gitlab_id: member_gitlab_id
     @time_range = time_range

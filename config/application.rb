@@ -19,5 +19,7 @@ module Teach
     # /lib autoload
     config.eager_load_paths << "#{Rails.root}/lib"
     config.autoload_paths += config.eager_load_paths
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end

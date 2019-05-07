@@ -14,5 +14,7 @@
         .card-title.clearFloat
           %span
             %a{href: classroom_team_event_path(id: event.id)}= event.name
+          - if event.error
+            %el-tag.floatRight{type: 'danger'}= event.error
         .card-info
           = event.description

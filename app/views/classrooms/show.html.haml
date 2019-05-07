@@ -99,10 +99,24 @@
             .card
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
-                -if teacher? || my_team?(project)
-                  .floatRight
+                .floatRight
+                  %el-dropdown{trigger: 'click'}
+                    %el-badge{':value': project['states'].size, ':max': 10}
+                      %el-button 团队状态
+                    %el-dropdown-menu{slot: 'dropdown'}
+                      - project['states'].each do |state|
+                        %el-dropdown-item.event-item
+                          %i.el-icon-circle-plus-outline
+                          =state
+                  -if teacher? || my_team?(project)
                     %a.el-button.el-button-mini{href: "#{project['web_url']}/edit"} 编辑
                     %a.el-button.el-button-mini{href: team_panel_path(project)} 团队面板
               .card-info= project['description']
 
+:css
+  .event-item {
+    cursor: default;
+    pointer-events: none;
+    color: #409EFF;
+  }
 

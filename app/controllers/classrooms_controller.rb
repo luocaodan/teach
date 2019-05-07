@@ -90,6 +90,10 @@ class ClassroomsController < ApplicationController
     end
     if @classroom_record.team_project_subgroup_id
       @team_projects = groups_service.get_projects @classroom_record.team_project_subgroup_id
+      @team_projects.each do |team_project|
+        record = TeamProject.find_by gitlab_id: team_project['id']
+        team_project['states'] = record.team_states.collect(&:state).compact
+      end
     end
     users = groups_service.get_members @classroom_record.gitlab_group_id
     # 所有 student

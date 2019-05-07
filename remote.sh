@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -e
-# 服务端脚本
-# rvm 环境
+# 服务端脚本 # rvm 环境
 source ~/.profile
 export RAILS_ENV=production
 project=$1
@@ -36,7 +35,10 @@ bundle exec rake db:create
 echo "运行数据库迁移...."
 bundle exec rails db:migrate > /dev/null
 
-# 必要文件夹
+# 更新 cron jobs
+whenever -i
+
+# 创建必要文件夹
 mkdir -p shared/log shared/pids shared/sockets
 
 # 运行服务器

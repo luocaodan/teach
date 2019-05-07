@@ -66,6 +66,8 @@ class WebhookController < ApplicationController
         committed_at: commit['timestamp']
       )
     end
+    # 执行事件
+    TeamEventsExecJob.perform_later [team_project.id], classroom.team_events
   end
 
   def issue_finish_handler(event)
@@ -95,6 +97,8 @@ class WebhookController < ApplicationController
       ).id
       issue_record.save
     end
+    # 执行事件
+    TeamEventsExecJob.perform_later [team_project.id], classroom.team_events
   end
 
   def issue_reopen_handler(event)
