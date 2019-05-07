@@ -15,6 +15,12 @@ if [[ -d ${project} ]];then
 			kill ${pid}
 		fi
 	fi
+	if [[ -f ${project}/shared/pids/sidekiq.pid ]];then
+		pid=`cat shared/pids/sidekiq.pid`
+		if [[ -d /proc/${pid} ]];then
+			kill ${pid}
+		fi
+	fi
 	cd ..
 	# 删除存在的项目
 	rm -rf ${project}
@@ -44,5 +50,9 @@ mkdir -p shared/log shared/pids shared/sockets
 # 运行服务器
 echo "启动服务器...."
 puma
+
+# 启动 sidekiq
+echo "启动 sidekiq"
+bundle exec sidekiq -d -e production
 
 echo "服务器启动成功"

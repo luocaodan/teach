@@ -1,0 +1,7 @@
+:verbose: false
+:concurrency: 5 # 并发数
+:pidfile: ./shared/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log # 输出的日志地址
+:timeout: 30
+:queues:
+  - default
