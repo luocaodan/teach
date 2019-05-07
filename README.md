@@ -8,6 +8,10 @@ sshd 用于 git
 ```bash
 sudo apt install openssh-server
 ```
+### redis
+```bash
+sudo apt-get install redis-server
+```
 ### GitLab
 安装GitLab
 #### 安装依赖

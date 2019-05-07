@@ -53,7 +53,7 @@ class TeamEventsExecJob < ApplicationJob
           state = ctx.eval "event(#{deps.join(',')})"
           team_state.update state: state
           team_event.update error: nil
-        rescue MiniRacer::RuntimeError => e
+        rescue MiniRacer::Error => e
           event_errors[index] = true
           team_event.update error: e.message
         end
