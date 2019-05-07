@@ -9,6 +9,9 @@ yarn install > /dev/null
 # 编译 Assets
 echo "编译 Assets...."
 rm -rf public/packs
+rm -rf public/assets
+
+export NODE_OPTIONS="--max-old-space-size=2048"
 RAILS_ENV=production rake assets:precompile > /dev/null
 
 ssh deploy@10.2.28.170 <<EOF
