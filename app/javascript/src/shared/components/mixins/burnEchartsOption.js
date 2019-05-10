@@ -24,7 +24,7 @@ export default {
       const guideData = this.getGuideData(burnData);
       const day = 3600 * 24;
       const start = toX(localDateToTimestamp(this.milestone.start_date));
-      const end = toX(localDateToTimestamp(this.milestone.due_date));
+      const end = toX(localDateToTimestamp(this.milestone.due_date)) + day;
       const tmp = Math.max(end, this.roundDate(burnData[burnData.length-1][0])) - start;
       const xAxisInterval = Math.ceil(tmp / day / 10) * day;
 

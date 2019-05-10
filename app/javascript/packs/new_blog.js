@@ -16,10 +16,10 @@ import BlogsService from "../src/blogs/services/blogs_service";
 import UploadService from "../src/shared/services/upload_service";
 import csrf from '../src/shared/components/csrf.vue'
 import AlertMixin from "../src/shared/components/mixins/alert";
+import IssuesService from "../src/issues/services/issues_service";
 
 
 Vue.use(ElementUI);
-Vue.use(AlertPlugin)
 Vue.use(MavonEditor);
 Vue.component('v-chart', ECharts);
 
@@ -74,10 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
     mounted() {
-      const $app = this.getContainer();
+      const $app = this.$el;
       this.type = $app.dataset.blogsType;
       this.blogsService = new BlogsService({
         blogsEndpoint: $app.dataset.blogsEndpoint
+      });
+      const navbar = document.getElementById('navbar');
+      this.issuesService = new IssuesService({
+        issuesEndpoint: navbar.dataset.issuesEndpoint
       });
       this.blog = new Blog(this.type);
       const $navbar = document.getElementById('navbar');

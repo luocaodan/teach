@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
     mounted() {
-      const $app = this.getContainer();
+      const $app = this.$el;
       this.blogsService = new BlogsService({
         blogsEndpoint: $app.dataset.blogsEndpoint
       });

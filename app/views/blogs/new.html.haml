@@ -1,9 +1,11 @@
 - content_for :scripts do
-  = javascript_pack_tag 'ew_blog'
+  = javascript_pack_tag 'new_blog'
 - content_for :styles do
   = stylesheet_pack_tag 'new_blog'
 
 #new-blog-app.small-container{data: {blogs: new_blog_data}, 'v-loading': 'loading', 'element-loading-text': '加载中'}
+  .page-title-holder
+    .page-title 创建博客
   %el-form{ref: 'newBlogForm', 'v-if': 'blog', ':model': 'blog', ':rules': 'rules', 'label-width': '80px', action: classroom_blogs_path, method: 'post'}
     -# 项目 | 冲刺
     %el-form-item{':label': 'blogContainerName', 'prop': 'project_id'}
@@ -33,11 +35,6 @@
       %el-button{'type': 'primary', '@click': 'createChart'} 确认生成并创建 Daily Scrum
 
 :css
-  #new-blog-app > * {
-    margin: 20px auto;
-    min-width: 500px;
-  }
-
   .burnchart {
     overflow: auto;
   }

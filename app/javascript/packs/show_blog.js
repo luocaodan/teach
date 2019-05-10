@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mdWrapper
     },
     mounted() {
-      const $app = this.getContainer();
+      const $app = this.$el;
       const blog = JSON.parse($app.dataset.blog);
       const pathname = window.location.pathname;
       blog.code = '';
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
               if (data === 'success') {
                 this.success('删除成功');
-                const $app = this.getContainer();
+                const $app = this.$el;
                 window.location.href = Endpoint.getPrefix($app.dataset.blogsEndpoint);
               }
               else {
