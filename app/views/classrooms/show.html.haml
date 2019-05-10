@@ -100,7 +100,7 @@
               .card-title.clearFloat
                 %a{href: project['web_url']}= project['name']
                 .floatRight
-                  %el-dropdown{trigger: 'click'}
+                  %el-dropdown.team-states{trigger: 'click'}
                     %el-badge{':value': project['states'].size, ':max': 10}
                       %el-button 团队状态
                     %el-dropdown-menu{slot: 'dropdown'}
@@ -118,5 +118,9 @@
     cursor: default;
     pointer-events: none;
     color: #409EFF;
+  }
+
+  .team-states {
+    margin-right: 10px;
   }
 
