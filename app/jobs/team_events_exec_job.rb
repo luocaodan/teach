@@ -51,7 +51,9 @@ class TeamEventsExecJob < ApplicationJob
           end
           # 执行
           state = ctx.eval "event(#{deps.join(',')})"
-          team_state.update state: state
+          if state && !state.empty?
+            team_state.update state: state
+          end
           team_event.update error: nil
         rescue MiniRacer::Error => e
           event_errors[index] = true
