@@ -4,4 +4,6 @@ class TeamProject < ApplicationRecord
   has_many :contribution_commits, dependent: :destroy
   has_many :contribution_issues, dependent: :destroy
   has_many :team_states, dependent: :destroy
+
+  validates :gitlab_id, presence: true, uniqueness: true
 end

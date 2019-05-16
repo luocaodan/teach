@@ -1,7 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  project_id: 1
+  gitlab_id: 1
+  classroom: one
 
 two:
-  project_id: 1
+  gitlab_id: 2
+  classroom: two

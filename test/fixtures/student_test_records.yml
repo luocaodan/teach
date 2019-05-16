@@ -2,14 +2,14 @@
 
 one:
   project_id: 1
-  forked_id: 1
-  student: MyString
   score: MyString
   unittest: MyString
+  auto_test_project: one
+  user: one
 
 two:
-  project_id: 1
-  forked_id: 1
-  student: MyString
+  project_id: 2
   score: MyString
   unittest: MyString
+  auto_test_project: two
+  user: two

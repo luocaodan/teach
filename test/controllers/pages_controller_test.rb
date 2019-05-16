@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class PagesControllerTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
+  test "get main" do
+    assert true
+  end
 end

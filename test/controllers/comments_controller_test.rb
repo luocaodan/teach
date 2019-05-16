@@ -1,7 +1,22 @@
 require 'test_helper'
 
 class CommentsControllerTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
+  test "should get index" do
+    assert true
+  end
+
+
+  test "should get create" do
+    assert true
+  end
+
+
+  test "should get update" do
+    assert true
+  end
+
+
+  test "should get destroy" do
+    assert true
+  end
 end

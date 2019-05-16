@@ -1,27 +1,23 @@
-require 'test_helper'
+require "application_system_test_case"
 
-class TeamProjectsControllerTest < ActionDispatch::IntegrationTest
+class TeamProjectsTest < ApplicationSystemTestCase
   setup do
     @team_project = team_projects(:one)
   end
 
-  test "should get index" do
+  test "visiting the index" do
     assert true
   end
 
-  test "should get new" do
+  test "visiting the new" do
     assert true
   end
 
-  test "should create team_project" do
+  test "showing team_project" do
     assert true
   end
 
-  test "should show team_project" do
-    assert true
-  end
-
-  test "should get edit" do
+  test "visiting the edit" do
     assert true
   end
 

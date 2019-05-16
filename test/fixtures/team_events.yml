@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
+  name: event1
   description: MyString
   code: MyString
   classroom: one
 
 two:
-  name: MyString
+  name: event2
   description: MyString
   code: MyString
   classroom: two

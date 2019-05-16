@@ -32,6 +32,7 @@
 
 # ignore idea files
 .idea/
+*.iml
 
 /public/packs
 /public/packs-test

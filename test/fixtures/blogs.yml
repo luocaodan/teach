@@ -3,11 +3,6 @@
 one:
   gitlab_id: 1
   project_id: 1
-  type: 
-  user_id: 1
-
-two:
-  gitlab_id: 1
-  project_id: 1
-  type: 
-  user_id: 1
+  blog_type: blog
+  user: one
+  classroom: one

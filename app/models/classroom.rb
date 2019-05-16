@@ -7,6 +7,8 @@ class Classroom < ApplicationRecord
   has_many :blogs, dependent: :destroy
   has_many :team_events, dependent: :destroy
 
+  validates :gitlab_group_id, presence: true, uniqueness: true
+
   def initialize(*args)
     super
     @personal = true
