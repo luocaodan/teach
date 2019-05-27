@@ -7,6 +7,7 @@ class TimedTeamEventsJobTest < ActiveJob::TestCase
 
   test "event is executed" do
     TimedTeamEventsJob.perform_now
+    # exec success
     assert true
   end
 end

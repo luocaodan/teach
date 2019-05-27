@@ -14,5 +14,6 @@ class ClassroomTest < ActiveSupport::TestCase
   test "should save with gitlab_group_id" do
     classroom = Classroom.new gitlab_group_id: 2
     assert classroom.save
+    assert classroom.to_json
   end
 end

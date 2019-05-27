@@ -2,6 +2,8 @@
 
 one:
   gitlab_id: 1
+  classroom: one
 
 two:
   gitlab_id: 2
+  classroom: one

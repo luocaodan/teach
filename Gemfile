@@ -3,6 +3,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.3'
 
+# coverage
+gem 'simplecov', require: false, group: :test
+
 # http client
 gem 'rest-client', '~> 2.0', '>= 2.0.2'
 

@@ -3,7 +3,7 @@
 one:
   name: event1
   description: MyString
-  code: MyString
+  code: function event(commits, issues, weights) {return 'haha'}
   classroom: one
 
 two:

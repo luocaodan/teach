@@ -2,6 +2,7 @@
 
 one:
   weight: 1
+  contribution_issue_id: 1
 
 two:
   weight: 1

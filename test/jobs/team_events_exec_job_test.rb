@@ -7,6 +7,7 @@ class TeamEventsExecJobTest < ActiveJob::TestCase
 
   test "event is executed" do
     TeamEventsExecJob.perform_now @event.classroom.team_project_ids, [@event]
+    # exec success
     assert true
   end
 end
