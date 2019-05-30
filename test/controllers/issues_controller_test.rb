@@ -1,15 +1,21 @@
 require 'test_helper'
 
 class IssuesControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @i_id = issues(:one)
+  end
   test "should get index" do
-    assert true
+    get issues_url
+    assert_equal 'index', @controller.action_name
   end
 
   test "should get create" do
-    assert true
+    post issues_url
+    assert_equal 'create', @controller.action_name
   end
 
   test "should get update" do
-    assert true
+    put issue_url(id: @i_id)
+    assert_equal 'update', @controller.action_name
   end
 end

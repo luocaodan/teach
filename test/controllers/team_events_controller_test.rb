@@ -2,34 +2,42 @@ require 'test_helper'
 
 class TeamEventsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @team_event = team_events(:one)
+    @c_id = classrooms(:one).id
+    @e_id = team_events(:one).id
   end
 
   test "should get index" do
-    assert true
+    get classroom_team_events_url(classroom_id: @c_id)
+    assert_equal 'index', @controller.action_name
   end
 
   test "should get new" do
-    assert true
+    get new_classroom_team_event_url(classroom_id: @c_id)
+    assert_equal 'new', @controller.action_name
   end
 
   test "should create team_event" do
-    assert true
+    post classroom_team_events_url(classroom_id: @c_id)
+    assert_equal 'create', @controller.action_name
   end
 
   test "should show team_event" do
-    assert true
+    get classroom_team_event_url(classroom_id: @c_id, id: @e_id)
+    assert_equal 'show', @controller.action_name
   end
 
   test "should get edit" do
-    assert true
+    get edit_classroom_team_event_url(classroom_id: @c_id, id: @e_id)
+    assert_equal 'edit', @controller.action_name
   end
 
   test "should update team_event" do
-    assert true
+    put classroom_team_event_url(classroom_id: @c_id, id: @e_id)
+    assert_equal 'update', @controller.action_name
   end
 
   test "should destroy team_event" do
-    assert true
+    delete classroom_team_event_url(classroom_id: @c_id, id: @e_id)
+    assert_equal 'destroy', @controller.action_name
   end
 end

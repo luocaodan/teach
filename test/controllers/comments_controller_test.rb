@@ -2,21 +2,25 @@ require 'test_helper'
 
 class CommentsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
-    assert true
+    get blog_comments_url(blog_id: 1, format: :json)
+    assert_equal 'index', @controller.action_name
   end
 
 
   test "should get create" do
-    assert true
+    post blog_comments_url(blog_id: 1, format: :json)
+    assert_equal 'create', @controller.action_name
   end
 
 
   test "should get update" do
-    assert true
+    put blog_comment_url(blog_id: 1, id: 1, format: :json)
+    assert_equal 'update', @controller.action_name
   end
 
 
   test "should get destroy" do
-    assert true
+    delete blog_comment_url(blog_id: 1, id: 1, format: :json)
+    assert_equal 'destroy', @controller.action_name
   end
 end

@@ -1,31 +1,42 @@
 require 'test_helper'
 
 class ClassroomsControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @c_id = classrooms(:one)
+  end
+
   test "should get index" do
-    assert true
+    get classrooms_url
+    assert_equal 'index', @controller.action_name
   end
 
   test "should get new" do
-    assert true
+    get new_classroom_url
+    assert_equal 'new', @controller.action_name
   end
 
   test "should get create" do
-    assert true
+    post classrooms_url
+    assert_equal 'create', @controller.action_name
   end
 
   test "should get destroy" do
-    assert true
+    delete classroom_url(id: @c_id)
+    assert_equal 'destroy', @controller.action_name
   end
 
   test "should get show" do
-    assert true
+    get classroom_url(id: @c_id)
+    assert_equal 'show', @controller.action_name
   end
 
   test "should get join" do
-    assert true
+    get join_classroom_url(id: @c_id)
+    assert_equal 'join', @controller.action_name
   end
 
   test "should get exit" do
-    assert true
+    get exit_classroom_url(id: @c_id)
+    assert_equal 'exit', @controller.action_name
   end
 end

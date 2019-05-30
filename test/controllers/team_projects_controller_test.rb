@@ -2,34 +2,31 @@ require 'test_helper'
 
 class TeamProjectsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @team_project = team_projects(:one)
-  end
-
-  test "should get index" do
-    assert true
+    @c_id = classrooms(:one).id
+    @t_id = team_projects(:one).id
   end
 
   test "should get new" do
-    assert true
+    get new_classroom_team_project_url(classroom_id: @c_id)
+    assert_equal 'new', @controller.action_name
   end
 
   test "should create team_project" do
-    assert true
+    post classroom_team_projects_url(classroom_id: @c_id)
+    assert_equal 'create', @controller.action_name
   end
 
   test "should show team_project" do
-    assert true
+    get classroom_team_project_url(classroom_id: @c_id, id: @t_id)
+    assert_equal 'show', @controller.action_name
   end
 
-  test "should get edit" do
-    assert true
-  end
-
-  test "should update team_project" do
-    assert true
-  end
-
-  test "should destroy team_project" do
-    assert true
+  test "should not destroy team_project" do
+    begin
+      delete classroom_team_project_url(classroom_id: @c_id, id: @t_id)
+      assert false
+    rescue
+      assert true
+    end
   end
 end
