@@ -80,7 +80,7 @@
                   @change="update('milestone')"
                   placeholder="选择冲刺">
                   <el-option label="无冲刺" :value="0"></el-option>
-                  <el-option v-for="(milestone, index) in milestoneList(issue)"
+                  <el-option v-for="(milestone, index) in milestones"
                              :key="index" :label="milestone.title"
                              :value="milestone.id"></el-option>
                 </el-select>
@@ -110,7 +110,7 @@
                        v-model="issue.labels" multiple
                        placeholder="选择标签"
                        @change="update('labels')">
-              <el-option v-for="(label, index) in labelList(issue)"
+              <el-option v-for="(label, index) in labels"
                          :key="index" :label="label.name"
                          :value="label.name"></el-option>
             </el-select>
@@ -148,7 +148,7 @@
                 placeholder="选择经办人">
                 <el-option label="无经办人" :value="0"></el-option>
                 <el-option
-                  v-for="(member, index) in memberList(issue)"
+                  v-for="(member, index) in members"
                   :key="index"
                   :label="member.name"
                   :value="member.id">
@@ -295,12 +295,14 @@
   import Issue from '../../issues/models/issue'
   import eventhub from '../../issues/eventhub'
   import Transform from '../../tools/transform'
-  import EditMixin from './mixins/edit_issue'
   import AlertMixin from './mixins/alert'
+  import DateMixin from './mixins/date_support'
+  import mdWrapper from './md_wrapper.vue'
   import Moment from "../../tools/moment";
+  import issuesStore from "../../issues/stores/issues_store";
 
   export default {
-    mixins: [EditMixin, AlertMixin],
+    mixins: [AlertMixin, DateMixin],
     data() {
       return {
         policy: {
@@ -320,20 +322,28 @@
         },
       }
     },
-    props: {
-      issueDup: Issue,
+    computed: {
+      labels() {
+        return issuesStore.state.labels.filter((l) => !['To Do', 'Doing'].includes(l.name));
+      },
+      members() {
+        return issuesStore.state.members;
+      },
+      milestones() {
+        const $navbar = document.getElementById('navbar');
+        const projects = JSON.parse($navbar.dataset.projects);
+        return projects.find((p) => p.id === this.issue.projectId).milestones;
+      },
+      canEdit() {
+        return true;
+      }
     },
-    updated() {
-      if (!this.issue) {
-        return;
-      }
-      let members = this.members[this.issue.projectId];
-      if (members) {
-        let exist = members.some((member) => member.id === this.issue.assignee.id);
-        if (!exist && this.issue.assignee.id) {
-          this.members[this.issue.projectId].splice(0, 0, this.issue.assignee);
-        }
-      }
+    components: {
+      mdWrapper
+    },
+    props: {
+      issue: Issue,
+      issueDup: Issue,
     },
     methods: {
       openPolicy(attr) {

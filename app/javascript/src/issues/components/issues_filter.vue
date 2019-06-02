@@ -64,6 +64,7 @@
 
 <script>
   import eventhub from '../eventhub'
+  import issuesStore from "../stores/issues_store";
 
   export default {
     data: function () {
@@ -82,7 +83,8 @@
         // members 数组索引
         currentM: 'all',
         // issues 状态
-        currentS: 'Open'
+        currentS: 'Open',
+        state: issuesStore.state
       }
     },
     computed: {
@@ -90,14 +92,14 @@
         if (this.currentP === null) {
           return [];
         }
-        const labels = this.projects[this.currentP].labels;
+        const labels = this.state.labels;
         return labels.filter((l) => !['To Do', 'Doing'].includes(l.name));
       },
       members() {
         if (this.currentP === null) {
           return [];
         }
-        return this.projects[this.currentP].members;
+        return this.state.members;
       },
       currentPN() {
         if (this.currentP === null) {

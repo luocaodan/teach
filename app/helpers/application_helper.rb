@@ -16,9 +16,6 @@ module ApplicationHelper
         name_with_namespace: project['name_with_namespace'],
         web_url: project['web_url']
       }
-      members = project_service.all_members project['id']
-      info[:members] = members
-      info[:labels] = project_service.all_labels project['id']
       info[:milestones] = project_service.all_milestones project['id']
       infos << info
     end

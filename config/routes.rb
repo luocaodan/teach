@@ -31,6 +31,9 @@ Rails.application.routes.draw do
       # file upload
       post 'uploads', to: 'uploads#index'
 
+      get 'labels', to: 'projects#labels', constraints: ->(req) {req.format == :json}
+
+      get 'members', to: 'projects#members', constraints: ->(req) {req.format == :json}
     end
   end
 

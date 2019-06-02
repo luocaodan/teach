@@ -5,6 +5,7 @@ import Issue from "../../../issues/models/issue";
 import IssuesList from '../../../issues/components/issues_list.vue'
 import Sidebar from '../sidebar.vue'
 import DetailIssue from '../detail_issue.vue'
+import issuesStore from "../../../issues/stores/issues_store";
 
 export default {
   components: {
@@ -163,6 +164,29 @@ export default {
       if (!isMore) {
         this.loading = true;
       }
+      if (this._projectId === filterParams.project) {
+        this.loadIssues(filterParams, isMore)
+      }
+      else {
+        this._projectId = filterParams.project;
+        this.issuesService.getProjectLabels(this._projectId)
+          .then(res => res.data)
+          .then(data => {
+            issuesStore.setLabelsAction(data);
+            return this.issuesService.getProjectMembers(this._projectId)
+          })
+          .then(res => res.data)
+          .then(data => {
+            issuesStore.setMembersAction(data);
+            this.loadIssues(filterParams);
+          })
+          .catch(e => {
+            this.alert('拉取列表或团队成员失败')
+            this.loading = false;
+          })
+      }
+    },
+    loadIssues(filterParams, isMore){
       this.issuesService
         .all(filterParams)
         .then(res => res.data)
